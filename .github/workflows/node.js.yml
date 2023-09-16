@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "prod", "dev" ]
+    branches: [ "prod", "dev", "feat/ST3-33_Create-CI-pipeline" ]
   pull_request:
     branches: [ "prod", "dev" ]
 
