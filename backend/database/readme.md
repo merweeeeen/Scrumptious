@@ -7,7 +7,7 @@
 ![alt text](assets/mysql.png)
 3. Insert the following:
     - Connection Name: can be anything you want
-    - hostname: scrumptious.c5plysfxqgrd.ap-southeast-1.rds.amazonaws.com
+    - hostname: sent in group chat
     - port: 3306 
     - username: admin
     - password: sent in group chat
@@ -16,6 +16,12 @@
     <img src="assets/success.png" width="200" height="300">
 
 5. Then you are good to go ! 
+
+## How to setup .env file
+
+If the `.env.example` file exists, change it to .env and add the env variables which is stated in our document/group chat.
+
+If it does not exist, create a `.env` file on your own. When you push, remember to create a new `.env.example` as well
 
 ## How to use the functions 
 
