@@ -1,14 +1,42 @@
+const express = require("express");
 const mysql = require("mysql");
 require("dotenv").config();
-
-var con = mysql.createConnection({
+const app = express();
+const bodyParser = require("body-parser");
+const con = mysql.createConnection({
   host: process.env["hostname"],
-  user: process.env['user'],
+  user: process.env["user"],
   password: process.env["password"],
   database: "role",
 });
 
+app.use(bodyParser.json());
 con.connect();
+
+app.get("/readAllRoles", (req, res) => {
+  function readAllRole() {
+    const query = `SELECT * FROM role;`;
+    con.query(query, function (error, results, fields) {
+      if (error) throw error;
+      res.send(results);
+    });
+  }
+  readAllRole();
+});
+
+app.get("/readRole", (req, res) => {
+  const params = req.query;
+  console.log(params);
+  function readRole() {
+    const roleId = params.roleId;
+    const query = `SELECT * FROM role WHERE role_id = ${roleId};`;
+    con.query(query, function (error, results, fields) {
+      if (error) throw error;
+      res.send(results);
+    });
+  }
+  readRole();
+});
 
 function createRole() {
   const roleId = 1235;
@@ -26,17 +54,6 @@ function createRole() {
   });
 }
 
-async function readRole() {
-  const query = `SELECT * FROM role;`;
-  const response = con.query(query
-    , function (error, results, fields) {
-    if (error) throw error;
-    // console.log(results);
-    return results;
-  }
-  );
-  console.log(response)
-  return response.query
-}
-
-readRole()
+app.listen(3000, () => {
+  console.log(" listening on port 3000");
+});
