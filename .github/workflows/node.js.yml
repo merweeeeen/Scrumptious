@@ -56,6 +56,10 @@ jobs:
       working-directory: frontend
     - run: npm run test
       working-directory: backend
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./dist
   # Deployment job
   deploy:
     environment:
