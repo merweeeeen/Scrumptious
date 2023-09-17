@@ -56,8 +56,8 @@ jobs:
     - id: Build-Vue
       uses: xRealNeon/VuePagesAction@1.0.1
       with:
-        username: 'YourGithubName'
-        reponame: 'YourRepoName'
+        username: 'merweeeeen'
+        reponame: 'Scrumptious'
         token: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
     # - run: npm run build 
     #   working-directory: frontend
