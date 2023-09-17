@@ -57,7 +57,7 @@ jobs:
       uses: xRealNeon/VuePagesAction@1.0.1
       with:
         username: 'merweeeeen'
-        reponame: 'Scrumptious'
+        reponame: 'Scrumptious/frontend'
         token: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
     # - run: npm run build 
     #   working-directory: frontend
