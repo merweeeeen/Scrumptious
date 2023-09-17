@@ -8,8 +8,10 @@ on:
     branches: [ "prod", "dev", "feat/ST3-33_Create-CI-pipeline" ]
   pull_request:
     branches: [ "prod", "dev" ]
-permissions: 
-  id-token: write
+
+permissions:
+      id-token: write
+
 jobs:
   build:
 
