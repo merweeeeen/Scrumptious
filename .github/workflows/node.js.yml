@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "prod", "dev", "feat/ST3-33_Create-CI-pipeline" ]
+    branches: [ "dev" ]
   pull_request:
-    branches: [ "prod", "dev" ]
+    branches: [ "dev" ]
 
 permissions:
   actions: read
@@ -56,18 +56,18 @@ jobs:
       working-directory: frontend
     - run: npm run test
       working-directory: backend
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v2
-      with:
-        path: ./frontend/dist
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: https://merweeeeen.github.io/Scrumptious/
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+  #   - name: Upload artifact
+  #     uses: actions/upload-pages-artifact@v2
+  #     with:
+  #       path: ./frontend/dist
+  # # Deployment job
+  # deploy:
+  #   environment:
+  #     name: github-pages
+  #     url: https://merweeeeen.github.io/Scrumptious/
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Deploy to GitHub Pages
+  #       id: deployment
+  #       uses: actions/deploy-pages@v2
