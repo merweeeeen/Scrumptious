@@ -9,6 +9,21 @@ on:
   pull_request:
     branches: [ "dev" ]
 
+permissions:
+  actions: read
+  checks: read
+  contents: read
+  deployments: read
+  id-token: write
+  issues: read
+  discussions: read
+  packages: read
+  pages: write
+  pull-requests: read
+  repository-projects: read
+  security-events: read
+  statuses: read
+
 jobs:
   build:
 
@@ -32,3 +47,18 @@ jobs:
     # - run: npm run build --if-present
     - run: npm run test --if-present
       working-directory: backend
+  #   - name: Upload artifact
+  #     uses: actions/upload-pages-artifact@v2
+  #     with:
+  #       path: ./frontend/dist
+  # # Deployment job
+  # deploy:
+  #   environment:
+  #     name: github-pages
+  #     url: https://merweeeeen.github.io/Scrumptious/
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Deploy to GitHub Pages
+  #       id: deployment
+  #       uses: actions/deploy-pages@v2
