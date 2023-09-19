@@ -55,6 +55,29 @@ app.get('/rs/:rolename?', async (req, res) => {
   })
 
 
+// Hvn't tested this yet
+app.post('/rs', async (req, res) => {
+    console.log(req.body)
+    //res.send(req.body)
+    //{"role_name":"TestRoleName","skill_name":"TestSkillName"}
+    //stonks it works
+    function createRole(theBody) {
+      const roleName = theBody.role_name;
+      const skillName = theBody.skill_name;
+      const query = `INSERT INTO role_skill (role_name, skill_name) VALUES ('${roleName}', '${skillName}');`;
+      con.query(query, function (error, results, fields) {
+        if (error) throw error;
+        console.log("success");
+        console.log(results)
+        return results;
+      });
+    }
+    const msg = createRole(req.body);
+    res.send(msg)
+    //stonks it works
+  })
+
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
