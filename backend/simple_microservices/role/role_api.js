@@ -75,7 +75,16 @@ app.post('/role', async (req, res) => {
     const numOpenings = theBody.num_openings;
     const expiryDate = theBody.expiry_date; // YYYY-MM-DD format
     const openVal = theBody.open;
-    const query = `INSERT INTO role (role_name, dept, country, num_openings, expiry_date, open) VALUES ('${roleName}', '${dept}', '${country}', '${numOpenings}', '${expiryDate}', '${openVal}');`;
+    const currentdate = new Date(); 
+    const datetime = currentdate.getFullYear() + "-"
+                + (currentdate.getMonth()+1)  + "-" 
+                + currentdate.getDate() + " "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+    console.log(datetime)
+    // YYYY-MM-DD HH:MI:SS format
+    const query = `INSERT INTO role (role_name, dept, country, num_openings, expiry_date, open, created_date) VALUES ('${roleName}', '${dept}', '${country}', '${numOpenings}', '${expiryDate}', '${openVal}', '${datetime}');`;
     con.query(query, function (error, results, fields) {
       if (error) throw error;
       console.log("success");

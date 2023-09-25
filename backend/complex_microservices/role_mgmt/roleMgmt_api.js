@@ -1,16 +1,9 @@
 const express = require("express");
-const mysql = require("mysql");
 const axios = require('axios');
-require("dotenv").config();
 const app = express();
 const port = 5000;
 const bodyParser = require("body-parser");
-const con = mysql.createConnection({
-  host: process.env["hostname"],
-  user: process.env["user"],
-  password: process.env["password"],
-  database: "role",
-});
+
 
 
 const roleMS = 'http://localhost:3000/';
@@ -18,7 +11,6 @@ const roleSkillMS = 'http://localhost:3001/';
 
 
 app.use(bodyParser.json());
-con.connect();
 
 
 app.get('/', (req, res) => {
