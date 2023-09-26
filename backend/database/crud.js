@@ -15,7 +15,7 @@ con.connect();
 
 app.get("/readAllRoles", (req, res) => {
   function readAllRole() {
-    const query = `SELECT * FROM role;`;
+    const query = `SELECT * FROM listing;`;
     con.query(query, function (error, results, fields) {
       if (error) throw error;
       res.send(results);

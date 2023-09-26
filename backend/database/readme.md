@@ -23,6 +23,21 @@ If the `.env.example` file exists, change it to .env and add the env variables w
 
 If it does not exist, create a `.env` file on your own. When you push, remember to create a new `.env.example` as well
 
+## How to test the connection
+
+1. First you navigate to the database folder.
+2. Run the following command on terminal.
+
+    `node crud`
+3. Now go to PostMan and create a new collection and a new HTTP request.
+
+      <img src="assets/postman.png" width="500" height="300">
+
+4. Type in the URL "http://localhost:3000/readAllRoles"
+
+5. You should be able to see the response that some listings have been pulled.
+
+
 ## How to use the functions 
 
 ### Create
