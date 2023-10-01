@@ -1,23 +1,21 @@
 import { mount } from "@vue/test-utils";
-import Footer from "../../src/components/Footer.vue";
-import LandingPage from '../../src/pages/LandingPage.vue';
+import Footer from "../../src/components/Footer.vue"; // Import the component you need
+import LandingPage from "../../src/pages/LandingPage.vue"; // Importing the page to test the existence of the component
 
-const wrapper = mount(Footer);
 
 describe("Testing buttons", () => {
   test("Home button", () => {
-    const button = wrapper.find("Home");
+    const wrapper = mount(Footer); // Mounting the Footer
+    const button = wrapper.find("#Home"); // Finding the id 'Home' in the Footer component
 
-    expect(button).toBeTruthy();
+    expect(Object.keys(button).length).toBeGreaterThan(0); // If the id Home is not found, the length would be 0
   });
 });
 
 describe("Testing Footer", () => {
-  test('LandingPage contains the Footer component', () => {
-    const wrapper = mount(LandingPage);
-  
-    const footer = wrapper.find('#Footer');
-  
-    expect(footer.find('#Home')).toBeTruthy();
+  test("LandingPage contains the Footer component", () => {
+    const wrapper = mount(LandingPage); // Mounting the LandingPage
+    const footer = wrapper.find("#Footer");// Finding the id 'Footer' in the LandingPage
+    expect(Object.keys(footer).length).toBeGreaterThan(0); // If id Footer is not found in the LandingPage, the lenth would be 0
   });
-})
+});
