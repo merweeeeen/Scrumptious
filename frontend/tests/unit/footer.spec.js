@@ -10,6 +10,36 @@ describe("Testing buttons", () => {
 
     expect(Object.keys(button).length).toBeGreaterThan(0); // If the id Home is not found, the length would be 0
   });
+  test("Departments button", () => {
+    const wrapper = mount(Footer); // Mounting the Footer
+    const button = wrapper.find("#Departments"); // Finding the id 'Home' in the Footer component
+
+    expect(Object.keys(button).length).toBeGreaterThan(0); // If the id Home is not found, the length would be 0
+  });
+  test("HRMS button", () => {
+    const wrapper = mount(Footer); // Mounting the Footer
+    const button = wrapper.find("#HRMS"); // Finding the id 'Home' in the Footer component
+
+    expect(Object.keys(button).length).toBeGreaterThan(0); // If the id Home is not found, the length would be 0
+  });
+  test("LMS button", () => {
+    const wrapper = mount(Footer); // Mounting the Footer
+    const button = wrapper.find("#LMS"); // Finding the id 'Home' in the Footer component
+
+    expect(Object.keys(button).length).toBeGreaterThan(0); // If the id Home is not found, the length would be 0
+  });
+  test("LJPS button", () => {
+    const wrapper = mount(Footer); // Mounting the Footer
+    const button = wrapper.find("#LJPS"); // Finding the id 'Home' in the Footer component
+
+    expect(Object.keys(button).length).toBeGreaterThan(0); // If the id Home is not found, the length would be 0
+  });
+  test("Feedback button", () => {
+    const wrapper = mount(Footer); // Mounting the Footer
+    const button = wrapper.find("#Feedback"); // Finding the id 'Home' in the Footer component
+
+    expect(Object.keys(button).length).toBeGreaterThan(0); // If the id Home is not found, the length would be 0
+  });
 });
 
 describe("Testing Footer", () => {
