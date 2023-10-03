@@ -1,16 +1,18 @@
 <template>
   <v-app>
     <Footer id="Footer"></Footer>
+    <ListingCard></ListingCard>
   </v-app>
 </template>
 
 <script>
 // import ListingCard from "../components/ListingCard.vue";
 import Footer from "../components/Footer.vue";
+import ListingCard from "../components/Listing.vue";
 
 export default {
   components: {
-    // ListingCard,
+    ListingCard,
     Footer,
   },
   data() {
