@@ -71,6 +71,7 @@
                     size="small"
                     variant="flat"
                     v-bind:color="primaryColor"
+                    id="apply"
                     >Apply</v-btn>
                 </v-col>
             </v-row>
