@@ -6,6 +6,7 @@ app.use(bodyParser.json());
 
 
 const role = require("./role");
+const role_skill = require("./roleskill");
 
 
 /////////////////////////////////////////////////////
@@ -76,7 +77,34 @@ app.post('/listing', async (req, res) => {
 ////////////// ROLE_SKILL MICROSERVICE //////////////
 /////////////////////////////////////////////////////
 
+app.get('/rs', async (req, res) => {
+  role_skill.readAllRoleSkills()
+  .then((results) => {
+    console.log("Results: ", results);
+    res.send(results)
+  })
+  .catch((error) => {
+    console.error("Error: ", error);
+  });
+    // console.log("printing results from calling the thing" + response)
+    // res.send(results)
+})
 
+app.get('/rs/:roleName?', async (req, res) => {
+    console.log(req.params.roleName)
+    role_skill.readSkillbyRole(req.params.roleName)
+  .then((results) => {
+    console.log("Results: ", results);
+    res.send(results)
+  })
+  .catch((error) => {
+    console.error("Error: ", error);
+  });
+})
+
+/////////////////////////////////////////////////////
+///////////////// STAFF MICROSERVICE ////////////////
+/////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////

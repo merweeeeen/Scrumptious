@@ -10,14 +10,6 @@ const con = mysql.createConnection({
 
 con.connect();
 
-// async function readAllRole() {
-//     const query = `SELECT * FROM listing;`;
-//     con.query(query, function (error, results, fields) {
-//       console.log("results: " + results)
-//       if (error) throw error;
-//       return(results);
-//     });
-//   }
 
 async function readAllRole() {
     return new Promise((resolve, reject) => {
@@ -33,19 +25,6 @@ async function readAllRole() {
     });
   }
 
-function readOneRole(roleid) {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM listing WHERE role_id = ${roleid};`;
-        con.query(query, function (error, results, fields) {
-            if (error) {
-                reject(error);
-              } else {
-              //   console.log("results: " + results)         
-                resolve(results);
-        }
-      });
-   });
-}
 
 function readOneListing(listingid) {
     return new Promise((resolve, reject) => {
@@ -61,11 +40,10 @@ function readOneListing(listingid) {
    });
 }
 
-// POST, should take in an object like this: {"listing_name":"ListName1","role_id":1,"role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
+// POST, should take in an object like this: {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 function createRoleListing(theBody) {
     return new Promise((resolve, reject) => {
         const listingName = theBody.listing_name;
-        const roleId = theBody.role_id;
         const roleName = theBody.role_name;
         const dept = theBody.dept;
         const country = theBody.country;
@@ -81,7 +59,7 @@ function createRoleListing(theBody) {
                     + currentdate.getSeconds();
         console.log(datetime) // YYYY-MM-DD HH:MI:SS format
         const desc = theBody.desc;
-        const query = `INSERT INTO listing (listing_name, role_id, role_name, dept, country, num_openings, expiry_date, open, created_date, description) VALUES ('${listingName}','${roleId}','${roleName}', '${dept}', '${country}', '${numOpenings}', '${expiryDate}', '${openVal}', '${datetime}', '${desc}');`;
+        const query = `INSERT INTO listing (listing_name, role_name, dept, country, num_openings, expiry_date, open, created_date, description) VALUES ('${listingName}','${roleName}', '${dept}', '${country}', '${numOpenings}', '${expiryDate}', '${openVal}', '${datetime}', '${desc}');`;
         con.query(query, function (error, results, fields) {
             if (error) {
                 console.log("error: " + error)
@@ -95,4 +73,4 @@ function createRoleListing(theBody) {
   }
 // createRoleListing({listing_name:"ListName1",role_id:1, role_name:"RoleName1",dept:"asdas",country:"sg",num_openings:2,expiry_date:"2023-07-04",open:1, desc:"desc1"})
 
-  module.exports = { readAllRole, readOneRole, readOneListing, createRoleListing };
+  module.exports = { readAllRole, readOneListing, createRoleListing };
