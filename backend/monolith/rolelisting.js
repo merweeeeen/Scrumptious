@@ -1,62 +1,60 @@
-class RoleListing {
+exports.RoleListing = class {
     constructor(
       listing_id,
       listing_name,
       role_name,
       dept,
       country,
-      num_opneing,
-      skills_required,
+      num_opening,
       expiry_date,
       open,
       desc
     ) {
-      this.listing_id = listing_id;
-      this.listing_name = listing_name;
-      this.role_name = role_name;
-      this.dept = dept;
-      this.country = country;
-      this.num_opneing = num_opneing;
-      this.skills_required = skills_required;
-      this.expiry_date = expiry_date;
-      this.open = open;
-      this.desc = desc;
+      this._listing_id = listing_id;
+      this._listing_name = listing_name;
+      this._role_name = role_name;
+      this._dept = dept;
+      this._country = country;
+      this._num_opneing = num_opening;
+      this._expiry_date = expiry_date;
+      this._open = open;
+      this._desc = desc;
     }
   
     get listingId() {
-      return this.listing_id;
+      return this._listing_id;
     }
   
     get listingName() {
-      return this.listing_name;
+      return this._listing_name;
     }
   
     get roleName() {
-      return this.role_name;
+      return this._role_name;
     }
   
-    get dept() {
-      return this.dept;
+    get dept_name() {
+      return this._dept_name;
     }
   
     get country() {
-      return this.country;
+      return this._country;
     }
   
-    get num_opneing() {
-      return this.num_opneing;
-    }
-  
-    get skills_required() {
-      return this.skills_required;
+    get num_opening() {
+      return this._num_opening;
     }
   
     get expiry_date() {
-      return this.expiry_date;
+      return this._expiry_date;
     }
   
     get open() {
-      return this.open;
+      return this._open;
+    }
+
+    get desc() {
+      return this._desc
     }
   }
   
