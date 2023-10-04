@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <NavBar id="NavBar"></NavBar>
     <Footer id="Footer"></Footer>
     <ListingCard id="ListingCard"></ListingCard>
   </v-app>
@@ -7,15 +8,16 @@
 
 <script>
 // import ListingCard from "../components/ListingCard.vue";
-import Footer from "../components/Footer.vue";
+import NavBar from "../components/NavBar.vue";
 import ListingCard from "../components/Listing.vue";
+import Footer from "../components/Footer.vue";
 
 export default {
   components: {
     ListingCard,
+    NavBar,
     Footer,
-  },
-  data() {
+  },  data() {
     return {
       listings: [
         {
