@@ -19,28 +19,28 @@ class Staff {
         this.Skills = Skills;
     }
 
-    getStaff_id() {
+    get Staff_id() {
         return this.Staff_id;
     }
-    getStaff_FName(){
+    get Staff_FName(){
         return this.Staff_FName;
     }
-    getStaff_LName(){
+    get Staff_LName(){
         return this.Staff_LName;
     }
-    getDept(){
+    get Dept(){
         return this.Dept;
     }
-    getCountry(){
+    get Country(){
         return this.Country;
     }
-    getEmail(){
+    get Email(){
         return this.Email;
     }
-    getAccess_Rights(){
+    get Access_Rights(){
         return this.Access_Rights;
     }
-    getSkills(){
+    get Skills(){
         return this.Skills;
     }
 }
