@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Footer id="Footer"></Footer>
-    <ListingCard></ListingCard>
+    <ListingCard id="ListingCard"></ListingCard>
   </v-app>
 </template>
 
