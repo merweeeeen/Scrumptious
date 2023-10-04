@@ -27,14 +27,11 @@
         </v-container>
 
         <!-- Info about role: Department, Openings, Applicants, Full Time -->
-        <template v-for="(info, index) in roleInfo">
-            <template v-if="index > 0"> <v-text class="text-caption text-grey-darken-2"> | </v-text></template>
-            <v-text 
+        <v-text 
                 class="text-caption text-grey-darken-2"
             >
-            {{info}}
-            </v-text>
-        </template>
+            {{roleInfo["Department"]}} | {{roleInfo["Openings"]}} Openings | {{roleInfo["Applicants"]}} Applicants | {{roleInfo["Full Time"]}}
+        </v-text>
 
         <!-- Skills Matched Percentage Bar -->
         <v-container class="pa-0 mt-1">
@@ -51,7 +48,7 @@
                         rounded
                         :height="15"
                     >
-                    <v-text class="text-caption">{{skillsPctMatch}}%</v-text>
+                    <v-text class="text-caption">{{getSkillsPctMatch(this.employeeSkills, this.roleInfo.Skills_Required)}}%</v-text>
                 </v-progress-linear>
                 </v-sheet>
             </v-col>
@@ -72,7 +69,7 @@
                     variant="flat"
                     v-bind:color="primaryColor"
                     id="apply"
-                    >Apply</v-btn>
+                    >Apply</v-btn> <!--v-bind:color="primaryColor"-->
                 </v-col>
             </v-row>
         </v-container>
@@ -88,16 +85,49 @@
 <script>
 export default {
   data() {
+    // skillsPctMatch = getSkillsPctMatch(this.employeeSkills, this.employeeSkills);
     return {
         roleName: "Software Developer",
-        roleInfo: ["Information Technology", "2 Openings", "4 Applicants", "Closing in 11 Days", "Full Time"],
-        skillsPctMatch: "90",
+        roleInfo: {
+            "Department": "Information Technology",
+            "Openings": "2",
+            "Applicants": "4",
+            "Closing in": "11 Days",
+            "Full Time": "Full Time",
+            "Skills_Required":["Python", "HTML", "Javascript", "C++"]
+        },
+        employeeSkills: ["Python", "C++"],
+        skillsPctMatch: "",
         lastUpdated: "Posted 4 Days ago",
         primaryColor: "grey",
         secondaryColor: "grey-lighten-1"
     };
   },
+  methods: {
+    getSkillsPctMatch(employeeSkills, roleSkills) {
+        var numSkillsMatched = 0;
+        for (var i = 0; i < employeeSkills.length; i++) {
+            if (roleSkills.includes(employeeSkills[i])) {
+                numSkillsMatched++;
+            }
+        }
+
+        // The line below updates the skillsPctMatch variable
+        this.skillsPctMatch = Math.round((numSkillsMatched / roleSkills.length) * 100);
+        return Math.round((numSkillsMatched / roleSkills.length) * 100);
+    }
+  }
 };
+
+function getSkillsPctMatch(employeeSkills, roleSkills) {
+    var numSkillsMatched = 0;
+    for (var i = 0; i < employeeSkills.length; i++) {
+        if (roleSkills.includes(employeeSkills[i])) {
+            numSkillsMatched++;
+        }
+    }
+    return Math.round((numSkillsMatched / roleSkills.length) * 100);
+}
 </script>
 
 <style>
