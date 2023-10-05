@@ -21,56 +21,81 @@ app.get('/', (req, res) => {
 /////////////////////////////////////////////////////
 
 // THIS IS GET /role => TO GET ALL ROLES FOR FRONTEND
-app.get('/role', async (req, res) => {
-    role.readAllRole()
+app.get('/listing', async (req, res) => {
+    role.readAllListing()
   .then((results) => {
-    console.log("Results: ", results);
-    res.send(results)
+    // console.log("Results: ", results);
+    const response = {
+      statusCode: 200,
+      body: results,
+      message:"Retrieved Successfully"
+    }
+    console.log(response)
+    res.status(200).send(response)
   })
   .catch((error) => {
-    console.error("Error: ", error);
+    // console.error("Error: ", error);
+    const response = {
+      statusCode: 400,
+      body: error,
+      message:"Retrieval Unsuccessful"
+    }
+    console.log(response)
+    res.status(400).send(response)
   });
-    // console.log("printing results from calling the thing" + response)
-    // res.send(results)
 })
 
-// THIS IS GET /role/:roleid? => TO GET ONE ROLE FOR FRONTEND
-app.get('/role/:roleid?', async (req, res) => {
-    console.log(req.params.roleid)
-    role.readOneRole(req.params.roleid)
-  .then((results) => {
-    console.log("Results: ", results);
-    res.send(results)
-  })
-  .catch((error) => {
-    console.error("Error: ", error);
-  });
-})
 
 // THIS IS GET /listing/:listingid? => TO GET ONE ROLE FOR FRONTEND
 app.get('/listing/:listingid?', async (req, res) => {
     console.log(req.params.listingid)
     role.readOneListing(req.params.listingid)
-  .then((results) => {
-    console.log("Results: ", results);
-    res.send(results)
-  })
-  .catch((error) => {
-    console.error("Error: ", error);
-  });
+    .then((results) => {
+      // console.log("Results: ", results);
+      const response = {
+        statusCode: 200,
+        body: results,
+        message:"Retrieved Successfully"
+      }
+      console.log(response)
+      res.status(200).send(response)
+    })
+    .catch((error) => {
+      // console.error("Error: ", error);
+      const response = {
+        statusCode: 400,
+        body: error,
+        message:"Retrieval Unsuccessful"
+      }
+      console.log(response)
+      res.status(400).send(response)
+    });
 })
 
 // THIS IS POST /listing => TO CREATE A ROLE
 // {"listing_name":"ListName1","role_id":1,"role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 app.post('/listing', async (req, res) => {
     console.log(req.body)
-    role.createRoleListing(req.body)
+    role.createListing(req.body)
     .then((results) => {
-        console.log("Results: ", results);
-        res.send(results)
+      // console.log("Results: ", results);
+      const response = {
+        statusCode: 201,
+        body: results,
+        message:"Posted Data Successfully"
+      }
+      console.log(response)
+      res.status(201).send(response)
     })
     .catch((error) => {
-        console.error("Error: ", error);
+      // console.error("Error: ", error);
+      const response = {
+        statusCode: 400,
+        body: error,
+        message:"Post Unsuccessful"
+      }
+      console.log(response)
+      res.status(400).send(response)
     });
 })
 /////////////////////////////////////////////////////
@@ -80,26 +105,50 @@ app.post('/listing', async (req, res) => {
 app.get('/rs', async (req, res) => {
   role_skill.readAllRoleSkills()
   .then((results) => {
-    console.log("Results: ", results);
-    res.send(results)
+    // console.log("Results: ", results);
+    const response = {
+      statusCode: 200,
+      body: results,
+      message:"Retrieved Successfully"
+    }
+    console.log(response)
+    res.status(200).send(response)
   })
   .catch((error) => {
-    console.error("Error: ", error);
+    // console.error("Error: ", error);
+    const response = {
+      statusCode: 400,
+      body: error,
+      message:"Retrieval Unsuccessful"
+    }
+    console.log(response)
+    res.status(400).send(response)
   });
-    // console.log("printing results from calling the thing" + response)
-    // res.send(results)
 })
 
 app.get('/rs/:roleName?', async (req, res) => {
     console.log(req.params.roleName)
     role_skill.readSkillbyRole(req.params.roleName)
-  .then((results) => {
-    console.log("Results: ", results);
-    res.send(results)
-  })
-  .catch((error) => {
-    console.error("Error: ", error);
-  });
+    .then((results) => {
+      // console.log("Results: ", results);
+      const response = {
+        statusCode: 200,
+        body: results,
+        message:"Retrieved Successfully"
+      }
+      console.log(response)
+      res.status(200).send(response)
+    })
+    .catch((error) => {
+      // console.error("Error: ", error);
+      const response = {
+        statusCode: 400,
+        body: error,
+        message:"Retrieval Unsuccessful"
+      }
+      console.log(response)
+      res.status(400).send(response)
+    });
 })
 
 /////////////////////////////////////////////////////
