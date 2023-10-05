@@ -73,7 +73,7 @@ app.get('/listing/:listingid?', async (req, res) => {
 })
 
 // THIS IS POST /listing => TO CREATE A ROLE
-// {"listing_name":"ListName1","role_id":1,"role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
+// {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 app.post('/listing', async (req, res) => {
     console.log(req.body)
     role.createListing(req.body)
