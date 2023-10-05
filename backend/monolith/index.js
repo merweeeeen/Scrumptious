@@ -60,6 +60,22 @@ app.get('/listing/:listingid?', async (req, res) => {
   });
 })
 
+// THIS IS PUT /listing => TO update A ROLE
+// {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
+app.put('/listing/:listingid?', async (req, res) => {
+  console.log(req.body)
+  console.log(req.params.listingid)
+  role.updateRoleListing(req.body, req.params.listingid)
+  .then((results) => {
+      console.log("Results: ", results);
+      res.status(201).send("Update Successful");
+      // res.send(results)
+  })
+  .catch((error) => {
+      console.error("Error: ", error);
+  });
+})
+
 // THIS IS POST /listing => TO CREATE A ROLE
 // {"listing_name":"ListName1","role_id":1,"role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 app.post('/listing', async (req, res) => {
