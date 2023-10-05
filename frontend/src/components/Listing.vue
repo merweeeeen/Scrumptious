@@ -4,8 +4,7 @@
 
     <div>
         <v-card 
-            width=100% 
-            max-width="450px"
+            width="450px"
             color="black" 
             variant="outlined"
         > 
@@ -84,18 +83,27 @@
 
 <script>
 export default {
+  props: {
+    roleName: String,
+    roleInfo: Object,
+    employeeSkills: Array,
+    lastUpdated: String,
+    primaryColor: String,
+    secondaryColor: String
+  },
   data() {
     // skillsPctMatch = getSkillsPctMatch(this.employeeSkills, this.employeeSkills);
+    
     return {
-        roleName: "Software Developer",
-        roleInfo: {
-            "Department": "Information Technology",
-            "Openings": "2",
-            "Applicants": "4",
-            "Closing in": "11 Days",
-            "Full Time": "Full Time",
-            "Skills_Required":["Python", "HTML", "Javascript", "C++"]
-        },
+        // roleName: "Software Developer",
+        // roleInfo: {
+        //     "Department": "Information Technology",
+        //     "Openings": "2",
+        //     "Applicants": "4",
+        //     "Closing in": "11 Days",
+        //     "Full Time": "Full Time",
+        //     "Skills_Required":["Python", "HTML", "Javascript", "C++"]
+        // },
         employeeSkills: ["Python", "C++"],
         skillsPctMatch: "",
         lastUpdated: "Posted 4 Days ago",

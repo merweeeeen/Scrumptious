@@ -1,9 +1,9 @@
 <template>
   <v-footer class="bg-grey">
     <v-row>
-      <v-col cols="3"> </v-col>
-      <v-col cols="6">
-        <v-row>
+      <v-col cols="2"> </v-col>
+      <v-col cols="8">
+        <v-row class="justify-center">
           <v-btn
             v-for="link in links"
             :key="link"
