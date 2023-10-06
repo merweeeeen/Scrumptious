@@ -2,7 +2,7 @@
     <div class="home">
       <h1 style="color: blueviolet; display:block">Create a role listing (as a HR)</h1>
       <!-- <p>This is the home page of my Vue.js application.</p> -->
-      <container class="containerStyle">
+      <v-container class="containerStyle">
       <v-form>
       <v-row>
         <v-col cols="2" class="contentCenter">
@@ -107,16 +107,29 @@
       </v-row>
       <v-btn @click="submit()">SUBMIT</v-btn>
     </v-form>
-    </container>
-      <v-btn @click="greet">Greet</v-btn>
+    </v-container>
     </div>
+
+    <v-dialog
+        v-model="dialog"
+        width="auto"
+      >
+        <v-card>
+          <v-card-text>
+            You have successfully created the role listing!
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="primary" block @click="reloadPage()">Okay</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
   </template>
   
   <script>
   import axios from 'axios'
 
   export default {
-    name: 'Home',
+    name: 'CreatePage',
     data() {
         return {
         responseHolder: {},
@@ -131,6 +144,8 @@
         
         roleslist: [],
         listtoskills: {},
+
+        dialog: false,
 
         access: "HR"
         }
@@ -168,6 +183,19 @@
         return true
       }
     },
+    // validation(){
+    //   const valid = true
+    //   const errormsg = ""
+    //   if (this.isValid(this.jobtitle) == false || this.isValid(this.rolename) == false || this.isValid(this.jobdescription) == false || this.isValid(this.dept) == false || this.isValid(this.vacancies) == false || this.isValid(this.country) == false || this.isValid(this.expirydate) == false) {
+    //     valid = false
+    //   } else if (this.jobdescription.length > 250) {
+    //     valid = false
+    //     errormsg += "Job description is too long \n"
+    //   } else if (this.vacancies <= 0 || this.vacancies % 1 !== 0) {
+    //     valid = false
+    //     errormsg += "Vacancy should only be a positive whole number. \n"
+    //   }
+    // },
     submit() {
       // console.log(this.isValid(this.jobtitle) + "\n" + this.isValid(this.rolename) + "\n" + this.isValid(this.jobdescription) + "\n" + this.isValid(this.dept) + "\n" + this.isValid(this.vacancies) + "\n" + this.isValid(this.country) + "\n" + this.isValid(this.expirydate))
       if ( this.isValid(this.jobtitle) == false || this.isValid(this.rolename) == false || this.isValid(this.jobdescription) == false || this.isValid(this.dept) == false || this.isValid(this.vacancies) == false || this.isValid(this.country) == false || this.isValid(this.expirydate) == false) {
@@ -189,18 +217,14 @@
         .then(response => {
           console.log(response)
           // alert("Role Listing created successfully!")
-          alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
+          this.dialog = true
+          // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
         })
         .catch(error => {
           console.log(error)
         })
         
       }
-    },
-    greet() {
-        // `this` inside methods points to the current active instance
-        alert(`Hello ${this.access}! ${this.jobtitle}`)
-        // `event` is the native DOM event
     },
     checkAccess() {
       if (this.access == "HR") {
@@ -210,6 +234,10 @@
         window.location.href = 'http://127.0.0.1:5173/Scrumptious/'
         return false
       }
+    },
+    reloadPage() {
+      this.dialog = false
+      window.location.reload();
     }
   },
   computed: {
@@ -238,14 +266,15 @@
     max-width: 100vw;
     max-height:  max-content;
     margin: 0 0 0 0;
-    border: 5px solid #24ec38;
+    align-items: center;
   }
   
   .containerStyle {
-    margin: 40px;
+    margin: 20px 10px 20px 10px;
+    max-width: 85%;
     border: 5px solid #f4d5ff;
     border-radius: 20px;
-    display: block;
+    display: inline-block;
     padding: 20px;
   }
 
