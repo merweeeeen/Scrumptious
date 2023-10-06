@@ -4,13 +4,15 @@
 
     <div>
         <v-card 
-            width="450px"
+            width="100%"
+            min-width="400px"
             color="black" 
             variant="outlined"
+            onmouseover="this.style.boxShadow='0 0 10px 0 rgba(0,0,0,0.5)'; show=true"
+            onmouseleave="this.style.boxShadow='none';show=false;"
         > 
-
         <!-- Role Name and when done, bookmark/3 dot icon -->
-        <v-card-item class="mt-0">
+        <v-card-item class="mt-0 w-100">
           <v-container class="pa-0 mt-1">
             <v-row no-gutters align="center" style="height: 25px;">
                 <v-col class="pa-0">
@@ -60,21 +62,52 @@
                 <v-col cols="auto">
                     <v-text class="text-caption text-grey-darken-2">{{ lastUpdated }}</v-text>
                 </v-col>
-                
-                <v-col cols="auto">
+            </v-row>
+            <v-row>
+                <v-col>
                     <v-btn 
+                    width="100%"
+                    height="100%"
                     density="comfortable"
-                    size="small"
+                    size="large"
                     variant="flat"
                     v-bind:color="primaryColor"
                     id="apply"
-                    >Apply</v-btn> <!--v-bind:color="primaryColor"-->
+                    >Apply</v-btn>
                 </v-col>
             </v-row>
         </v-container>
-          
-        </v-card-item>
 
+        </v-card-item>
+        <v-card-item class="mt-0 w-100" v-show="show">
+            <v-container class="pa-0">
+                <v-row no-gutters justify="space-between" style="height: 25px;">
+                    <v-col cols="auto">
+                        <v-text class="text-caption text-grey-darken-2">Skills Required</v-text>
+                    </v-col>
+                </v-row>
+                <v-row no-gutters justify="space-between" style="height: 25px;">
+                    <v-col cols="auto">
+                        <v-text class="text-caption text-grey-darken-2">{{roleInfo["Skills_Required"]}}</v-text>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-card-item>
+        <v-card-actions>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+        @click="show = !show"
+      ></v-btn>
+    </v-card-actions>
+
+    <v-expand-transition>
+      <div v-show="show">
+        <v-divider></v-divider>
+      </div>
+    </v-expand-transition>
       </v-card> 
     </div>
 
@@ -83,6 +116,7 @@
 
 <script>
 export default {
+    name: "ListingCard",
   props: {
     roleName: String,
     roleInfo: Object,
@@ -95,15 +129,7 @@ export default {
     // skillsPctMatch = getSkillsPctMatch(this.employeeSkills, this.employeeSkills);
     
     return {
-        // roleName: "Software Developer",
-        // roleInfo: {
-        //     "Department": "Information Technology",
-        //     "Openings": "2",
-        //     "Applicants": "4",
-        //     "Closing in": "11 Days",
-        //     "Full Time": "Full Time",
-        //     "Skills_Required":["Python", "HTML", "Javascript", "C++"]
-        // },
+        show: false,
         employeeSkills: ["Python", "C++"],
         skillsPctMatch: "",
         lastUpdated: "Posted 4 Days ago",

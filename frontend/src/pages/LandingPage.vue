@@ -1,6 +1,4 @@
 <template>
-  <v-app>
-    <NavBar id="NavBar"></NavBar>
     <v-container class="mt-12 fill-height align-start">
       <v-row>
         <v-col class="v-col-4 mt-8 ">
@@ -19,26 +17,19 @@
 
       </v-row>
     </v-container>
-
-
-    <Footer id="Footer"></Footer>
-  </v-app>
 </template>
 
 <script>
-// import ListingCard from "../components/ListingCard.vue";
-import NavBar from "../components/NavBar.vue";
 import ListingCard from "../components/Listing.vue";
-import Footer from "../components/Footer.vue";
 import Filter from "../components/Filter.vue";
 
 export default {
+  name: "LandingPage",
   components: {
     ListingCard,
-    NavBar,
-    Footer,
     Filter
-},  data() {
+},  
+data() {
     return {
       listings: [
         {
@@ -80,24 +71,6 @@ export default {
           },
           country: "Singapore",
         },
-        // {
-        //   listing_id: 1234,
-        //   listing_name: "Software Developer",
-        //   dept: "Tech",
-        //   country: "Singapore",
-        // },
-        // {
-        //   listing_id: 1234,
-        //   listing_name: "Software Engineer",
-        //   dept: "Tech",
-        //   country: "Singapore",
-        // },
-        // {
-        //   listing_id: 1234,
-        //   listing_name: "Software Engineer",
-        //   dept: "Tech",
-        //   country: "Singapore",
-        // },
       ],
     };
   },
