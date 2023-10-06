@@ -46,7 +46,7 @@ jobs:
       working-directory: backend
     # - run: npm run build --if-present
     - name: Backend Test
-      run: 
+      run: |
         if [ -e '*/test/*.test.js' ]; then
           npm run test
         else
@@ -63,7 +63,7 @@ jobs:
       working-directory: frontend
     # - run: npm run build --if-present
     - name: frontend Test
-      run: 
+      run: |
         if [ -e '*/test/*.test.js' ]; then
           npm run test
         else
