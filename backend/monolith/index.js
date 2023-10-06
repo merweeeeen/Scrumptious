@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 const role = require("./role");
 const role_skill = require("./roleskill");
 
-var allowedOrigins = ['http://127.0.0.1:5173'];
+var allowedOrigins = ['http://127.0.0.1:5173', 'http://localhost:5173'];
 app.use(cors({
   origin: function(origin, callback){
     // allow requests with no origin 

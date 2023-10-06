@@ -26,10 +26,11 @@
             variant="outlined"
             clearable
             label="Role Name"
-            :items="['Software Analysis', 'Administration', 'Consultant', 'Accountant', 'Software Architect', 'Business Analyst', 'Data Analyst', 'Data Scientist', 'Database Administrator', 'DevOps Engineer', 'Front End Developer', 'Full Stack Developer', 'Game Developer', 'Graphic Designer', 'Hardware Engineer', 'Information Security Analyst', 'IT Manager', 'Mobile Developer', 'Network Engineer', 'Product Manager', 'Project Manager', 'Quality Assurance Engineer', 'Software Developer', 'Software Engineer', 'Systems Administrator', 'Systems Analyst', 'UX Designer', 'Video Game Designer', 'Web Developer', 'Webmaster','Cyber Security','Tech Staff']"
+            :items=this.roleslist
           ></v-autocomplete>
         </v-col>
       </v-row>
+      <!-- <p>            :items="['Software Analysis', 'Administration', 'Consultant', 'Accountant', 'Software Architect', 'Business Analyst', 'Data Analyst', 'Data Scientist', 'Database Administrator', 'DevOps Engineer', 'Front End Developer', 'Full Stack Developer', 'Game Developer', 'Graphic Designer', 'Hardware Engineer', 'Information Security Analyst', 'IT Manager', 'Mobile Developer', 'Network Engineer', 'Product Manager', 'Project Manager', 'Quality Assurance Engineer', 'Software Developer', 'Software Engineer', 'Systems Administrator', 'Systems Analyst', 'UX Designer', 'Video Game Designer', 'Web Developer', 'Webmaster','Cyber Security','Tech Staff']"</p> -->
       <!-- <p>Role is: {{rolename}}</p> -->
       <v-row>
         <v-col cols="2" class="contentCenter">
@@ -49,7 +50,12 @@
           <p class="text">Skills Required</p>
         </v-col>
         <v-col cols="8">
-          <v-text-field v-model="skillsrequired" label="Skills Required" placeholder="edit me"></v-text-field>
+          <v-autocomplete
+            variant="solo"
+            clearable
+            tags
+            disabled
+          ></v-autocomplete>
         </v-col>
       </v-row>
       <v-row>
@@ -115,8 +121,9 @@
         vacancies: "",
         country: "",
         expirydate: "",
-
-        content: [],
+        
+        roleslist: [],
+        listtoskills: {},
 
         access: "HR"
         }
@@ -126,12 +133,22 @@
       axios.get('http://localhost:3003/rs')
       .then(response => {
         this.responseHolder = response.data
-        console.log(response.data)
-        console.log( "THIS IS DATA RECIEVED" + this.responseHolder)
-        this.content = this.responseHolder.body
+        // console.log(response.data)
+        console.log(this.responseHolder)
+        // this.content = this.responseHolder.body[0].role_name
         for (var i = 0; i < this.responseHolder.body.length; i++) {
-          console.log(this.responseHolder.body[i].rolename)
+          // this.content += [this.responseHolder.body[i].rolename]
+          console.log(this.responseHolder.body[i].role_name)
+          if (this.roleslist.indexOf(this.responseHolder.body[i].role_name) !== -1) {
+            this.listtoskills[this.responseHolder.body[i].role_name].push(this.responseHolder.body[i].skill_name)
+          } else {
+            console.log("not in list")
+            this.roleslist.push(this.responseHolder.body[i].role_name)
+            this.listtoskills[this.responseHolder.body[i].role_name] = [this.responseHolder.body[i].skill_name]
+          }
         }
+        console.log(this.listtoskills)
+        console.log(this.roleslist)
       })
       .catch(error => {
         console.log(error)
