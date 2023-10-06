@@ -1,5 +1,7 @@
 <template>
+    <v-app>
     <v-container class="mt-12 fill-height align-start">
+      <NavBar></NavBar>
       <v-row>
         <v-col class="v-col-4 mt-8 ">
           <Filter id="Filter"></Filter>
@@ -14,20 +16,26 @@
             </v-col>
           </v-row>
         </v-col>
-
       </v-row>
+      
     </v-container>
+    <Footer></Footer>
+    </v-app>
 </template>
 
 <script>
 import ListingCard from "../components/Listing.vue";
 import Filter from "../components/Filter.vue";
+import NavBar from "../components/NavBar.vue";
+import Footer from "../components/Footer.vue";
 
 export default {
   name: "LandingPage",
   components: {
     ListingCard,
-    Filter
+    Filter,
+    NavBar,
+    Footer,
 },  
 data() {
     return {
