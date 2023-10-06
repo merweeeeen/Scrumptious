@@ -4,11 +4,12 @@ const cors = require('cors');
 // app.use(cors());
 const port = 3003;
 const bodyParser = require("body-parser");
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 
 const role = require("./role");
 const role_skill = require("./roleskill");
+// const e = require("express");
 
 var allowedOrigins = ['http://127.0.0.1:5173', 'http://localhost:5173'];
 app.use(cors({
@@ -23,7 +24,7 @@ app.use(cors({
     }
     return callback(null, true);
   }
-}));
+}), bodyParser.json());
 
 /////////////////////////////////////////////////////
 ///////////////////// TEST //////////////////////////
@@ -91,28 +92,33 @@ app.get('/listing/:listingid?', async (req, res) => {
 // THIS IS POST /listing => TO CREATE A ROLE
 // {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 app.post('/listing', async (req, res) => {
+    console.log("POST /listing called") // This is to check if email parameter contails anything
     console.log(req.body)
-    role.createListing(req.body)
-    .then((results) => {
-      // console.log("Results: ", results);
-      const response = {
-        statusCode: 201,
-        body: results,
-        message:"Posted Data Successfully"
-      }
-      console.log(response)
-      res.status(201).send(response)
-    })
-    .catch((error) => {
-      // console.error("Error: ", error);
-      const response = {
-        statusCode: 400,
-        body: error,
-        message:"Post Unsuccessful"
-      }
-      console.log(response)
-      res.status(400).send(response)
-    });
+    if (req.body !== {}){
+      // console.log("Body found")
+      role.createListing(req.body)
+      .then((results) => {
+        // console.log("Results: ", results);
+        const response = {
+          statusCode: 201,
+          body: results,
+          message:"Posted Data Successfully"
+        }
+        console.log(response)
+        res.status(201).send(response)
+      })
+      .catch((error) => {
+        // console.error("Error: ", error);
+        const response = {
+          statusCode: 400,
+          body: error,
+          message:"Post Unsuccessful"
+        }
+        console.log(response)
+        res.status(400).send(response)
+      });
+    }
+    else{ console.log("No body found")}
 })
 /////////////////////////////////////////////////////
 ////////////// ROLE_SKILL MICROSERVICE //////////////
