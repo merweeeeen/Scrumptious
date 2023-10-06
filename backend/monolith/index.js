@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const cors = require('cors');
+// app.use(cors());
 const port = 3003;
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
@@ -8,6 +10,20 @@ app.use(bodyParser.json());
 const role = require("./role");
 const role_skill = require("./roleskill");
 
+var allowedOrigins = ['http://127.0.0.1:5173'];
+app.use(cors({
+  origin: function(origin, callback){
+    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 /////////////////////////////////////////////////////
 ///////////////////// TEST //////////////////////////
