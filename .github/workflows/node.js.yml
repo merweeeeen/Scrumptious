@@ -47,8 +47,8 @@ jobs:
     # - run: npm run build --if-present
     - name: Backend Test
       run: |
-        if [ -e '*/test/*.test.js' ]; then
-          npm run test
+        if find backend -type f -name '*.test.js' | grep -q .; then
+         npm run test
         else
           echo "No .test.js files found in test directory."
         fi
@@ -64,7 +64,7 @@ jobs:
     # - run: npm run build --if-present
     - name: frontend Test
       run: |
-        if [ -e '*/test/*.test.js' ]; then
+        if [ -e 'frontend/tests/*.test.js' ]; then
           npm run test
         else
           echo "No .test.js files found in test directory."
