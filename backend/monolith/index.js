@@ -94,7 +94,7 @@ app.get('/listing/:listingid?', async (req, res) => {
 app.post('/listing', async (req, res) => {
     console.log("POST /listing called") // This is to check if email parameter contails anything
     console.log(req.body)
-    if (req.body !== {}){
+    // if (req.body !== {}){
       // console.log("Body found")
       role.createListing(req.body)
       .then((results) => {
@@ -117,8 +117,8 @@ app.post('/listing', async (req, res) => {
         console.log(response)
         res.status(400).send(response)
       });
-    }
-    else{ console.log("No body found")}
+    // }
+    // else{ console.log("No body found")}
 })
 /////////////////////////////////////////////////////
 ////////////// ROLE_SKILL MICROSERVICE //////////////

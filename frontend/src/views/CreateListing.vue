@@ -76,7 +76,7 @@
         <v-col cols="8">
           <v-text-field 
             variant="outlined"
-            :rules="[v => v.indexOf('.') == -1 || 'Please key in a whole number only.']"
+            :rules="[v => v.indexOf('.') == -1 && v.indexOf('-')|| 'Please key in a positive whole number only.']"
             v-model="vacancies" type="number" placeholder="Please key in the number of vacancies">
           </v-text-field>
         </v-col>
@@ -210,7 +210,7 @@
         this.validform = false
         this.errormsg.push("Please fill in all the fields")
       }
-      else if (this.vacancies <= 0 || this.vacancies % 1 !== 0) {
+      if (Number(this.vacancies) <= 0 || Number(this.vacancies) % 1 !== 0) {
         this.validform = false
         this.errormsg.push("Vacancy should only be a positive whole number")
       }
