@@ -1,9 +1,9 @@
 <script setup>
-import LandingPage from './pages/LandingPage.vue'
+import ListingPage from './pages/ListingPage.vue'
 </script>
 
 <template>
-  <LandingPage />
+  <ListingPage />
 </template>
 
 <style scoped>
