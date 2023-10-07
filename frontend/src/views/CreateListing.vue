@@ -147,6 +147,7 @@
   export default {
     name: 'CreatePage',
     data() {
+      // in the future access needs to be a prop that is passed around
         return {
         responseHolder: {},
         jobtitle: "",
@@ -264,7 +265,7 @@
         return true
       } else {
         alert("You do not have access to this page")
-        window.location.href = 'http://127.0.0.1:5173/Scrumptious/'
+        this.$router.push('/')
         return false
       }
     },
