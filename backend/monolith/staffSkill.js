@@ -9,9 +9,9 @@ const con = mysql.createConnection({
 
 con.connect();
 
-function findStaff(id) {
+function findStaffSkill(id) {
   return new Promise((resolve, reject) => {
-    const query = `SELECT * FROM staff WHERE staff_id = ${id};`;
+    const query = `SELECT * FROM staff_skill WHERE staff_id = ${id};`;
     con.query(query, function (error, results, fields) {
       if (error) {
         reject(error);
@@ -23,5 +23,4 @@ function findStaff(id) {
   });
 }
 
-
-module.exports = { findStaff };
+module.exports = { findStaffSkill };
