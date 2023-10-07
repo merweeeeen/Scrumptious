@@ -123,6 +123,22 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      
+    <v-dialog
+      v-model="invalid"
+      width="auto"
+    >
+      <v-card>
+        <v-card-text>
+          <p style="text-align: center;">Please Try Again</p>
+          <v-list-item v-for="error in errormsg">{{error}}</v-list-item>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" block @click="clearError()">Okay</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </template>
   
   <script>
@@ -146,6 +162,9 @@
         listtoskills: {},
 
         dialog: false,
+        validform: false,
+        invalid: false,
+        errormsg: [],
 
         access: "HR"
         }
@@ -183,23 +202,34 @@
         return true
       }
     },
-    // validation(){
-    //   const valid = true
-    //   const errormsg = ""
-    //   if (this.isValid(this.jobtitle) == false || this.isValid(this.rolename) == false || this.isValid(this.jobdescription) == false || this.isValid(this.dept) == false || this.isValid(this.vacancies) == false || this.isValid(this.country) == false || this.isValid(this.expirydate) == false) {
-    //     valid = false
-    //   } else if (this.jobdescription.length > 250) {
-    //     valid = false
-    //     errormsg += "Job description is too long \n"
-    //   } else if (this.vacancies <= 0 || this.vacancies % 1 !== 0) {
-    //     valid = false
-    //     errormsg += "Vacancy should only be a positive whole number. \n"
-    //   }
-    // },
+    validation(){
+      this.validform = true
+      this.errormsg = []
+      if (this.isValid(this.jobtitle) == false || this.isValid(this.rolename) == false || this.isValid(this.jobdescription) == false || this.isValid(this.dept) == false || this.isValid(this.vacancies) == false || this.isValid(this.country) == false || this.isValid(this.expirydate) == false) {
+        this.validform = false
+        this.errormsg.push("Please fill in all the fields")
+      }
+      else if (this.vacancies <= 0 || this.vacancies % 1 !== 0) {
+        this.validform = false
+        this.errormsg.push("Vacancy should only be a positive whole number")
+      }
+      if (this.jobdescription.length > 250) {
+        this.validform = false
+        this.errormsg.push("Job description is too long")
+      }
+      if (Date.parse(this.expirydate) <= new Date()) {
+        this.validform = false
+        this.errormsg.push("Expiry date should be in the future")
+      }
+    },
     submit() {
+      this.validation()
       // console.log(this.isValid(this.jobtitle) + "\n" + this.isValid(this.rolename) + "\n" + this.isValid(this.jobdescription) + "\n" + this.isValid(this.dept) + "\n" + this.isValid(this.vacancies) + "\n" + this.isValid(this.country) + "\n" + this.isValid(this.expirydate))
-      if ( this.isValid(this.jobtitle) == false || this.isValid(this.rolename) == false || this.isValid(this.jobdescription) == false || this.isValid(this.dept) == false || this.isValid(this.vacancies) == false || this.isValid(this.country) == false || this.isValid(this.expirydate) == false) {
-        alert("Please fill in all the fields")
+      // if ( this.isValid(this.jobtitle) == false || this.isValid(this.rolename) == false || this.isValid(this.jobdescription) == false || this.isValid(this.dept) == false || this.isValid(this.vacancies) == false || this.isValid(this.country) == false || this.isValid(this.expirydate) == false) {
+      if (this.validform == false){
+        // alert(this.errormsg)
+        console.log(this.errormsg)
+        this.invalid = true
       } else {
         const bodyInfo = {
           listing_name: this.jobtitle,
@@ -225,6 +255,9 @@
         })
         
       }
+    },
+    clearError(){
+      this.invalid = false
     },
     checkAccess() {
       if (this.access == "HR") {
