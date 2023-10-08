@@ -1,4 +1,3 @@
-
 <template>
     <div class="d-flex align-center flex-column">  
 
@@ -31,11 +30,11 @@
         <v-text 
                 class="text-caption text-grey-darken-2"
             >
-            {{roleInfo["Department"]}} | {{roleInfo["Openings"]}} Openings | {{roleInfo["Applicants"]}} Applicants | {{roleInfo["Full Time"]}}
+            {{Department}} | {{num_openings}} Opening(s)
         </v-text>
 
         <!-- Skills Matched Percentage Bar -->
-        <v-container class="pa-0 mt-1">
+        <!-- <v-container class="pa-0 mt-1">
             <v-row no-gutters align="center" style="height: 25px;">
                 <v-text class="text-subtitle-1">Skills Matched</v-text>
             </v-row>
@@ -55,12 +54,12 @@
             </v-col>
             </v-row>
         </v-container>
-        
+    -->
         <!-- Last Updated -->
         <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px;">
                 <v-col cols="auto">
-                    <v-text class="text-caption text-grey-darken-2">{{ lastUpdated }}</v-text>
+                    <v-text class="text-caption text-grey-darken-2">{{ days_posted(created_at) }}</v-text>
                 </v-col>
             </v-row>
             <v-row>
@@ -119,11 +118,13 @@ export default {
     name: "ListingCard",
   props: {
     roleName: String,
-    roleInfo: Object,
-    employeeSkills: Array,
-    lastUpdated: String,
-    primaryColor: String,
-    secondaryColor: String
+    Department: String,
+    num_openings: Number,
+    created_at: String,
+    // employeeSkills: Array,
+    // lastUpdated: String,
+    // primaryColor: String,
+    // secondaryColor: String
   },
   data() {
     // skillsPctMatch = getSkillsPctMatch(this.employeeSkills, this.employeeSkills);
@@ -132,7 +133,6 @@ export default {
         show: false,
         employeeSkills: ["Python", "C++"],
         skillsPctMatch: "",
-        lastUpdated: "Posted 4 Days ago",
         primaryColor: "grey",
         secondaryColor: "grey-lighten-1"
     };
@@ -149,7 +149,22 @@ export default {
         // The line below updates the skillsPctMatch variable
         this.skillsPctMatch = Math.round((numSkillsMatched / roleSkills.length) * 100);
         return Math.round((numSkillsMatched / roleSkills.length) * 100);
-    }
+    },
+    days_posted(created_at) {
+        var today = new Date();
+        var created = new Date(created_at);
+        var diff = today - created;
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        if (days == 1) {
+            return "Posted " + days + " day ago";
+        }
+        else if (days == 0) {
+            return "Posted today";
+        }
+        else {
+        return "Posted " + days + " days ago";
+        }
+}
   }
 };
 
