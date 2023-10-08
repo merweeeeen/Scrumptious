@@ -7,7 +7,7 @@
         
         <v-app-bar-nav-icon :id="Menu"></v-app-bar-nav-icon>
 
-        <v-app-bar-title :id="Title">
+        <v-app-bar-title :id="Title" @click="this.$router.push({path: '/'})">
             SBRP
         </v-app-bar-title>
 
@@ -15,9 +15,11 @@
             <v-icon>mdi-magnify</v-icon>
         </v-btn> -->
 
-        <v-btn variant="text" :id="Link"> 
-            <!--^ @click="this.$router.push({path: '/newpage'})"> -->
-            <!-- Need to update router? -->
+        <v-btn 
+        variant="text"
+        @click="this.$router.push({path: '/create'})" 
+        :id="Link"
+        > 
             link!
         </v-btn>
 

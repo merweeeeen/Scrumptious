@@ -1,13 +1,6 @@
 <template>
   <v-app>
   <v-container class="mt-12 fill-height align-start">
-    <NavBar></NavBar>
-    <v-btn
-    @click="gotoEvent"
-    width="100%"
-    >
-      Create Listing
-    </v-btn>
     <v-row>
       <v-col class="v-col-4 mt-8 ">
         <Filter id="Filter"></Filter>
@@ -27,7 +20,6 @@
     </v-row>
     
   </v-container>
-  <Footer></Footer>
   </v-app>
 </template>
 

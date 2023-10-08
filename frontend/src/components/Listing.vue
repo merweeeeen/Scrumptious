@@ -78,7 +78,7 @@
         </v-container>
 
         </v-card-item>
-        <v-card-item class="mt-0 w-100" v-show="show">
+        <!-- <v-card-item class="mt-0 w-100" v-show="show">
             <v-container class="pa-0">
                 <v-row no-gutters justify="space-between" style="height: 25px;">
                     <v-col cols="auto">
@@ -91,7 +91,7 @@
                     </v-col>
                 </v-row>
             </v-container>
-        </v-card-item>
+        </v-card-item> -->
         <v-card-actions>
 
       <v-spacer></v-spacer>
@@ -138,18 +138,18 @@ export default {
     };
   },
   methods: {
-    getSkillsPctMatch(employeeSkills, roleSkills) {
-        var numSkillsMatched = 0;
-        for (var i = 0; i < employeeSkills.length; i++) {
-            if (roleSkills.includes(employeeSkills[i])) {
-                numSkillsMatched++;
-            }
-        }
+    // getSkillsPctMatch(employeeSkills, roleSkills) {
+    //     var numSkillsMatched = 0;
+    //     for (var i = 0; i < employeeSkills.length; i++) {
+    //         if (roleSkills.includes(employeeSkills[i])) {
+    //             numSkillsMatched++;
+    //         }
+    //     }
 
-        // The line below updates the skillsPctMatch variable
-        this.skillsPctMatch = Math.round((numSkillsMatched / roleSkills.length) * 100);
-        return Math.round((numSkillsMatched / roleSkills.length) * 100);
-    },
+    //     // The line below updates the skillsPctMatch variable
+    //     this.skillsPctMatch = Math.round((numSkillsMatched / roleSkills.length) * 100);
+    //     return Math.round((numSkillsMatched / roleSkills.length) * 100);
+    // },
     days_posted(created_at) {
         var today = new Date();
         var created = new Date(created_at);
