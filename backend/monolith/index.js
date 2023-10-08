@@ -10,7 +10,6 @@ const role = require("./role");
 const role_skill = require("./roleskill");
 const staffClass = require("./StaffClass");
 const staff = require("./Staff");
-const staffSkill = require("./staffSkill");
 // const e = require("express");
 
 var allowedOrigins = ["http://127.0.0.1:5173", "http://localhost:5173"];
@@ -189,35 +188,30 @@ app.get("/rs/:roleName?", async (req, res) => {
 
 // THIS IS GET /role => TO GET ALL Staff FOR FRONTEND
 app.get("/login/:staffId/:password/:access", async (req, res) => {
-  console.log(req.params.password)
   staff
     .findStaff(req.params.staffId)
     .then((results) => {
       // console.log("Results: ", results);
       if (results[0].password !== req.params.password) {
         const response = {
-          statusCode: 401,
+          statusCode: 200,
           message: "Wrong Password",
         };
-        res.status(401).send(response);
-        console.log('Wrong Password')
+        res.send(response);
         return;
       }
       if (results[0].access_rights < req.params.access) {
         const response = {
-          statusCode: 401,
-          message: "Wrong Access Rights",
+          statusCode: 200,
+          message: "Invalid Access",
         };
-        res.status(401).send(response);
-        console.log('Wrong Access')
+        res.send(response);
         return;
       }
-      console.log(results);
-      staffSkill.findStaffSkill(req.params.staffId).then((staffSkills) => {
+      staff.findStaffSkill(req.params.staffId).then((staffSkills) => {
         const skills = staffSkills.map((staffSkill) => {
           return staffSkill.skill_name;
         });
-        console.log(staffSkills)
         const returnStaffClass = new staffClass.Staff(
           results[0].staff_id,
           results[0].staff_fname,
@@ -244,9 +238,8 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
       const response = {
         statusCode: 400,
         body: error,
-        message: "Retrieval Unsuccessful",
+        message: "StaffID not found",
       };
-      console.log(response);
       res.status(400).send(response);
     });
 });
