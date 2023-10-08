@@ -9,7 +9,7 @@
         <v-row class="flex-column mt-6">
           <v-col  v-for="listing in listings" :key="listing.listing_id">
             <ListingCard
-              :roleName="listing.role_name"
+              :roleName="listing.listing_name"
               :Department="listing.dept"
               :num_openings="listing.num_openings"
               :created_at="listing.created_date"
