@@ -1,10 +1,13 @@
 <script setup>
-import LandingPage from './pages/LandingPage.vue'
+import NavBar from './components/NavBar.vue';
+import Footer from './components/Footer.vue';
 </script>
 
 <template>
-  <LandingPage />
+  <v-app>
+  <NavBar />
+  <router-view />
+  <Footer />
+</v-app>
 </template>
 
-<style scoped>
-</style>
