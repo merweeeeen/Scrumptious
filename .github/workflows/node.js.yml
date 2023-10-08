@@ -43,7 +43,7 @@ jobs:
         cache: 'npm'
         cache-dependency-path: backend/monolith/package-lock.json
     - run: npm ci
-      working-directory: backend
+      working-directory: backend/monolith
     # - run: npm run build --if-present
     - name: Backend Test
       run: |
@@ -52,7 +52,7 @@ jobs:
         else
           echo "No test files found."
         fi
-      working-directory: backend
+      working-directory: backend/monolith
     - name: Setup Frontend Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
