@@ -1,14 +1,14 @@
 <template>
-  <v-card style="margin: 25vh 37.5vw; width: 25vw; padding: 20px; height: 50vh">
+  <v-card class="card" style="padding:20px">
     Staff ID<v-text-field
       label="Staff ID"
-      style="width: 20vw"
+      style="width: 100%"
       v-model="staffId"
     ></v-text-field>
     Password<v-text-field
       type="password"
       label="Password"
-      style="width: 20vw"
+      style="width: 100%"
       v-model="password"
     ></v-text-field>
     <p>Logging in as:</p>
@@ -16,7 +16,7 @@
       v-model="selected"
       :items="items"
       density="compact"
-      style="width: 20vw"
+      style="width: 100%"
     ></v-select>
     <v-btn @click="login">Login</v-btn>
   </v-card>
@@ -80,3 +80,17 @@ export default {
   },
 };
 </script>
+
+<style>
+@media (min-width: 700px) {
+  .card {
+    margin: 25vh 37.5vw;
+  }
+}
+
+@media (max-width: 700px) {
+  .card {
+    margin: 10vh 20vw;
+  }
+}
+</style>
