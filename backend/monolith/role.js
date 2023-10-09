@@ -11,7 +11,7 @@ const con = mysql.createConnection({
 con.connect();
 
 
-async function readAllRole() {
+async function readAllListing() {
     return new Promise((resolve, reject) => {
       const query = `SELECT * FROM listing;`;
       con.query(query, function (error, results, fields) {
@@ -75,7 +75,7 @@ function updateRoleListing(theBody,listingid) {
 }
 
 // POST, should take in an object like this: {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
-function createRoleListing(theBody) {
+function createListing(theBody) {
     return new Promise((resolve, reject) => {
         const listingName = theBody.listing_name;
         const roleName = theBody.role_name;
