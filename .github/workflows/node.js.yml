@@ -47,7 +47,7 @@ jobs:
     # - run: npm run build --if-present
     - name: Backend Test
       run: |
-        if (find . -type f -name '*.test.js' -o -name '*.spec.js') | grep -q .; then
+        if (find . -type f -name '*.test.js' -o -name '*.spec.js') | grep -q ; then
           npm run test
         else
           echo "No test files found."
