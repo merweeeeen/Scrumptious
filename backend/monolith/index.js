@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 
 const role = require("./role");
 const role_skill = require("./roleskill");
+const staff_skill = require("./staffskill")
 const staffClass = require("./StaffClass");
 const staff = require("./Staff");
 // const e = require("express");
@@ -243,6 +244,67 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
       res.status(400).send(response);
     });
 });
+
+
+
+/////////////////////////////////////////////////////
+////////////// STAFF_SKILL MICROSERVICE /////////////
+/////////////////////////////////////////////////////
+
+
+app.get("/ss", async (req, res) => {
+  staff_skill
+    .readAllStaffSkills()
+    .then((results) => {
+      // console.log("Results: ", results);
+      const response = {
+        statusCode: 200,
+        body: results,
+        message: "Retrieved Successfully",
+      };
+      console.log(response);
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      // console.error("Error: ", error);
+      const response = {
+        statusCode: 400,
+        body: error,
+        message: "Retrieval Unsuccessful",
+      };
+      console.log(response);
+      res.status(400).send(response);
+    });
+});
+
+app.get("/ss/:staffId?", async (req, res) => {
+  console.log(req.params.staffId);
+  staff_skill
+    .readSkillbyStaffId(req.params.staffId)
+    .then((results) => {
+      // console.log("Results: ", results);
+      const response = {
+        statusCode: 200,
+        body: results,
+        message: "Retrieved Successfully",
+      };
+      console.log(response);
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      // console.error("Error: ", error);
+      const response = {
+        statusCode: 400,
+        body: error,
+        message: "Retrieval Unsuccessful",
+      };
+      console.log(response);
+      res.status(400).send(response);
+    });
+});
+
+
+
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 app.listen(port, () => {
