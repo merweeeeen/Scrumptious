@@ -167,7 +167,7 @@
         invalid: false,
         errormsg: [],
 
-        access: "HR"
+        access: this.$store.state.access
         }
     },
     methods: {
