@@ -81,7 +81,7 @@
                             <p class="text-h6 text--primary">
                                 Skillset Required
                             </p>
-                            <v-chip v-for="skill in listing.description" class="ma-1"
+                            <v-chip v-for="skill in listingSkills" class="ma-1"
                                     variant='tonal'
                                     :color="employeeSkills.includes(skill) ? 'green-darken-3' : 'default'"
                             >
@@ -113,60 +113,72 @@ export default {
 
     data() {
         return {
-        listing: {
-            listing_id: 1234,
-            listing_name: "Software Engineer",
-            country: "Singapore",
-            info: {
-                "Department": "Information Technology",
-                "Openings": "2",
-                "Applicants": "4",
-                "Closing in": "11 Days",
-                "Full Time": "Full Time",
-                "Skills_Required":["Python", "HTML", "Javascript", "C++"],
-                "Description": "Lorem ipsum dolor sit amet, consectet adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla."
-            },
-            },
-        listing_id: 12,
-        // listing_id: this.$route.params.listing_id,
-        // listing: {},
+        listing: {},
+        listing_id: this.$route.params.listing_id,
+        listingSkills: [],
         primaryColor: "black",
         employeeSkills: ["Python", "C++"],
         };
     },
 
     methods: {
-        async getRoleSkills() {
+        async getListing() {
             axios.get('http://localhost:3003/listing')
             .then(response => {
-                // this.responseHolder = response.data
                 var data = response.data.body
-                // console.log(response.data.body)
-                // console.log(data.body.length)
-                
+                // console.log(data)
                 for (var i = 0; i < data.length; i++) {
-                
-                if (data[i].listing_id == this.listing_id) {
-                    this.listing = data[i]
-                    console.log(data[i])
-                }
+                    if (data[i].listing_id == this.listing_id) {
+                        this.listing = data[i]
+                        // console.log(data[i])
+                    }
                 }
             })
             .catch(error => {
                 console.log(error)
             })
-            },
-            isValid(value){
-            if (value == "" || value == null || value == undefined || value == []) {
-                return false
-            } else {
-                return true
-            }
         },
+
+        async getRoleSkills() {
+            axios.get('http://localhost:3003/rs')
+            .then(response => {
+                var data = response.data.body
+                // console.log(data)
+                var requiredSkills = []
+                
+                for (var i = 0; i < data.length; i++) {
+                    // console.log(data[i].role_name)
+                    if (data[i].role_name == this.listing.role_name) {
+                        requiredSkills.push(data[i].skill_name)
+                    }
+                }
+                this.listingSkills = requiredSkills
+                // console.log(this.listingSkills)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        },
+
+        async getEmployeeSkills() {
+            axios.get('http://localhost:3003/')
+            .then(response => {
+                var data = response //.data.body
+                console.log(data)
+                var employeeSkills = []
+            
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        }
+            
     },
 
-    mounted() {
-        this.getRoleSkills()
+    created() {
+        this.getListing(),
+        this.getRoleSkills(),
+        this.getEmployeeSkills()
     },
 };
 

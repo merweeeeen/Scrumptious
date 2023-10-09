@@ -15,7 +15,7 @@
               :created_at="listing.created_date"
               :open="listing.open"
               :access=this.$store.state.access
-
+              @click.native="gotoListing(listing)"
             ></ListingCard>
           </v-col>
         </v-row>
@@ -62,6 +62,10 @@ data() {
               this.$router.push('/login')
             }
           },
+          gotoListing(listing) {
+            // this.$router.push('/' + listing.id)
+            this.$router.push({ name: 'ListingPage', params: { listing_id: listing.listing_id } })
+          }
       },
       mounted() {
           this.gotoLogin();
