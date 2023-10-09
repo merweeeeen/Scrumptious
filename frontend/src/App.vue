@@ -1,14 +1,13 @@
 <script setup>
-// import NavBar from './components/NavBar.vue';
-// import Footer from './components/Footer.vue';
-import ListingPage from './pages/ListingPage.vue'
+import NavBar from './components/NavBar.vue';
+import Footer from './components/Footer.vue';
 </script>
 
 <template>
   <v-app>
-  <!-- <NavBar /> -->
+  <NavBar />
   <router-view />
-  <!-- <Footer /> -->
+  <Footer />
 </v-app>
   <ListingPage />
 </template>

@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="home mt-15 fill-height">
       <h1 style="color: blueviolet; display:block">Create a role listing (as a HR)</h1>
       <!-- <p>This is the home page of my Vue.js application.</p> -->
       <v-container class="containerStyle">
@@ -167,7 +167,7 @@
         invalid: false,
         errormsg: [],
 
-        access: "HR"
+        access: this.$store.state.access
         }
     },
     methods: {
