@@ -21,16 +21,16 @@
                                 {{listing.listing_name}}
                             </p>
                             <p class="text-h6 text--primary">
-                                {{listing.info["Department"]}}
+                                {{listing.dept}}
                             </p>
                             <p class="text-h7 text--primary">
-                                {{listing.info["Openings"]}} Openings | {{listing.info["Applicants"]}} Applicant(s)
+                                {{listing.num_openings}} Openings | {{listing.open}} Applicant(s)
                             </p>
                             <p class="text-h7 text--primary">
-                                Job Type: {{listing.info["Full Time"]}}
+                                Country: {{listing.country}}
                             </p>
                             <p class="text-h7 text--primary">
-                                Closing in: {{listing.info["Closing in"]}} 
+                                Closing on: {{listing.expiry_date}} 
                             </p>
                         </v-card-text>
                         <v-row class="" justify="space-between">
@@ -75,13 +75,13 @@
                                 Job Description
                             </p>
                             <p class="text-h7 text--primary">
-                                {{listing.info["Description"]}} 
+                                {{listing.description}} 
                             </p>
                             <br>
                             <p class="text-h6 text--primary">
                                 Skillset Required
                             </p>
-                            <v-chip v-for="skill in listing.info['Skills_Required']" class="ma-1"
+                            <v-chip v-for="skill in listing.description" class="ma-1"
                                     variant='tonal'
                                     :color="employeeSkills.includes(skill) ? 'green-darken-3' : 'default'"
                             >
@@ -127,7 +127,8 @@ export default {
                 "Description": "Lorem ipsum dolor sit amet, consectet adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla."
             },
             },
-        listing_id: this.$route.params.listing_id,
+        listing_id: 12,
+        // listing_id: this.$route.params.listing_id,
         // listing: {},
         primaryColor: "black",
         employeeSkills: ["Python", "C++"],
@@ -139,21 +140,17 @@ export default {
             axios.get('http://localhost:3003/listing')
             .then(response => {
                 // this.responseHolder = response.data
-                console.log(response.data)
-                data = response.data
+                var data = response.data.body
+                // console.log(response.data.body)
+                // console.log(data.body.length)
+                
                 for (var i = 0; i < data.length; i++) {
                 
-                console.log(data[i])
-                if (this.roleslist.indexOf(this.responseHolder.body[i].role_name) !== -1) {
-                    this.listtoskills[this.responseHolder.body[i].role_name].push(this.responseHolder.body[i].skill_name)
-                } else {
-                    console.log("not in list")
-                    this.roleslist.push(this.responseHolder.body[i].role_name)
-                    this.listtoskills[this.responseHolder.body[i].role_name] = [this.responseHolder.body[i].skill_name]
+                if (data[i].listing_id == this.listing_id) {
+                    this.listing = data[i]
+                    console.log(data[i])
                 }
                 }
-                console.log(this.listtoskills)
-                console.log(this.roleslist)
             })
             .catch(error => {
                 console.log(error)
