@@ -9,6 +9,7 @@
             variant="outlined"
             onmouseover="this.style.boxShadow='0 0 10px 0 rgba(0,0,0,0.5)'; show=true"
             onmouseleave="this.style.boxShadow='none';show=false;"
+            v-if="open == 1"
         > 
         <!-- Role Name and when done, bookmark/3 dot icon -->
         <v-card-item class="mt-0 w-100">
@@ -78,29 +79,91 @@
         </v-container>
 
         </v-card-item>
-        <!-- <v-card-item class="mt-0 w-100" v-show="show">
-            <v-container class="pa-0">
-                <v-row no-gutters justify="space-between" style="height: 25px;">
-                    <v-col cols="auto">
-                        <v-text class="text-caption text-grey-darken-2">Skills Required</v-text>
-                    </v-col>
-                </v-row>
-                <v-row no-gutters justify="space-between" style="height: 25px;">
-                    <v-col cols="auto">
-                        <v-text class="text-caption text-grey-darken-2">{{roleInfo["Skills_Required"]}}</v-text>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-card-item> -->
-        <v-card-actions>
 
-      <v-spacer></v-spacer>
+    <v-expand-transition>
+      <div v-show="show">
+        <v-divider></v-divider>
+      </div>
+    </v-expand-transition>
+      </v-card> 
+      <v-card 
+            width="100%"
+            min-width="400px"
+            color="red" 
+            variant="flat"
+            onmouseover="this.style.boxShadow='0 0 10px 0 rgba(0,0,0,0.5)'; show=true"
+            onmouseleave="this.style.boxShadow='none';show=false;"
+            v-if="open == 0 && access == 'HR'"
+        > 
+        <!-- Role Name and when done, bookmark/3 dot icon -->
+        <v-card-item class="mt-0 w-100">
+          <v-container class="pa-0 mt-1">
+            <v-row no-gutters align="center" style="height: 25px;">
+                <v-col class="pa-0">
+                    <v-card-title>{{roleName}}</v-card-title>
+                </v-col>
+                
+                <!-- This should be where the bookmark/3 dot icon should go -->
+                <v-col class="pa-0">
+                    <!-- <v-icon icon="fa:fas fa-list"></v-icon> -->
+                    <!-- <v-text class="text-caption text-grey-darken-2">More</v-text> -->
+                </v-col>
+            </v-row>
+        </v-container>
 
-      <v-btn
-        :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-        @click="show = !show"
-      ></v-btn>
-    </v-card-actions>
+        <!-- Info about role: Department, Openings, Applicants, Full Time -->
+        <v-text 
+                class="text-caption"
+            >
+            {{Department}} | {{num_openings}} Opening(s)
+        </v-text>
+
+        <!-- Skills Matched Percentage Bar -->
+        <!-- <v-container class="pa-0 mt-1">
+            <v-row no-gutters align="center" style="height: 25px;">
+                <v-text class="text-subtitle-1">Skills Matched</v-text>
+            </v-row>
+            <v-row no-gutters align="center" style="height: 25px;">
+            <v-col class="pa-1">
+                <v-sheet class="rounded-5 bg-transparent" style="border: solid 1px black; border-radius: 10px;">
+                    <v-progress-linear 
+                        v-bind:model-value="skillsPctMatch"
+                        v-bind:bg-color="primaryColor"
+                        v-bind:color="secondaryColor"
+                        rounded
+                        :height="15"
+                    >
+                    <v-text class="text-caption">{{getSkillsPctMatch(this.employeeSkills, this.roleInfo.Skills_Required)}}%</v-text>
+                </v-progress-linear>
+                </v-sheet>
+            </v-col>
+            </v-row>
+        </v-container>
+    -->
+        <!-- Last Updated -->
+        <v-container class="pa-0">
+            <v-row no-gutters justify="space-between" style="height: 25px;">
+                <v-col cols="auto">
+                    <v-text class="text-caption">{{ days_posted(created_at) }}</v-text>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col>
+                    <v-btn 
+                    width="100%"
+                    height="100%"
+                    density="comfortable"
+                    size="large"
+                    variant="flat"
+                    v-bind:color="primaryColor"
+                    id="apply"
+                    disabled
+                    >Apply</v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
+
+        </v-card-item>
 
     <v-expand-transition>
       <div v-show="show">
@@ -121,6 +184,8 @@ export default {
     Department: String,
     num_openings: Number,
     created_at: String,
+    open: Number,
+    access: String,
     // employeeSkills: Array,
     // lastUpdated: String,
     // primaryColor: String,
@@ -134,7 +199,8 @@ export default {
         employeeSkills: ["Python", "C++"],
         skillsPctMatch: "",
         primaryColor: "grey",
-        secondaryColor: "grey-lighten-1"
+        secondaryColor: "grey-lighten-1",
+        // access: (access) => store.commit("access", access)
     };
   },
   methods: {
@@ -165,7 +231,10 @@ export default {
         return "Posted " + days + " days ago";
         }
 }
-  }
+  },
+    mounted() {
+        console.log(this.access);
+    }
 };
 
 function getSkillsPctMatch(employeeSkills, roleSkills) {

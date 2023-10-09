@@ -13,6 +13,9 @@
               :Department="listing.dept"
               :num_openings="listing.num_openings"
               :created_at="listing.created_date"
+              :open="listing.open"
+              :access=this.$store.state.access
+
             ></ListingCard>
           </v-col>
         </v-row>
@@ -51,12 +54,17 @@ data() {
           async getAllListings() {
               axios.get("http://localhost:3003/listing")
               .then((response) => {
-                  console.log(response.data.body);
                   this.listings = response.data.body;
               })
           },
+          gotoLogin() {
+            if (this.$store.state.access === "") {
+              this.$router.push('/login')
+            }
+          },
       },
       mounted() {
+          this.gotoLogin();
           this.getAllListings();
       },
   }
