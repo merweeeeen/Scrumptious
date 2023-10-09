@@ -41,7 +41,7 @@ function readOneListing(listingid) {
 }
 
 //PUT, should take in object like this: {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"msia","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
-function updateRoleListing(theBody,listingid) {
+function updateListing(theBody,listingid) {
   return new Promise((resolve, reject) => {
       const listingName = theBody.listing_name;
       const roleName = theBody.role_name;
@@ -107,4 +107,4 @@ function createListing(theBody) {
   }
 // createRoleListing({listing_name:"ListName1",role_id:1, role_name:"RoleName1",dept:"asdas",country:"sg",num_openings:2,expiry_date:"2023-07-04",open:1, desc:"desc1"})
 
-  module.exports = { readAllRole, readOneListing, createRoleListing, updateRoleListing };
+  module.exports = { readAllListing, readOneListing, createListing, updateListing };

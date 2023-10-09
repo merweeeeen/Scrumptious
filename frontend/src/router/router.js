@@ -3,6 +3,8 @@ import {createRouter, createWebHistory} from 'vue-router';
 import test from '../views/test.vue';
 import CreateListing from '../views/CreateListing.vue';
 import Login from '../views/Login.vue';
+import Update from '../views/UpdateListing.vue';
+
 
 const routes = [
       {
@@ -19,11 +21,16 @@ const routes = [
         path: '/create',
         name: 'CreatePage',
         component: CreateListing,
+      },
+      {
+        path: '/update/:id?',
+        name: 'UpdatePage',
+        component: Update,
       }
     ]
 
 const router = createRouter({
-    history: createWebHistory('/Scrumptious'),
+  history: createWebHistory('/Scrumptious'),
   routes,
 });
 

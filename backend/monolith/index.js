@@ -43,66 +43,9 @@ app.get("/", (req, res) => {
 /////////////////////////////////////////////////////
 
 // THIS IS GET /role => TO GET ALL ROLES FOR FRONTEND
-app.get('/role', async (req, res) => {
-    role.readAllRole()
-  .then((results) => {
-    console.log("Results: ", results);
-    res.send(results)
-  })
-  .catch((error) => {
-    console.error("Error: ", error);
-  });
-    // console.log("printing results from calling the thing" + response)
-    // res.send(results)
-})
-
-// THIS IS GET /role/:roleid? => TO GET ONE ROLE FOR FRONTEND
-app.get('/role/:roleid?', async (req, res) => {
-    console.log(req.params.roleid)
-    role.readOneRole(req.params.roleid)
-  .then((results) => {
-    console.log("Results: ", results);
-    res.send(results)
-  })
-  .catch((error) => {
-    console.error("Error: ", error);
-  });
-})
-
-// THIS IS GET /listing/:listingid? => TO GET ONE ROLE FOR FRONTEND
-app.get('/listing/:listingid?', async (req, res) => {
-    console.log(req.params.listingid)
-    role.readOneListing(req.params.listingid)
-  .then((results) => {
-    console.log("Results: ", results);
-    res.send(results)
-  })
-  .catch((error) => {
-    console.error("Error: ", error);
-  });
-})
-
-// THIS IS PUT /listing => TO update A ROLE
-// {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
-app.put('/listing/:listingid?', async (req, res) => {
-  console.log(req.body)
-  console.log(req.params.listingid)
-  role.updateRoleListing(req.body, req.params.listingid)
-  .then((results) => {
-      console.log("Results: ", results);
-      res.status(201).send("Update Successful");
-      // res.send(results)
-  })
-  .catch((error) => {
-      console.error("Error: ", error);
-  });
-})
-
-// THIS IS POST /listing => TO CREATE A ROLE
-// {"listing_name":"ListName1","role_id":1,"role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
-app.post('/listing', async (req, res) => {
-    console.log(req.body)
-    role.createRoleListing(req.body)
+app.get("/listing", async (req, res) => {
+  role
+    .readAllListing()
     .then((results) => {
       // console.log("Results: ", results);
       const response = {
@@ -132,6 +75,15 @@ app.get("/listing/:listingid?", async (req, res) => {
     .readOneListing(req.params.listingid)
     .then((results) => {
       // console.log("Results: ", results);
+      if (results.length == 0){
+        const response = {
+          statusCode: 401,
+          body: results,
+          message: "Record not found"
+        }
+        console.log(response);
+        res.status(400).send(response);
+      }
       const response = {
         statusCode: 200,
         body: results,
@@ -151,6 +103,35 @@ app.get("/listing/:listingid?", async (req, res) => {
       res.status(400).send(response);
     });
 });
+
+// THIS IS PUT /listing => TO update A ROLE
+// {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
+app.put('/listing/:listingid?', async (req, res) => {
+  console.log(req.body)
+  console.log(req.params.listingid)
+  role.updateListing(req.body, req.params.listingid)
+  .then((results) => {
+      console.log("Results: ", results);
+      res.status(200).send({
+        statusCode: 200,
+        body: results,
+        message: "Update Successful"
+      })
+      // res.status(201).send("Update Successful");
+      // res.send(results)
+  })
+  .catch((error) => {
+    const response = {
+      statusCode: 400,
+      body: error,
+      message: "Update Unsuccessful",
+    };
+    console.log(response);
+    res.status(400).send(response);
+    console.error("Error: ", error);
+  });
+})
+
 
 // THIS IS POST /listing => TO CREATE A ROLE
 // {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
