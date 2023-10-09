@@ -69,4 +69,5 @@ jobs:
         else
           npm run test
         fi
+        
       working-directory: frontend
