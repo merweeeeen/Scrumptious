@@ -103,6 +103,7 @@
 <script>
 import NavBar from "../components/NavBar.vue";
 import Footer from "../components/Footer.vue";
+import axios from 'axios'
 
 export default {
     components: {
@@ -126,9 +127,49 @@ export default {
                 "Description": "Lorem ipsum dolor sit amet, consectet adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla."
             },
             },
+        listing_id: this.$route.params.listing_id,
+        // listing: {},
         primaryColor: "black",
         employeeSkills: ["Python", "C++"],
         };
+    },
+
+    methods: {
+        async getRoleSkills() {
+            axios.get('http://localhost:3003/listing')
+            .then(response => {
+                // this.responseHolder = response.data
+                console.log(response.data)
+                data = response.data
+                for (var i = 0; i < data.length; i++) {
+                
+                console.log(data[i])
+                if (this.roleslist.indexOf(this.responseHolder.body[i].role_name) !== -1) {
+                    this.listtoskills[this.responseHolder.body[i].role_name].push(this.responseHolder.body[i].skill_name)
+                } else {
+                    console.log("not in list")
+                    this.roleslist.push(this.responseHolder.body[i].role_name)
+                    this.listtoskills[this.responseHolder.body[i].role_name] = [this.responseHolder.body[i].skill_name]
+                }
+                }
+                console.log(this.listtoskills)
+                console.log(this.roleslist)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            },
+            isValid(value){
+            if (value == "" || value == null || value == undefined || value == []) {
+                return false
+            } else {
+                return true
+            }
+        },
+    },
+
+    mounted() {
+        this.getRoleSkills()
     },
 };
 
