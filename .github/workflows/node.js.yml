@@ -47,10 +47,10 @@ jobs:
     # - run: npm run build --if-present
     - name: Backend Test
       run: |
-        if (find . -type f -name '*.test.js' -o -name '*.spec.js') | grep -q ; then
-          npm run test
-        else
+        if find . -type f \( -name '*.test.js' -o -name '*.spec.js' \) -exec false {} +; then
           echo "No test files found."
+        else
+          npm run test
         fi
       working-directory: backend/monolith
     - name: Setup Frontend Node.js ${{ matrix.node-version }}
@@ -64,9 +64,9 @@ jobs:
     # - run: npm run build --if-present
     - name: frontend Test
       run: |
-        if (find . -type f -name '*.test.js' -o -name '*.spec.js') | grep -q .; then
-         npm run test
-        else
+        if find . -type f \( -name '*.test.js' -o -name '*.spec.js' \) -exec false {} +; then
           echo "No test files found."
+        else
+          npm run test
         fi
       working-directory: frontend
