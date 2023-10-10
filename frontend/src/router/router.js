@@ -23,7 +23,7 @@ const routes = [
         component: CreateListing,
       },
       {
-        path: '/update/:id?',
+        path: '/update',
         name: 'UpdatePage',
         component: Update,
       }

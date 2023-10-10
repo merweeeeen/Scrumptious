@@ -167,7 +167,8 @@
         invalid: false,
         errormsg: [],
 
-        access: "HR"
+        access: "HR",
+        idparam: this.$route.query.id
         }
     },
     methods: {
@@ -176,7 +177,9 @@
         // if (this.$route.params.update.listingid != null){
         //     console.log(this.$route.params.update.listingid);
         // }
-        axios.get('http://localhost:3003/listing/21')
+        // const idparam = this.$route.query.id;
+        console.log(this.idparam);
+        axios.get('http://localhost:3003/listing/' + this.idparam)
         .then(response => {
             this.responseHolder = response.data
             console.log(response.data)
@@ -266,7 +269,7 @@
         }
         // const jsonInfo = JSON.stringify(bodyInfo)
         console.log(bodyInfo)
-        axios.put('http://localhost:3003/listing/21', bodyInfo)
+        axios.put('http://localhost:3003/listing/'+ this.idparam, bodyInfo)
         .then(response => {
           console.log(response)
           // alert("Role Listing created successfully!")
