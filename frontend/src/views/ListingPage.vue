@@ -5,7 +5,9 @@
         <NavBar id="NavBar"></NavBar>
 
         <!-- Start of Content -->
-        <v-container class="mt-16 align-start"> <!--fill-height-->
+        <div class="d-flex justify-center">
+        <div class="maxwidth">
+        <v-container class="mt-16 align-start w-100"> <!--fill-height-->
             <v-row class="ma-0 w-100">
                 <v-col class="py-0">
 
@@ -17,9 +19,30 @@
                         margin="10px"
                     > 
                         <v-card-text>
-                            <p class="text-h4 text--primary">
-                                {{listing.listing_name}}
-                            </p>
+                            <v-row class="d-flex align-center">
+                                <v-col>
+                                    <p class="text-h4 text--primary">
+                                        {{listing.listing_name}}
+                                    </p>
+                                </v-col>
+
+                                <v-col class="d-flex align-center py-0 h-100">
+                                    <v-icon class="align-center w-100 justify-end"  
+                                    size="x-large"
+                                    @click="toggleSaved"
+                                    v-if="saved"
+                                    >
+                                    mdi-heart
+                                    </v-icon>
+                                    <v-icon class="align-center w-100 justify-end"  
+                                    size="x-large"
+                                    @click="toggleSaved"
+                                    v-else
+                                    >
+                                    mdi-heart-outline
+                                    </v-icon>
+                                </v-col>
+                            </v-row>
                             <p class="text-h6 text--primary">
                                 {{listing.dept}}
                             </p>
@@ -37,7 +60,7 @@
                             <v-col class="pt-0">
                                 <v-card-text>
                                 <p class="text-h7 text--primary">
-                                    Posted 4 Days Ago 
+                                    {{days_posted(listing.created_date)}} 
                                 </p>
                                 </v-card-text>
                             </v-col>
@@ -93,6 +116,8 @@
                 </v-col>
             </v-row>
         </v-container>
+        </div>
+        </div>
     
         <!-- Footer -->
         <Footer id="Footer"></Footer>
@@ -104,8 +129,19 @@
 import NavBar from "../components/NavBar.vue";
 import Footer from "../components/Footer.vue";
 import axios from 'axios'
+import { useStore } from "vuex";
+
 
 export default {
+
+    setup() {
+        const store = useStore();
+        return {
+        access: (access) => store.commit("access", access),
+        skills: (skills) => store.commit("skills", skills),
+        };
+    },
+
     components: {
         NavBar,
         Footer,
@@ -117,30 +153,27 @@ export default {
         listing_id: this.$route.params.listing_id,
         listingSkills: [],
         primaryColor: "black",
-        employeeSkills: ["Python", "C++"],
+        employeeSkills: [],
+        savedListings: ["12", "13", "14"],
+        saved: false,
         };
     },
 
     methods: {
         async getListing() {
-            axios.get('http://localhost:3003/listing')
+            axios.get('http://localhost:3003/listing/' + this.listing_id )
             .then(response => {
                 var data = response.data.body
                 // console.log(data)
-                for (var i = 0; i < data.length; i++) {
-                    if (data[i].listing_id == this.listing_id) {
-                        this.listing = data[i]
-                        // console.log(data[i])
-                    }
-                }
+                this.listing = data[0]
             })
             .catch(error => {
                 console.log(error)
             })
         },
 
-        async getRoleSkills() {
-            axios.get('http://localhost:3003/rs')
+        async getRoleSkills() { // not sure why but the rolename endpoint not really working out
+            axios.get('http://localhost:3003/rs/')
             .then(response => {
                 var data = response.data.body
                 // console.log(data)
@@ -161,16 +194,47 @@ export default {
         },
 
         async getEmployeeSkills() {
-            axios.get('http://localhost:3003/')
-            .then(response => {
-                var data = response //.data.body
-                console.log(data)
-                var employeeSkills = []
-            
-            })
-            .catch(error => {
-                console.log(error)
-            })
+            this.employeeSkills = this.$store.state.skills
+            // console.log(this.$store.state.skills);
+        },
+
+        days_posted(created_at) {
+            var today = new Date();
+            var created = new Date(created_at);
+            var diff = today - created;
+            var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            if (days == 1) {
+                return "Posted " + days + " day ago";
+            }
+            else if (days == 0) {
+                return "Posted today";
+            }
+            else {
+            return "Posted " + days + " days ago";
+            }
+        },
+
+        getSaved() {
+            if (this.savedListings.includes(this.listing_id)) {
+                this.saved = true
+                // console.log(this.saved)
+            }
+            else {
+                this.saved = false
+            }
+        },
+
+        toggleSaved() {
+            this.saved = !this.saved
+            if (this.saved) {
+                this.savedListings.push(this.listing_id)
+                console.log(this.savedListings)
+            }
+            else {
+                var index = this.savedListings.indexOf(this.listing_id)
+                this.savedListings.splice(index, 1)
+                console.log(this.savedListings)
+            }
         }
             
     },
@@ -178,7 +242,8 @@ export default {
     created() {
         this.getListing(),
         this.getRoleSkills(),
-        this.getEmployeeSkills()
+        this.getEmployeeSkills(),
+        this.getSaved()
     },
 };
 
@@ -186,5 +251,8 @@ export default {
 
 <!-- Style -->
 <style scoped>
-
+    .maxwidth {
+        width: 100%;
+        max-width: 800px;
+    }
 </style>
