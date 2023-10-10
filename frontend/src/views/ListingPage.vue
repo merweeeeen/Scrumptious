@@ -102,7 +102,7 @@
                             </p>
                             <br>
                             <p class="text-h6 text--primary">
-                                Skillset Required
+                                Skills Required
                             </p>
                             <v-chip v-for="skill in listingSkills" class="ma-1"
                                     variant='tonal'
