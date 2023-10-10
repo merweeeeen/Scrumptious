@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
           },
         }),
       ],
-      base: "/Scrumptious",
+      base: "/Scrumptious/",
       test: {
         globals: true,
         coverage: {
