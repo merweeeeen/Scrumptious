@@ -17,7 +17,7 @@
             width="700"
         >
             <v-card>
-            <v-card-title>Apply for role {{roleName}}</v-card-title>
+            <v-card-title>Apply for role: {{this.roleName}}</v-card-title>
             <v-card-item>
                 <div>
                     <!--Staff's personal details so they can check that the dettails-->
@@ -26,22 +26,22 @@
                         Contact Info
                     </div>
                     <div class="text">
-                        {{ staffName }}
+                        {{ this.staff._Staff_FName }} {{ this.staff._Staff_LName }}
                     </div>
                     <div class="text-caption">
-                        {{ Department }} | {{ currRole }}
+                        {{ this.staff._Dept }} | {{ currRole }}
                     </div>
                     <div class="text-caption">
-                        E-mail address: {{ email }} | Phone number: {{phone}}
+                        E-mail address: {{ this.staff._Email }} | Phone number: {{phone}}
                     </div>
 
 
-                    <div class="text-h6">
+                    <!-- <div class="text-h6">
                         Resume
-                    </div>
-                    <div class="text-caption mb-1">
+                    </div> -->
+                    <!-- <div class="text-caption mb-1">
                         Be sure to include an updated resume*
-                    </div>
+                    </div> -->
                     
                     <!--Select previously used resume-->
                     <!-- <v-combobox
@@ -63,14 +63,14 @@
                     </v-btn> -->
 
                     <!--for staff to upload an updated resume-->
-                    <v-file-input
+                    <!-- <v-file-input
                         chips
                         clearable
                         accept="image/png, image/jpeg, image/bmp, application/pdf"
                         label="Upload Resume"
                         density = "compact"
                         color="deep-purple-accent-4"
-                    ></v-file-input>
+                    ></v-file-input> -->
                 </div>
             </v-card-item>
 
@@ -158,20 +158,19 @@
 </template>
 
 <script>
+    import axios from 'axios';
     export default {
         name: "ApplyRLPopup",
         data () {
         return {
             dialog: false,
             dialog2: false,
+            staff: this.$store.state.staff,
         }
         },
         props: {
             roleName: String,
-            Department: String,
             currRole: String,
-            staffName: String,
-            email: String,
             phone: String,
         },
     }

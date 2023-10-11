@@ -75,7 +75,9 @@
                     v-bind:color="primaryColor"
                     id="apply"
                     >Apply</v-btn> -->
-                    <ApplyRLPopup/>
+                    <ApplyRLPopup
+                    :roleName="this.roleName"
+                    />
                 </v-col>
             </v-row>
         </v-container>
@@ -199,6 +201,7 @@ export default {
         // skillsPctMatch = getSkillsPctMatch(this.employeeSkills, this.employeeSkills);
         
         return {
+            roleName: this.roleName,
             show: false,
             employeeSkills: ["Python", "C++"],
             skillsPctMatch: "",

@@ -26,6 +26,7 @@ const store = createStore({
   state: {
     access: "",
     skills: "",
+    staff: {},
   },
   mutations: {
     access(state, access) {
@@ -33,6 +34,9 @@ const store = createStore({
     },
     skills(state, skills) {
       state.skills = skills;
+    },
+    staff(state, staff) {
+      state.staff = staff;
     },
   },
 });
