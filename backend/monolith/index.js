@@ -77,7 +77,7 @@ app.get("/listing/:listingid?", async (req, res) => {
       // console.log("Results: ", results);
       if (results.length == 0){
         const response = {
-          statusCode: 401,
+          statusCode: 400,
           body: results,
           message: "Record not found"
         }
