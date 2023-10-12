@@ -22,7 +22,7 @@
                             <v-row class="d-flex align-center">
                                 <v-col>
                                     <p class="text-h4 text--primary">
-                                        {{listing.listing_name}}
+                                        {{listing._listing_name}}
                                     </p>
                                 </v-col>
 
@@ -44,23 +44,23 @@
                                 </v-col>
                             </v-row>
                             <p class="text-h6 text--primary">
-                                {{listing.dept}}
+                                {{listing._dept}}
                             </p>
                             <p class="text-h7 text--primary">
-                                {{listing.num_openings}} Openings | {{listing.open}} Applicant(s)
+                                {{listing._num_openings}} Openings | {{listing._open}} Applicant(s)
                             </p>
                             <p class="text-h7 text--primary">
-                                Country: {{listing.country}}
+                                Country: {{listing._country}}
                             </p>
                             <p class="text-h7 text--primary">
-                                Closing on: {{listing.expiry_date}} 
+                                Closing on: {{listing._expiry_date}} 
                             </p>
                         </v-card-text>
                         <v-row class="" justify="space-between">
                             <v-col class="pt-0">
                                 <v-card-text>
                                 <p class="text-h7 text--primary">
-                                    {{days_posted(listing.created_date)}} 
+                                    {{days_posted(listing._created_date)}} 
                                 </p>
                                 </v-card-text>
                             </v-col>
@@ -98,7 +98,7 @@
                                 Job Description
                             </p>
                             <p class="text-h7 text--primary">
-                                {{listing.description}} 
+                                {{listing._desc}} 
                             </p>
                             <br>
                             <p class="text-h6 text--primary">
@@ -165,8 +165,8 @@ export default {
             axios.get('http://localhost:3003/listing/' + this.listing_id )
             .then(response => {
                 var data = response.data.body
-                // console.log(data)
-                this.listing = data[0]
+                console.log(data)
+                this.listing = data
             })
             .catch(error => {
                 console.log(error)
@@ -182,7 +182,7 @@ export default {
                 
                 for (var i = 0; i < data.length; i++) {
                     // console.log(data[i].role_name)
-                    if (data[i].role_name == this.listing.role_name) {
+                    if (data[i].role_name == this.listing._role_name) {
                         requiredSkills.push(data[i].skill_name)
                     }
                 }

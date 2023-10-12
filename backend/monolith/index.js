@@ -10,6 +10,7 @@ const role = require("./role");
 const role_skill = require("./roleskill");
 const staff_skill = require("./staffskill");
 const staffClass = require("./StaffClass");
+const listingClass = require("./rolelisting");
 const staff = require("./Staff");
 const favourite = require("./Favourite");
 // const e = require("express");
@@ -76,13 +77,26 @@ app.get("/listing/:listingid?", async (req, res) => {
   role
     .readOneListing(req.params.listingid)
     .then((results) => {
-      // console.log("Results: ", results);
+      const returnListingClass = new listingClass.RoleListing(
+        results[0].listing_id,
+        results[0].listing_name,
+        results[0].role_name,
+        results[0].dept,
+        results[0].country,
+        results[0].num_openings,
+        results[0].expiry_date,
+        results[0].open,
+        results[0].description,
+        results[0].created_date
+      );
+      // console.log(returnListingClass);
+      console.log("Results: ", returnListingClass);
       const response = {
         statusCode: 200,
-        body: results,
+        body: returnListingClass,
         message: "Retrieved Successfully",
       };
-      console.log(response);
+      // console.log(response);
       res.status(200).send(response);
     })
     .catch((error) => {

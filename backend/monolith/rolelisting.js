@@ -8,17 +8,19 @@ exports.RoleListing = class {
       num_opening,
       expiry_date,
       open,
-      desc
+      desc,
+      created_date
     ) {
       this._listing_id = listing_id;
       this._listing_name = listing_name;
       this._role_name = role_name;
       this._dept = dept;
       this._country = country;
-      this._num_opneing = num_opening;
+      this._num_opening = num_opening;
       this._expiry_date = expiry_date;
       this._open = open;
       this._desc = desc;
+      this._created_date = created_date;
     }
   
     get listingId() {
@@ -54,7 +56,40 @@ exports.RoleListing = class {
     }
 
     get desc() {
-      return this._desc
+      return this._desc;
     }
+
+    get created_date(){
+      return this._created_date;
+    }
+    
+    set listingName(newname){
+      this._listing_name = newname;
+    }
+    
+    set roleName(newname){
+      this._role_name = newname;
+    }
+    
+    set dept_name(deptname) {
+      this._dept = deptname;
+    }
+
+    set num_opening(openings) {
+      this._num_opening = openings;
+    }
+
+    set expiry_date(date) {
+      this._expiry_date = date;
+    }
+
+    set open(newopen){
+      this._open = newopen;
+    }
+
+    set desc(new_desc) {
+      this._desc = new_desc;
+    }
+
   }
   
