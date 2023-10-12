@@ -8,9 +8,10 @@ const bodyParser = require("body-parser");
 
 const role = require("./role");
 const role_skill = require("./roleskill");
-const staff_skill = require("./staffskill")
+const staff_skill = require("./staffskill");
 const staffClass = require("./StaffClass");
 const staff = require("./Staff");
+const favourite = require("./Favourite");
 // const e = require("express");
 
 var allowedOrigins = ["http://127.0.0.1:5173", "http://localhost:5173"];
@@ -231,7 +232,6 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
         };
         res.status(200).send(response);
         return;
-
       });
     })
     .catch((error) => {
@@ -245,12 +245,9 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
     });
 });
 
-
-
 /////////////////////////////////////////////////////
 ////////////// STAFF_SKILL MICROSERVICE /////////////
 /////////////////////////////////////////////////////
-
 
 app.get("/ss", async (req, res) => {
   staff_skill
@@ -303,7 +300,66 @@ app.get("/ss/:staffId?", async (req, res) => {
     });
 });
 
+/* 
+Favourite
+To utilise Favourite Class, you can run the code as "const favouriteClass = response.data.body"
+To get the staffid use favouriteClass._staffId
+To get the listingid use favouriteClass._listingId
+*/
+app.get("/favourite/read/:staffid/:listingid", async (req, res) => {
+  role
+    .readFavourite(req.params.staffid, req.params.listingid)
+    .then((result) => {
+      if (result.length === 0) {
+        res.status(200).send({ status: 200, message: "Not Favourited" });
+      } else {
+        const favouriteClass = new favourite.Favourite(
+          req.params.staffid,
+          req.params.listingid
+        );
+        res
+          .status(200)
+          .send({ status: 200, message: "Favourited", body: favouriteClass });
+      }
+    });
+});
 
+/* Add and Post would require the frontend to parse in in this format 
+"axios.post("url",{staffid: [input staffid], listingid: [input listingid]})" 
+"axios.delete("url",{data: {staffid: [input staffid], listingid: [input listingid]}})" respectively
+*/
+
+app.post("/favourite/add", async (req, res) => {
+  try {
+    console.log(req.body);
+    const staffid = req.body.staffid;
+    const listingid = req.body.listingid;
+    const favouriteClass = new favourite.Favourite(staffid, listingid);
+    const response = await favouriteClass.addFavourite(staffid, listingid);
+    if (response.error === "ER_DUP_ENTRY") {
+      res.status(200).send({ status: 200, message: "Already Favourited" });
+      return;
+    }
+    res.status(200).send({ status: 200, message: "Favourited" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ status: 400, message: "Favouriting Failed" });
+  }
+});
+
+app.post("/favourite/remove", async (req, res) => {
+  try {
+    console.log(req.body);
+    const staffid = req.body.staffid;
+    const listingid = req.body.listingid;
+    const favouriteClass = new favourite.Favourite(staffid, listingid);
+    await favouriteClass.deleteFavourite(staffid, listingid);
+    res.status(200).send({ status: 200, message: "Unfavourited" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ status: 400, message: "Unfavouriting Failed" });
+  }
+});
 
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////

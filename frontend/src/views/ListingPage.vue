@@ -156,6 +156,7 @@ export default {
         employeeSkills: [],
         savedListings: ["12", "13", "14"],
         saved: false,
+        staffid: "",
         };
     },
 
@@ -195,7 +196,8 @@ export default {
 
         async getEmployeeSkills() {
             this.employeeSkills = this.$store.state.skills
-            // console.log(this.$store.state.skills);
+            this.staffid = this.$store.state.staff
+            // console.log(this.staffid);
         },
 
         days_posted(created_at) {
@@ -214,26 +216,68 @@ export default {
             }
         },
 
+        // getFavouriteListings() {
+        //     axios.get('http://localhost:3003/favourite/read/'+ this.staffid +'/' + this.listing_id)
+        //     .then(response => {
+        //         const favouriteClass = response.data.body
+        //         console.log(favouriteClass)
+        //     })
+        //     .catch(error => {
+        //         console.log(error)
+        //     })
+        // },
+
         getSaved() {
-            if (this.savedListings.includes(this.listing_id)) {
+            axios.get('http://localhost:3003/favourite/read/'+ this.staffid +'/' + this.listing_id)
+            .then(response => {
+                const favouriteClass = response.data.body
+                console.log(favouriteClass)
+                if (favouriteClass) {
                 this.saved = true
-                // console.log(this.saved)
-            }
-            else {
-                this.saved = false
-            }
+                console.log("at first listing saved: " + this.saved)
+                }
+                else {
+                    this.saved = false
+                    console.log("at first listing saved: " + this.saved)
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            })
         },
 
         toggleSaved() {
-            this.saved = !this.saved
-            if (this.saved) {
-                this.savedListings.push(this.listing_id)
-                console.log(this.savedListings)
+            // this.saved = !this.saved
+            if (!this.saved) {
+                axios.post('http://localhost:3003/favourite/add', 
+                {
+                    staffid: this.staffid,
+                    listingid: this.listing_id
+                }
+                )
+                .then(response => {
+                    const favouriteClass = response
+                    console.log(favouriteClass)
+                    this.saved = favouriteClass
+                })
+                .catch(error => {
+                    console.log(error)
+                })
             }
             else {
-                var index = this.savedListings.indexOf(this.listing_id)
-                this.savedListings.splice(index, 1)
-                console.log(this.savedListings)
+                axios.post('http://localhost:3003/favourite/remove', {
+                    staffid: this.staffid,
+                    listingid: this.listing_id
+                })
+                .then(response => {
+                    this.saved = false
+                    console.log(response)
+                }
+                )
+                .catch(
+                    console.log("error")
+                )
+                // console.log(this.savedListings)
             }
         }
             
@@ -244,6 +288,7 @@ export default {
         this.getRoleSkills(),
         this.getEmployeeSkills(),
         this.getSaved()
+        // this.getFavouriteListings()
     },
 };
 
