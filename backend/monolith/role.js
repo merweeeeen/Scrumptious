@@ -8,7 +8,7 @@ const con = mysql.createConnection({
 });
 
 con.connect();
-console.log('Connected')
+
 async function readAllListing() {
   return new Promise((resolve, reject) => {
     const query = `SELECT * FROM listing;`;
@@ -60,7 +60,6 @@ function createListing(theBody) {
       currentdate.getMinutes() +
       ":" +
       currentdate.getSeconds();
-    console.log(datetime); // YYYY-MM-DD HH:MI:SS format
     const desc = theBody.desc;
     const query = `INSERT INTO listing (listing_name, role_name, dept, country, num_openings, expiry_date, open, created_date, description) VALUES ('${listingName}','${roleName}', '${dept}', '${country}', '${numOpenings}', '${expiryDate}', '${openVal}', '${datetime}', '${desc}');`;
     con.query(query, function (error, results, fields) {

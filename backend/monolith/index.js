@@ -31,7 +31,7 @@ app.use(
   }),
   bodyParser.json()
 );
-console.log('Okay !')
+
 /////////////////////////////////////////////////////
 ///////////////////// TEST //////////////////////////
 
@@ -115,7 +115,6 @@ app.get("/listing/:listingid?", async (req, res) => {
 // {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 app.post("/listing", async (req, res) => {
   console.log("POST /listing called"); // This is to check if email parameter contails anything
-  console.log(req.body);
   // if (req.body !== {}){
   // console.log("Body found")
   role
@@ -127,7 +126,6 @@ app.post("/listing", async (req, res) => {
         body: results,
         message: "Posted Data Successfully",
       };
-      console.log(response);
       res.status(201).send(response);
     })
     .catch((error) => {
@@ -147,7 +145,7 @@ app.post("/listing", async (req, res) => {
 app.get("/listing/filter/:filter", async (req, res) => {
   try {
     const filter = JSON.parse(req.params.filter);
-    
+
     const filterKey = Object.keys(filter);
     var filterString = "";
     for (let key of filterKey) {
@@ -196,11 +194,15 @@ app.get("/listing/filter/:filter", async (req, res) => {
     const response = {
       statusCode: 200,
       body: responseArray,
-      message: "Posted Data Successfully",
+      message: "Data Filtered Successfully",
     };
     res.status(200).send(response);
   } catch (error) {
-    console.log(error);
+    const response = {
+      statusCode: 200,
+      message: "Data Filtered Unsuccesfully",
+    };
+    res.status(400).send(response);
   }
 });
 /////////////////////////////////////////////////////
@@ -319,27 +321,28 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
     });
 });
 
-app.delete('/delete/listing/:listingId', async (req, res) => {
+app.delete("/delete/listing/:listingId", async (req, res) => {
   const listingName = req.params.listingId;
-  console.log(listingName)
-  role.deleteListing(listingName)
-  .then((results) => {
-    const response = {
-      statusCode: 200,
-      body: results,
-      message: "Deleted Successfully",
-    };
-    res.status(200).send(response);
-  })
-  .catch((error) => {
-    const response = {
-      statusCode: 400,
-      body: error,
-      message: "Deletion Unsuccessful",
-    };
-    res.status(400).send(response);
-  });
-})
+  console.log(listingName);
+  role
+    .deleteListing(listingName)
+    .then((results) => {
+      const response = {
+        statusCode: 200,
+        body: results,
+        message: "Deleted Successfully",
+      };
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      const response = {
+        statusCode: 400,
+        body: error,
+        message: "Deletion Unsuccessful",
+      };
+      res.status(400).send(response);
+    });
+});
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 app.listen(port, () => {
