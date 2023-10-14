@@ -5,20 +5,22 @@ exports.RoleListing = class {
       role_name,
       dept,
       country,
-      num_opening,
+      num_openings,
       expiry_date,
       open,
-      desc
+      desc,
+      created_date
     ) {
       this._listing_id = listing_id;
       this._listing_name = listing_name;
       this._role_name = role_name;
       this._dept = dept;
       this._country = country;
-      this._num_opneing = num_opening;
+      this._num_opening = num_openings;
       this._expiry_date = expiry_date;
       this._open = open;
       this._desc = desc;
+      this._created_date = created_date
     }
   
     get listingId() {
@@ -55,6 +57,10 @@ exports.RoleListing = class {
 
     get desc() {
       return this._desc
+    }
+
+    get created_date(){
+      return this._created_date
     }
   }
   
