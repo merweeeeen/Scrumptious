@@ -66,10 +66,7 @@ jobs:
           echo "hostname='${{ secrets.HOSTNAME }}'" > backend/monolith/.env
           echo "user='${{ secrets.USER }}'" >> backend/monolith/.env
           echo "password='${{ secrets.PASSWORD }}'" >> backend/monolith/.env
-          echo ${{ secrets.HOSTNAME }}
-          echo ${{ secrets.USER }}
-          echo ${{ secrets.PASSWORD }}
-          working-directory: ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: frontend Test
         run: |
           cd ../backend/monolith
