@@ -62,27 +62,14 @@ jobs:
     - run: npm ci
       working-directory: frontend
     # - run: npm run build --if-present
-    - name: check Secrets
-      run: |
-        echo HOSTNAME: ${{ secrets.HOSTNAME }}
-        echo USER: ${{ secrets.USER }}
-        echo PASSWORD: ${{ secrets.PASSWORD }}
     - name: Set up environment variables
-      env:
-        RDS_HOST: ${{ secrets.HOSTNAME }}
-        RDS_USER: ${{ secrets.USER }}
-        RDS_PASSWORD: ${{ secrets.PASSWORD }}
       run: |
-        export hostname=$RDS_HOST
-        export user=$RDS_USER
-        export password=$RDS_PASSWORD
+        echo "DB_HOST=${{ secrets.HOSTNAME }}" > backend/monolith/.env
+        echo "DB_USER=${{ secrets.USER }}" >> backend/monolith/.env
+        echo "DB_PASSWORD=${{ secrets.PASSWORD }}" >> backend/monolith/.env
+        echo "DB_NAME=your-db-name" >> backend/monolith/.env
       working-directory: backend/monolith
-
     - name: frontend Test   
-      env:
-        hostname: ${{ secrets.HOSTNAME }}
-        user: ${{ secrets.USER }}
-        password: ${{ secrets.PASSWORD }}
       run: |
         cd ../backend/monolith
         node index
