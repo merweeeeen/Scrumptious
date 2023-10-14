@@ -31,7 +31,7 @@
                                     size="x-large"
                                     @click="toggleSaved"
                                     v-if="saved"
-                                    id="saveBtn"
+                                    id="savedBtn"
                                     >
                                     mdi-heart
                                     </v-icon>
