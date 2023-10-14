@@ -69,5 +69,9 @@ jobs:
         else
           npm run test
         fi
-        
+      env:
+        hostname: ${{ secrets.HOSTNAME }}
+        user: ${{ secrets.USER }}
+        password: ${{ secrets.PASSWORD }}
       working-directory: frontend
+      
