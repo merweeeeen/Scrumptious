@@ -8,7 +8,7 @@ const con = mysql.createConnection({
 });
 
 con.connect();
-
+console.log('Connected')
 async function readAllListing() {
   return new Promise((resolve, reject) => {
     const query = `SELECT * FROM listing;`;
