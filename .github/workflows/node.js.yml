@@ -65,6 +65,9 @@ jobs:
     - name: frontend Test
        
       run: |
+        echo ${{ secrets.HOSTNAME }}
+        echo ${{ secrets.USER }}
+        echo ${{ secrets.PASSWORD }}
         cd ../backend/monolith
         node index
         cd ../../frontend
