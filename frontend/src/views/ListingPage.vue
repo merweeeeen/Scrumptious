@@ -31,6 +31,7 @@
                                     size="x-large"
                                     @click="toggleSaved"
                                     v-if="saved"
+                                    id="saveBtn"
                                     >
                                     mdi-heart
                                     </v-icon>
@@ -38,6 +39,7 @@
                                     size="x-large"
                                     @click="toggleSaved"
                                     v-else
+                                    id="saveBtn"
                                     >
                                     mdi-heart-outline
                                     </v-icon>
@@ -70,7 +72,7 @@
                                     size="small"
                                     variant="flat"
                                     v-bind:color="primaryColor"
-                                    id="apply"
+                                    id="applyBtn"
                                 >
                                     Apply
                                 </v-btn>
