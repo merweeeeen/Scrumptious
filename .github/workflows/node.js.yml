@@ -64,9 +64,9 @@ jobs:
     # - run: npm run build --if-present
     - name: check Secrets
       run: |
-        echo ${{ secrets.HOSTNAME }}
-        echo ${{ secrets.USER }}
-        echo ${{ secrets.PASSWORD }}
+        echo HOSTNAME: ${{ secrets.HOSTNAME }}
+        echo USER: ${{ secrets.USER }}
+        echo PASSWORD: ${{ secrets.PASSWORD }}
     - name: Set up environment variables
       env:
         RDS_HOST: ${{ secrets.HOSTNAME }}
