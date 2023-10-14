@@ -68,9 +68,9 @@ jobs:
         RDS_USER: ${{ secrets.USER }}
         RDS_PASSWORD: ${{ secrets.PASSWORD }}
       run: |
-        echo $RDS_HOST
-        echo $RDS_USER
-        echo $RDS_PASSWORD
+        echo ${{ secrets.HOSTNAME }}
+        echo ${{ secrets.USER }}
+        echo ${{ secrets.PASSWORD }}
         export DB_HOST=$RDS_HOST
         export DB_USER=$RDS_USER
         export DB_PASSWORD=$RDS_PASSWORD
