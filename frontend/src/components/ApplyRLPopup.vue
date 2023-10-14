@@ -16,7 +16,7 @@
             activator="parent"
             width="700"
         >
-            <v-card>
+            <v-card id="popup">
             <v-card-title>Apply for role: {{this.roleName}}</v-card-title>
             <v-card-item>
                 <div>
@@ -29,10 +29,10 @@
                         {{ this.staff._Staff_FName }} {{ this.staff._Staff_LName }}
                     </div>
                     <div class="text-caption">
-                        {{ this.staff._Dept }} | {{ currRole }}
+                        Department: {{ this.staff._Dept }}
                     </div>
                     <div class="text-caption">
-                        E-mail address: {{ this.staff._Email }} | Phone number: {{phone}}
+                        E-mail address: {{ this.staff._Email }}
                     </div>
 
 
@@ -77,80 +77,63 @@
             <v-card-text>
                 <v-container>
                     <v-row>
-                    <!-- <v-col
-                        cols="12"
-                        sm="3"
-                        md="3"
-                    > -->
                     <!--Section for staff to include more details for their application-->
-                    <div>
-                        <div class="text mr-1">
+                    <v-col cols="2">
+                    <div class="text mr-1">
                             Write-up
                         </div>
-                    </div>
-                    <!-- </v-col> -->
-                    <!-- <v-col
-                        cols="12"
-                        sm="6"
-                        md="9"
-                    > -->
-                        <v-text-field
-                        colour="deep-purple-accent-4"
-                        label="Write a brief summary of why you should be chosen for this role"
-                        ></v-text-field>
-                    <!-- </v-col> -->
+                    </v-col>
+                        <v-col>
+                        <v-form @submit.prevent ref="form">
+                            <v-text-field
+                                colour="deep-purple-accent-4"
+                                label="Write a brief summary of why you should be chosen for this role"
+                                id = "writeUp"
+                                :rules="[v => !!this.writeUp || 'Write-up is required']"
+                                v-model = "writeUp"
+                            ></v-text-field>
+                            <v-btn 
+                            size="small" 
+                            type="submit" 
+                            color="primary" 
+                            class="mt-2" 
+                            >
+                            Submit
+                            </v-btn>
+                        </v-form>
+                        <!-- v-dialog should only pop up when the rule of the text field is satisfied -->
+                        <v-dialog
+                            v-model="dialog4"
+                            width="auto"
+                            >
+                            <v-card>
+                                <div class="py-12 mx-9 text-center">
+                                    <v-icon
+                                        class="mb-6"
+                                        color="success"
+                                        icon="mdi-check-circle-outline"
+                                        size="120"
+                                    ></v-icon>
+                                    <div class="text-h6 font-weight-bold">Application Submitted Successfully!</div>
+                                    <div class="text">Thank you for your application, kindly look out for an update on your application status which will be sent via email</div>
+                                </div>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="primary" 
+                                    class="text-none text-subtitle-1"
+                                    size="small"
+                                    variant="flat" 
+                                    @click="dialog4 = false;dialog = false"
+                                    >
+                                    Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        </v-col>
                     </v-row>
                 </v-container>
             </v-card-text>
-
-            <!--Submit button-->
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" 
-                class="text-none text-subtitle-1"
-                size="small"
-                variant="flat" 
-                @click="dialog2 = false"
-                >
-                    Submit
-                    <!--pop up for confirmation of successful submission-->
-                    <v-dialog
-                    v-model="dialog2"
-                    activator="parent"
-                    width="500"
-                    persistent
-                    >
-                    <v-card>
-                    <!-- <v-card append-icon = "$close"> -->
-                        <!-- <template v-slot:append>
-                            <v-btn icon="$close" variant="text" @click="dialog2 = false"></v-btn>
-                        </template> -->
-                        <div class="py-12 mx-9 text-center">
-                            <v-icon
-                                class="mb-6"
-                                color="success"
-                                icon="mdi-check-circle-outline"
-                                size="120"
-                            ></v-icon>
-                            <div class="text-h6 font-weight-bold">Application Submitted Successfully!</div>
-                            <div class="text">Thank you for your application, kindly look out for an update on your application status which will be sent via email</div>
-                        </div>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="primary" 
-                            class="text-none text-subtitle-1"
-                            size="small"
-                            variant="flat" 
-                            @click="dialog2 = false;dialog = false"
-                            >
-                            Close
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                    </v-dialog>
-                </v-btn>
-            </v-card-actions>
-
         </v-card>
         </v-dialog>
         </v-btn>
@@ -162,16 +145,29 @@
     export default {
         name: "ApplyRLPopup",
         data () {
-        return {
-            dialog: false,
-            dialog2: false,
-            staff: this.$store.state.staff,
-        }
+            return {
+                dialog: false,
+                dialog4: false,
+                staff: this.$store.state.staff,
+                writeUp: '', // Bind the input value to this data property
+            }
+        },
+        methods: {
+            submitForm() {
+                console.log('Submit button clicked');
+                // Check if the validation rule is satisfied
+                if (this.$refs.form.validate()) {
+                    // If validation is successful, open dialog4
+                    console.log('Validation passed');
+                    this.dialog4 = true;
+                }
+            },
         },
         props: {
             roleName: String,
             currRole: String,
             phone: String,
         },
+        
     }
 </script>
