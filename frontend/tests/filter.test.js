@@ -11,7 +11,7 @@ let listingId;
 
 beforeEach(async () => {
   originalAxios = axios.get;
-  response = await axios.get("http://localhost:3003/listing");
+  response = await axios.get("http://127.0.0.1:3003/listing");
   const profile = {
     _Access_Rights: 1,
     _Country: "SG",
@@ -47,7 +47,7 @@ beforeEach(async () => {
 afterEach(async () => {
   axios.get = originalAxios;
   console.log(listingId);
-  await axios.delete(`http://localhost:3003/delete/listing/${listingId}`);
+  await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingId}`);
 });
 
 describe("Integration tests", async () => {
@@ -63,7 +63,7 @@ describe("Integration tests", async () => {
 
     const filter = { skills: "Python" };
     const filterResponse = await axios.get(
-      `http://localhost:3003/listing/filter/${JSON.stringify(filter)}`
+      `http://127.0.0.1:3003/listing/filter/${JSON.stringify(filter)}`
     );
     let mockAxios = {
       get: async () => ({
@@ -118,7 +118,7 @@ describe("Integration tests", async () => {
 
     const filter = { role_name: "Accountant" };
     const filterResponse = await axios.get(
-      `http://localhost:3003/listing/filter/${JSON.stringify(filter)}`
+      `http://127.0.0.1:3003/listing/filter/${JSON.stringify(filter)}`
     );
     let mockAxios = {
       get: async () => ({
@@ -173,7 +173,7 @@ describe("Integration tests", async () => {
 
     const filter = { dept: "Management" };
     const filterResponse = await axios.get(
-      `http://localhost:3003/listing/filter/${JSON.stringify(filter)}`
+      `http://127.0.0.1:3003/listing/filter/${JSON.stringify(filter)}`
     );
     let mockAxios = {
       get: async () => ({
@@ -228,7 +228,7 @@ describe("Integration tests", async () => {
 
     const filter = { num_openings: 1 };
     const filterResponse = await axios.get(
-      `http://localhost:3003/listing/filter/${JSON.stringify(filter)}`
+      `http://127.0.0.1:3003/listing/filter/${JSON.stringify(filter)}`
     );
     let mockAxios = {
       get: async () => ({
@@ -283,7 +283,7 @@ describe("Integration tests", async () => {
 
     const filter = { skills: "Python", num_openings: 1 };
     const filterResponse = await axios.get(
-      `http://localhost:3003/listing/filter/${JSON.stringify(filter)}`
+      `http://127.0.0.1:3003/listing/filter/${JSON.stringify(filter)}`
     );
     let mockAxios = {
       get: async () => ({
@@ -345,6 +345,6 @@ async function createListings(listingDetails) {
     expiry_date: "2024-01-01",
     open: 1,
   };
-  const response = await axios.post("http://localhost:3003/listing", bodyInfo);
+  const response = await axios.post("http://127.0.0.1:3003/listing", bodyInfo);
   return response.data.body.insertId;
 }
