@@ -76,6 +76,7 @@ jobs:
         export hostname=$RDS_HOST
         export user=$RDS_USER
         export password=$RDS_PASSWORD
+      working-directory: backend/monolith
 
     - name: frontend Test   
       run: |
