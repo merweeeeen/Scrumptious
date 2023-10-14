@@ -64,10 +64,9 @@ jobs:
     # - run: npm run build --if-present
     - name: Set up environment variables
       run: |
-        echo "DB_HOST=${{ secrets.HOSTNAME }}" > backend/monolith/.env
-        echo "DB_USER=${{ secrets.USER }}" >> backend/monolith/.env
-        echo "DB_PASSWORD=${{ secrets.PASSWORD }}" >> backend/monolith/.env
-        echo "DB_NAME=your-db-name" >> backend/monolith/.env
+        echo "hostname=${{ secrets.HOSTNAME }}" > backend/monolith/.env
+        echo "user=${{ secrets.USER }}" >> backend/monolith/.env
+        echo "password=${{ secrets.PASSWORD }}" >> backend/monolith/.env
       working-directory: ${{ github.workspace }}
     - name: frontend Test   
       run: |
