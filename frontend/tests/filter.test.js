@@ -7,7 +7,7 @@ import axios from "axios";
 let wrapper;
 let response;
 let originalAxios;
-let listingId;
+let listingIds = [];
 
 beforeEach(async () => {
   console.log("Start Test");
@@ -48,8 +48,10 @@ beforeEach(async () => {
 
 afterEach(async () => {
   axios.get = originalAxios;
-  console.log(listingId);
-  await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingId}`);
+  for (let i = 0; i < listingIds.length; i++) {
+    await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
+  }
+
   console.log("End Test");
 });
 
@@ -62,7 +64,7 @@ describe("Integration tests", async () => {
       dept: "IT Support",
       num_openings: 1,
     };
-    listingId = await createListings(listingDetails);
+    listingIds.push(await createListings(listingDetails));
 
     const filter = { skills: "Python" };
     const filterResponse = await axios.get(
@@ -109,6 +111,71 @@ describe("Integration tests", async () => {
     expect(output).toBe("ST3-8.1.1");
   });
 
+  test("ST3-8.1.2", async () => {
+    // Call the filtered Axios call first since the data is already expected
+    const listingDetails1 = {
+      listingName: "ST3-8.1.2_1",
+      roleName: "Software Developer",
+      dept: "IT Support",
+      num_openings: 1,
+    };
+    const listingId1 = await createListings(listingDetails1);
+    listingIds.push(listingId1);
+
+    const listingDetails2 = {
+      listingName: "ST3-8.1.2_2",
+      roleName: "Accountant",
+      dept: "Finance",
+      num_openings: 1,
+    };
+    const listingId2 = await createListings(listingDetails2);
+    listingIds.push(listingId2);
+
+    const filter = { skills: "Python" };
+    const filterResponse = await axios.get(
+      `http://127.0.0.1:3003/listing/filter/${JSON.stringify(filter)}`
+    );
+    let mockAxios = {
+      get: async () => ({
+        data: {
+          body: response.data.body,
+        },
+      }),
+    };
+
+    axios.get = mockAxios.get;
+
+    const filterComponent = wrapper.findComponent("#Filter");
+    await filterComponent.find("#checkSkill").setChecked();
+    await filterComponent.setData({ skill: [true] });
+    const skill = await wrapper.find("#skill");
+    expect(skill.exists()).toBe(true);
+    await filterComponent.setData({ selectedSkill: "Python" });
+
+    mockAxios = {
+      get: async () => ({
+        data: {
+          body: filterResponse.data.body,
+        },
+      }),
+    };
+    axios.get = mockAxios.get;
+    await filterComponent.find("#filter").trigger("click");
+    expect(filterComponent.emitted().filter[0][0].skills).toBe("Python");
+
+    const allListingCards = await wrapper.findAllComponents({
+      name: "ListingCard",
+    });
+    // console.log(allListingCards);
+    let output = false;
+    for (let card of allListingCards) {
+      if (card.vm.identified === "ST3-8.1.2_2") {
+        output = true;
+      }
+    }
+    expect(output).toBe(false);
+  });
+
   test("ST3-8.2.1", async () => {
     // Call the filtered Axios call first since the data is already expected
     const listingDetails = {
@@ -117,7 +184,7 @@ describe("Integration tests", async () => {
       dept: "Finance",
       num_openings: 1,
     };
-    listingId = await createListings(listingDetails);
+    listingIds.push(await createListings(listingDetails));
 
     const filter = { role_name: "Accountant" };
     const filterResponse = await axios.get(
@@ -164,6 +231,69 @@ describe("Integration tests", async () => {
     expect(output).toBe("ST3-8.2.1");
   });
 
+  test("ST3-8.2.2", async () => {
+    // Call the filtered Axios call first since the data is already expected
+    const listingDetails = {
+      listingName: "ST3-8.2.2_1",
+      roleName: "Accountant",
+      dept: "Finance",
+      num_openings: 1,
+    };
+    listingIds.push(await createListings(listingDetails));
+
+    const listingDetails2 = {
+      listingName: "ST3-8.2.2_2",
+      roleName: "Software Developer",
+      dept: "IT Support",
+      num_openings: 1,
+    };
+    listingIds.push(await createListings(listingDetails2));
+
+    const filter = { role_name: "Accountant" };
+    const filterResponse = await axios.get(
+      `http://127.0.0.1:3003/listing/filter/${JSON.stringify(filter)}`
+    );
+    let mockAxios = {
+      get: async () => ({
+        data: {
+          body: response.data.body,
+        },
+      }),
+    };
+
+    axios.get = mockAxios.get;
+
+    const filterComponent = wrapper.findComponent("#Filter");
+    await filterComponent.find("#checkRole").setChecked();
+    await filterComponent.setData({ role: [true] });
+    const skill = await wrapper.find("#role");
+    expect(skill.exists()).toBe(true);
+    await filterComponent.setData({ selectedRole: "Accountant" });
+
+    mockAxios = {
+      get: async () => ({
+        data: {
+          body: filterResponse.data.body,
+        },
+      }),
+    };
+    axios.get = mockAxios.get;
+    await filterComponent.find("#filter").trigger("click");
+    expect(filterComponent.emitted().filter[0][0].role_name).toBe("Accountant");
+
+    const allListingCards = await wrapper.findAllComponents({
+      name: "ListingCard",
+    });
+    // console.log(allListingCards);
+    let output = false;
+    for (let card of allListingCards) {
+      if (card.vm.identified === "ST3-8.2.2_2") {
+        output = true;
+      }
+    }
+    expect(output).toBe(false);
+  });
+
   test("ST3-8.3.1", async () => {
     // Call the filtered Axios call first since the data is already expected
     const listingDetails = {
@@ -172,7 +302,7 @@ describe("Integration tests", async () => {
       dept: "Management",
       num_openings: 1,
     };
-    listingId = await createListings(listingDetails);
+    listingIds.push(await createListings(listingDetails));
 
     const filter = { dept: "Management" };
     const filterResponse = await axios.get(
@@ -219,6 +349,69 @@ describe("Integration tests", async () => {
     expect(output).toBe("ST3-8.3.1");
   });
 
+  test("ST3-8.3.2", async () => {
+    // Call the filtered Axios call first since the data is already expected
+    const listingDetails = {
+      listingName: "ST3-8.3.2_1",
+      roleName: "Customer Service",
+      dept: "Management",
+      num_openings: 1,
+    };
+    listingIds.push(await createListings(listingDetails));
+
+    const listingDetails2 = {
+      listingName: "ST3-8.3.2_2",
+      roleName: "Software Developer",
+      dept: "IT Support",
+      num_openings: 1,
+    };
+    listingIds.push(await createListings(listingDetails2));
+
+    const filter = { dept: "Management" };
+    const filterResponse = await axios.get(
+      `http://127.0.0.1:3003/listing/filter/${JSON.stringify(filter)}`
+    );
+    let mockAxios = {
+      get: async () => ({
+        data: {
+          body: response.data.body,
+        },
+      }),
+    };
+
+    axios.get = mockAxios.get;
+
+    const filterComponent = wrapper.findComponent("#Filter");
+    await filterComponent.find("#checkDept").setChecked();
+    await filterComponent.setData({ dept: [true] });
+    const skill = await wrapper.find("#dept");
+    expect(skill.exists()).toBe(true);
+    await filterComponent.setData({ selectedDept: "Management" });
+
+    mockAxios = {
+      get: async () => ({
+        data: {
+          body: filterResponse.data.body,
+        },
+      }),
+    };
+    axios.get = mockAxios.get;
+    await filterComponent.find("#filter").trigger("click");
+    expect(filterComponent.emitted().filter[0][0].dept).toBe("Management");
+
+    const allListingCards = await wrapper.findAllComponents({
+      name: "ListingCard",
+    });
+    // console.log(allListingCards);
+    let output = false;
+    for (let card of allListingCards) {
+      if (card.vm.identified === "ST3-8.3.2_2") {
+        output = true;
+      }
+    }
+    expect(output).toBe(false);
+  });
+
   test("ST3-8.4.1", async () => {
     // Call the filtered Axios call first since the data is already expected
     const listingDetails = {
@@ -227,7 +420,7 @@ describe("Integration tests", async () => {
       dept: "Marketing",
       num_openings: 1,
     };
-    listingId = await createListings(listingDetails);
+    listingIds.push(await createListings(listingDetails));
 
     const filter = { num_openings: 1 };
     const filterResponse = await axios.get(
@@ -274,6 +467,69 @@ describe("Integration tests", async () => {
     expect(output).toBe("ST3-8.4.1");
   });
 
+  test("ST3-8.4.2", async () => {
+    // Call the filtered Axios call first since the data is already expected
+    const listingDetails = {
+      listingName: "ST3-8.4.2_1",
+      roleName: "Software Developer",
+      dept: "Marketing",
+      num_openings: 1,
+    };
+    listingIds.push(await createListings(listingDetails));
+
+    const listingDetails2 = {
+      listingName: "ST3-8.4.2_2",
+      roleName: "Accountant",
+      dept: "Finance",
+      num_openings: 2,
+    };
+    listingIds.push(await createListings(listingDetails2));
+
+    const filter = { num_openings: 1 };
+    const filterResponse = await axios.get(
+      `http://127.0.0.1:3003/listing/filter/${JSON.stringify(filter)}`
+    );
+    let mockAxios = {
+      get: async () => ({
+        data: {
+          body: response.data.body,
+        },
+      }),
+    };
+
+    axios.get = mockAxios.get;
+
+    const filterComponent = wrapper.findComponent("#Filter");
+    await filterComponent.find("#checkVacancy").setChecked();
+    await filterComponent.setData({ vacancy: [true] });
+    const skill = await wrapper.find("#vacancy");
+    expect(skill.exists()).toBe(true);
+    await filterComponent.setData({ selectedVacancy: "1" });
+
+    mockAxios = {
+      get: async () => ({
+        data: {
+          body: filterResponse.data.body,
+        },
+      }),
+    };
+    axios.get = mockAxios.get;
+    await filterComponent.find("#filter").trigger("click");
+    expect(filterComponent.emitted().filter[0][0].num_openings).toBe("1");
+
+    const allListingCards = await wrapper.findAllComponents({
+      name: "ListingCard",
+    });
+    // console.log(allListingCards);
+    let output = false;
+    for (let card of allListingCards) {
+      if (card.vm.identified === "ST3-8.4.2_2") {
+        output = true;
+      }
+    }
+    expect(output).toBe(false);
+  });
+
   test("ST3-8.5.1", async () => {
     // Call the filtered Axios call first since the data is already expected
     const listingDetails = {
@@ -282,7 +538,7 @@ describe("Integration tests", async () => {
       dept: "Management",
       num_openings: 1,
     };
-    listingId = await createListings(listingDetails);
+    listingIds.push(await createListings(listingDetails));
 
     const filter = { skills: "Python", num_openings: 1 };
     const filterResponse = await axios.get(
@@ -334,6 +590,76 @@ describe("Integration tests", async () => {
       }
     }
     expect(output).toBe("ST3-8.5.1");
+  });
+
+  test("ST3-8.5.2", async () => {
+    // Call the filtered Axios call first since the data is already expected
+    const listingDetails = {
+      listingName: "ST3-8.5.2_1",
+      roleName: "Software Developer",
+      dept: "Management",
+      num_openings: 1,
+    };
+    listingIds.push(await createListings(listingDetails));
+
+    const listingDetails2 = {
+      listingName: "ST3-8.5.2_2",
+      roleName: "Accountant",
+      dept: "Management",
+      num_openings: 2,
+    };
+    listingIds.push(await createListings(listingDetails2));
+
+    const filter = { skills: "Python", num_openings: 1 };
+    const filterResponse = await axios.get(
+      `http://127.0.0.1:3003/listing/filter/${JSON.stringify(filter)}`
+    );
+    let mockAxios = {
+      get: async () => ({
+        data: {
+          body: response.data.body,
+        },
+      }),
+    };
+
+    axios.get = mockAxios.get;
+
+    const filterComponent = wrapper.findComponent("#Filter");
+    await filterComponent.find("#checkSkill").setChecked();
+    await filterComponent.setData({ skill: [true] });
+    const skill = await wrapper.find("#skill");
+    expect(skill.exists()).toBe(true);
+    await filterComponent.setData({ selectedSkill: "Python" });
+
+    await filterComponent.find("#checkVacancy").setChecked();
+    await filterComponent.setData({ vacancy: [true] });
+    const vacancy = await wrapper.find("#vacancy");
+    expect(vacancy.exists()).toBe(true);
+    await filterComponent.setData({ selectedVacancy: "1" });
+
+    mockAxios = {
+      get: async () => ({
+        data: {
+          body: filterResponse.data.body,
+        },
+      }),
+    };
+    axios.get = mockAxios.get;
+    await filterComponent.find("#filter").trigger("click");
+    expect(filterComponent.emitted().filter[0][0].num_openings).toBe("1");
+    expect(filterComponent.emitted().filter[0][0].skills).toBe("Python");
+
+    const allListingCards = await wrapper.findAllComponents({
+      name: "ListingCard",
+    });
+    // console.log(allListingCards);
+    let output = false;
+    for (let card of allListingCards) {
+      if (card.vm.identified === "ST3-8.5.2") {
+        output = true;
+      }
+    }
+    expect(output).toBe(false);
   });
 });
 
