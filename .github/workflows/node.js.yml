@@ -70,7 +70,7 @@ jobs:
       - name: frontend Test
         run: |
           cd ../backend/monolith
-          node index
+          node index &
           echo "Backend is running."
           cd ../../frontend
           echo "Frontend dir"
