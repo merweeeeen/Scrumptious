@@ -45,6 +45,8 @@ jobs:
     - run: npm ci
       working-directory: backend/monolith
     # - run: npm run build --if-present
+    - run: node index
+      working-directory: backend/monolith
     - name: Backend Test
       run: |
         if find . -type f \( -name '*.test.js' -o -name '*.spec.js' \) -exec false {} +; then
@@ -63,6 +65,7 @@ jobs:
       working-directory: frontend
     # - run: npm run build --if-present
     - name: frontend Test
+       
       run: |
         if find . -type f \( -name '*.test.js' -o -name '*.spec.js' \) -exec false {} +; then
           echo "No test files found."
