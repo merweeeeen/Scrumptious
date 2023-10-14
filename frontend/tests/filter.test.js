@@ -10,6 +10,8 @@ let originalAxios;
 let listingId;
 
 beforeEach(async () => {
+  console.log("Start Test");
+
   originalAxios = axios.get;
   response = await axios.get("http://127.0.0.1:3003/listing");
   const profile = {
@@ -48,6 +50,7 @@ afterEach(async () => {
   axios.get = originalAxios;
   console.log(listingId);
   await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingId}`);
+  console.log("End Test");
 });
 
 describe("Integration tests", async () => {
