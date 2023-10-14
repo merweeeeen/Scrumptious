@@ -68,7 +68,7 @@ jobs:
         echo "DB_USER=${{ secrets.USER }}" >> backend/monolith/.env
         echo "DB_PASSWORD=${{ secrets.PASSWORD }}" >> backend/monolith/.env
         echo "DB_NAME=your-db-name" >> backend/monolith/.env
-      working-directory: backend/monolith
+      working-directory: ${{ github.workspace }}
     - name: frontend Test   
       run: |
         cd ../backend/monolith
