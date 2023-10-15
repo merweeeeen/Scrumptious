@@ -35,7 +35,6 @@
                         E-mail address: {{ this.staff._Email }}
                     </div>
 
-
                     <!-- <div class="text-h6">
                         Resume
                     </div> -->
@@ -101,7 +100,9 @@
                             Submit
                             </v-btn>
                         </v-form>
+
                         <!-- v-dialog should only pop up when the rule of the text field is satisfied -->
+                        <!-- else form validation should be performed and error message should show. confirmation popup should not appear-->
                         <v-dialog
                             v-model="dialog4"
                             width="auto"
