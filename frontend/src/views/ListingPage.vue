@@ -62,7 +62,7 @@
                             <v-col class="pt-0">
                                 <v-card-text>
                                 <p class="text-h7 text--primary">
-                                    {{days_posted(listing._created_date)}} 
+                                    {{days_posted(listing._created_date)}} on {{pretty_date(listing._created_date)}}
                                 </p>
                                 </v-card-text>
                             </v-col>
@@ -79,12 +79,6 @@
                             </v-col>
                         </v-row>
                     </v-card> 
-<!-- 
-                    <div class="text--primary">
-                            well meaning and kindly.<br>
-                            "a benevolent smile"
-                    </div> -->
-
                 </v-col>
             </v-row>
 
@@ -175,7 +169,7 @@ export default {
             })
         },
 
-        async getRoleSkills() { // not sure why but the rolename endpoint not really working out
+        async getRoleSkills() { 
             axios.get('http://localhost:3003/rs/')
             .then(response => {
                 var data = response.data.body
@@ -218,16 +212,10 @@ export default {
             }
         },
 
-        // getFavouriteListings() {
-        //     axios.get('http://localhost:3003/favourite/read/'+ this.staffid +'/' + this.listing_id)
-        //     .then(response => {
-        //         const favouriteClass = response.data.body
-        //         console.log(favouriteClass)
-        //     })
-        //     .catch(error => {
-        //         console.log(error)
-        //     })
-        // },
+        pretty_date(created_at) {
+            var created = new Date(created_at);
+            return created.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        },
 
         getSaved() {
             axios.get('http://localhost:3003/favourite/read/'+ this.staffid +'/' + this.listing_id)
