@@ -77,6 +77,7 @@
                 <v-container>
                     <v-row>
                     <!--Section for staff to include more details for their application-->
+                    <!-- write up should not be longer than 500 words-->
                     <v-col cols="2">
                     <div class="text mr-1">
                             Write-up
@@ -88,7 +89,10 @@
                                 colour="deep-purple-accent-4"
                                 label="Write a brief summary of why you should be chosen for this role"
                                 id = "writeUp"
-                                :rules="[v => !!this.writeUp || 'Write-up is required']"
+                                :rules="[
+                                    v => !!v || 'Write-up is required',
+                                    v => (v && v.length <= 500) || 'Write-up must be less than 500 characters',
+                                    ]"
                                 v-model = "writeUp"
                             ></v-text-field>
                             <v-btn 
