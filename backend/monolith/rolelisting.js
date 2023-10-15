@@ -9,7 +9,8 @@ exports.RoleListing = class {
       expiry_date,
       open,
       desc,
-      created_date
+      created_date,
+      applicants
     ) {
       this._listing_id = listing_id;
       this._listing_name = listing_name;
@@ -21,6 +22,7 @@ exports.RoleListing = class {
       this._open = open;
       this._desc = desc;
       this._created_date = created_date;
+      this._applicants = applicants
     }
   
     get listingId() {
@@ -63,6 +65,10 @@ exports.RoleListing = class {
       return this._created_date;
     }
     
+    get applicants(){
+      return this._applicants
+    }
+    
     set listingName(newname){
       this._listing_name = newname;
     }
@@ -90,6 +96,7 @@ exports.RoleListing = class {
     set desc(new_desc) {
       this._desc = new_desc;
     }
+
 
   }
   
