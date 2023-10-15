@@ -54,9 +54,7 @@ app.get("/listing", async (req, res) => {
       // console.log("Results: ", results);
       let body = [];
       for (let result of results) {
-        const applicants = await application.getApplicants(
-          result.listing_id
-        );
+        const applicants = await application.getApplicants(result.listing_id);
         const numberOfApplicants = applicants.length;
 
         body.push(
@@ -358,23 +356,27 @@ To get the staffid use favouriteClass._staffId
 To get the listingid use favouriteClass._listingId
 */
 app.get("/favourite/read/:staffid/:listingid", async (req, res) => {
-  console.log("GET /favourite/read started");
-  role
-    .readFavourite(req.params.staffid, req.params.listingid)
-    .then((result) => {
-      if (result.length === 0) {
-        res.status(200).send({ status: 200, message: "Not Favourited" });
-      } else {
-        const favouriteClass = new favourite.Favourite(
-          req.params.staffid,
-          req.params.listingid
-        );
-        res
-          .status(200)
-          .send({ status: 200, message: "Favourited", body: favouriteClass });
+  try {
+    console.log("GET /favourite/read started");
+    role
+      .readFavourite(req.params.staffid, req.params.listingid)
+      .then((result) => {
+        if (result.length === 0) {
+          res.status(200).send({ status: 200, message: "Not Favourited" });
+        } else {
+          const favouriteClass = new favourite.Favourite(
+            req.params.staffid,
+            req.params.listingid
+          );
+          res
+            .status(200)
+            .send({ status: 200, message: "Favourited", body: favouriteClass });
+        }
         console.log("GET /favourite/read ended");
-      }
-    });
+      });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 /* Add and Post would require the frontend to parse in in this format 

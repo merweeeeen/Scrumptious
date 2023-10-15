@@ -18,7 +18,7 @@ exports.RoleListing = class {
       this._role_name = role_name;
       this._dept = dept;
       this._country = country;
-      this._num_opening = num_opening;
+      this._num_openings = num_opening;
       this._expiry_date = expiry_date;
       this._open = open;
       this._desc = desc;
@@ -47,8 +47,8 @@ exports.RoleListing = class {
       return this._country;
     }
   
-    get num_opening() {
-      return this._num_opening;
+    get num_openings() {
+      return this._num_openings;
     }
   
     get expiry_date() {

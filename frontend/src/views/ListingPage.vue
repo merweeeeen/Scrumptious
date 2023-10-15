@@ -32,7 +32,7 @@
                         size="x-large"
                         @click="toggleSaved"
                         v-if="saved"
-                        id="savedBtn"
+                        id="saved"
                       >
                         mdi-heart
                       </v-icon>
@@ -41,7 +41,7 @@
                         size="x-large"
                         @click="toggleSaved"
                         v-else
-                        id="saveBtn"
+                        id="notSaved"
                       >
                         mdi-heart-outline
                       </v-icon>
@@ -50,21 +50,21 @@
                   <p class="text-h6 text--primary">
                     {{ listing._dept }}
                   </p>
-                  <p class="text-h7 text--primary">
+                  <p class="text-h7 text--primary" id="vacancyAndApplicants">
                     {{ listing._num_openings }} Openings |
                     {{ listing._applicants }} Applicant(s)
                   </p>
-                  <p class="text-h7 text--primary">
+                  <p class="text-h7 text--primary" id="country">
                     Country: {{ listing._country }}
                   </p>
-                  <p class="text-h7 text--primary">
+                  <p class="text-h7 text--primary" id="expiryDate">
                     Closing on: {{ listing._expiry_date }}
                   </p>
                 </v-card-text>
                 <v-row class="" justify="space-between">
                   <v-col class="pt-0">
                     <v-card-text>
-                      <p class="text-h7 text--primary">
+                      <p class="text-h7 text--primary" id="createdDate">
                         {{ days_posted(listing._created_date) }} on
                         {{ pretty_date(listing._created_date) }}
                       </p>
@@ -169,6 +169,7 @@ export default {
             // console.log(data[i].role_name)
             requiredSkills.push(i.skill_name);
           }
+          console.log(requiredSkills)
           this.listingSkills = requiredSkills;
         })
         .catch((error) => {
