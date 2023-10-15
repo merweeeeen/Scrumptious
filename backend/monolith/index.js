@@ -48,7 +48,7 @@ app.get("/", (req, res) => {
 
 // THIS IS GET /role => TO GET ALL ROLES FOR FRONTEND
 app.get("/listing", async (req, res) => {
-  console.log('GET /listing started')
+  console.log("GET /listing started");
   role
     .readAllListing()
     .then((results) => {
@@ -70,16 +70,16 @@ app.get("/listing", async (req, res) => {
       };
       console.log(response);
       res.status(400).send(response);
-      console.log('GET /listing ended')
+      console.log("GET /listing ended");
     });
 });
 
 // THIS IS GET /listing/:listingid? => TO GET ONE ROLE FOR FRONTEND
 app.get("/listing/:listingid?", async (req, res) => {
-  console.log('GET /listing/:listingId started')
+  console.log("GET /listing/:listingId started");
   console.log(req.params.listingid);
   const applicants = await application.getApplicants(req.params.listingid);
-  const numberOfApplicants = applicants.length
+  const numberOfApplicants = applicants.length;
   role
     .readOneListing(req.params.listingid)
     .then((results) => {
@@ -105,7 +105,7 @@ app.get("/listing/:listingid?", async (req, res) => {
       };
       // console.log(response);
       res.status(200).send(response);
-      console.log('GET /listing/:listingId ended')
+      console.log("GET /listing/:listingId ended");
     })
     .catch((error) => {
       // console.error("Error: ", error);
@@ -137,7 +137,7 @@ app.post("/listing", async (req, res) => {
       };
       console.log(response);
       res.status(201).send(response);
-      console.log('POST /listing ended')
+      console.log("POST /listing ended");
     })
     .catch((error) => {
       // console.error("Error: ", error);
@@ -157,7 +157,7 @@ app.post("/listing", async (req, res) => {
 /////////////////////////////////////////////////////
 
 app.get("/rs", async (req, res) => {
-  console.log('GET /rs started')
+  console.log("GET /rs started");
   role_skill
     .readAllRoleSkills()
     .then((results) => {
@@ -169,7 +169,7 @@ app.get("/rs", async (req, res) => {
       };
       // console.log(response);
       res.status(200).send(response);
-      console.log('GET /rs ended')
+      console.log("GET /rs ended");
     })
     .catch((error) => {
       // console.error("Error: ", error);
@@ -184,7 +184,7 @@ app.get("/rs", async (req, res) => {
 });
 
 app.get("/rs/:roleName?", async (req, res) => {
-  console.log('GET /rs/:roleName started')
+  console.log("GET /rs/:roleName started");
   console.log(req.params.roleName);
   role_skill
     .readSkillbyRole(req.params.roleName)
@@ -197,7 +197,7 @@ app.get("/rs/:roleName?", async (req, res) => {
       };
       // console.log(response);
       res.status(200).send(response);
-      console.log('GET /rs/:roleName ended')
+      console.log("GET /rs/:roleName ended");
     })
     .catch((error) => {
       // console.error("Error: ", error);
@@ -217,7 +217,7 @@ app.get("/rs/:roleName?", async (req, res) => {
 
 // THIS IS GET /role => TO GET ALL Staff FOR FRONTEND
 app.get("/login/:staffId/:password/:access", async (req, res) => {
-  console.log('GET /login started')
+  console.log("GET /login started");
   staff
     .findStaff(req.params.staffId)
     .then((results) => {
@@ -259,7 +259,7 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
           message: "Retrieved Successfully",
         };
         res.status(200).send(response);
-        console.log('GET /login ended')
+        console.log("GET /login ended");
         return;
       });
     })
@@ -336,7 +336,7 @@ To get the staffid use favouriteClass._staffId
 To get the listingid use favouriteClass._listingId
 */
 app.get("/favourite/read/:staffid/:listingid", async (req, res) => {
-  console.log('GET /favourite/read started')
+  console.log("GET /favourite/read started");
   role
     .readFavourite(req.params.staffid, req.params.listingid)
     .then((result) => {
@@ -350,7 +350,7 @@ app.get("/favourite/read/:staffid/:listingid", async (req, res) => {
         res
           .status(200)
           .send({ status: 200, message: "Favourited", body: favouriteClass });
-          console.log('GET /favourite/read ended')
+        console.log("GET /favourite/read ended");
       }
     });
 });
@@ -362,7 +362,7 @@ app.get("/favourite/read/:staffid/:listingid", async (req, res) => {
 
 app.post("/favourite/add", async (req, res) => {
   try {
-    console.log('POST /favourite/add started')
+    console.log("POST /favourite/add started");
     console.log(req.body);
     const staffid = req.body.staffid;
     const listingid = req.body.listingid;
@@ -373,7 +373,7 @@ app.post("/favourite/add", async (req, res) => {
       return;
     }
     res.status(200).send({ status: 200, message: "Favourited" });
-    console.log('POST /favourite/add ended')
+    console.log("POST /favourite/add ended");
   } catch (error) {
     console.log(error);
     res.status(400).send({ status: 400, message: "Favouriting Failed" });
@@ -382,32 +382,57 @@ app.post("/favourite/add", async (req, res) => {
 
 app.post("/favourite/remove", async (req, res) => {
   try {
-    console.log('POST /favourite/remove started')
+    console.log("POST /favourite/remove started");
     console.log(req.body);
     const staffid = req.body.staffid;
     const listingid = req.body.listingid;
     const favouriteClass = new favourite.Favourite(staffid, listingid);
     await favouriteClass.deleteFavourite(staffid, listingid);
     res.status(200).send({ status: 200, message: "Unfavourited" });
-    console.log('POST /favourite/remove ended')
+    console.log("POST /favourite/remove ended");
   } catch (error) {
     console.log(error);
     res.status(400).send({ status: 400, message: "Unfavouriting Failed" });
   }
 });
 
-app.get("/application/:listingId", async (req, res) =>{
-  try{
-    console.log('GET /application started')
+app.get("/application/:listingId", async (req, res) => {
+  try {
+    console.log("GET /application started");
     const listingid = req.params.listingId;
     const response = await application.getApplicants(listingid);
-    res.status(200).send({status: 200, body: response, message: "Applicants Retrieved"})
-    console.log('GET /application ended')
+    res
+      .status(200)
+      .send({ status: 200, body: response, message: "Applicants Retrieved" });
+    console.log("GET /application ended");
   } catch (error) {
     console.log(error);
     res.status(400).send({ status: 400, message: "Retrieval Failed" });
   }
-})
+});
+
+app.delete("/delete/listing/:listingId", async (req, res) => {
+  const listingName = req.params.listingId;
+  console.log(listingName);
+  role
+    .deleteListing(listingName)
+    .then((results) => {
+      const response = {
+        statusCode: 200,
+        body: results,
+        message: "Deleted Successfully",
+      };
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      const response = {
+        statusCode: 400,
+        body: error,
+        message: "Deletion Unsuccessful",
+      };
+      res.status(400).send(response);
+    });
+});
 
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////

@@ -24,19 +24,11 @@ const vuetify = createVuetify({
 
 const store = createStore({
   state: {
-    access: "",
-    skills: "",
-    staff: "",
+    profile: "",
   },
   mutations: {
-    access(state, access) {
-      state.access = access;
-    },
-    skills(state, skills) {
-      state.skills = skills;
-    },
-    staff(state, staff) {
-      state.staff = staff;
+    profile(state, profile) {
+      state.profile = profile;
     },
   },
 });

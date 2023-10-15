@@ -16,6 +16,7 @@
               :open="listing.open"
               :access=this.$store.state.access
               @click.native="gotoListing(listing)"
+              :id="listing.listing_id"
             ></ListingCard>
           </v-col>
         </v-row>
@@ -58,7 +59,8 @@ data() {
               })
           },
           gotoLogin() {
-            if (this.$store.state.access === "") {
+            console.log(this.$store.state.profile)
+            if (this.$store.state.profile === "") {
               this.$router.push('/login')
             }
           },

@@ -117,6 +117,20 @@ function removeFavourite(staffid, listingid) {
   });
 }
 
+function deleteListing(listingId) {
+  return new Promise((resolve, reject) => {
+    const query = `DELETE FROM listing WHERE (listing_id = '${listingId}')`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+
 // createRoleListing({listing_name:"ListName1",role_id:1, role_name:"RoleName1",dept:"asdas",country:"sg",num_openings:2,expiry_date:"2023-07-04",open:1, desc:"desc1"})
 
 module.exports = {
@@ -125,5 +139,6 @@ module.exports = {
   createListing,
   readFavourite,
   postFavourite,
-  removeFavourite
+  removeFavourite,
+  deleteListing,
 };
