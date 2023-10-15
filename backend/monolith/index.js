@@ -48,17 +48,39 @@ app.get("/", (req, res) => {
 
 // THIS IS GET /role => TO GET ALL ROLES FOR FRONTEND
 app.get("/listing", async (req, res) => {
-  console.log("GET /listing started");
   role
     .readAllListing()
-    .then((results) => {
+    .then(async (results) => {
       // console.log("Results: ", results);
+      let body = [];
+      for (let result of results) {
+        const applicants = await application.getApplicants(
+          result.listing_id
+        );
+        const numberOfApplicants = applicants.length;
+
+        body.push(
+          new listingClass.RoleListing(
+            result.listing_id,
+            result.listing_name,
+            result.role_name,
+            result.dept,
+            result.country,
+            result.num_openings,
+            result.expiry_date,
+            result.open,
+            result.description,
+            result.created_date,
+            numberOfApplicants,
+            await role_skill.readSkillbyRole(result.role_name)
+          )
+        );
+      }
       const response = {
         statusCode: 200,
-        body: results,
+        body: body,
         message: "Retrieved Successfully",
       };
-      // console.log(response);
       res.status(200).send(response);
     })
     .catch((error) => {
@@ -70,7 +92,6 @@ app.get("/listing", async (req, res) => {
       };
       console.log(response);
       res.status(400).send(response);
-      console.log("GET /listing ended");
     });
 });
 
@@ -82,7 +103,7 @@ app.get("/listing/:listingid?", async (req, res) => {
   const numberOfApplicants = applicants.length;
   role
     .readOneListing(req.params.listingid)
-    .then((results) => {
+    .then(async (results) => {
       const returnListingClass = new listingClass.RoleListing(
         results[0].listing_id,
         results[0].listing_name,
@@ -94,7 +115,8 @@ app.get("/listing/:listingid?", async (req, res) => {
         results[0].open,
         results[0].description,
         results[0].created_date,
-        numberOfApplicants
+        numberOfApplicants,
+        await role_skill.readSkillbyRole(results[0].role_name)
       );
       // console.log(returnListingClass);
       console.log("Results: ", returnListingClass);

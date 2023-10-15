@@ -10,7 +10,8 @@ exports.RoleListing = class {
       open,
       desc,
       created_date,
-      applicants
+      applicants,
+      skills
     ) {
       this._listing_id = listing_id;
       this._listing_name = listing_name;
@@ -22,7 +23,8 @@ exports.RoleListing = class {
       this._open = open;
       this._desc = desc;
       this._created_date = created_date;
-      this._applicants = applicants
+      this._applicants = applicants;
+      this._skills = skills
     }
   
     get listingId() {
@@ -67,6 +69,10 @@ exports.RoleListing = class {
     
     get applicants(){
       return this._applicants
+    }
+
+    get skills(){
+      return this._skills
     }
     
     set listingName(newname){

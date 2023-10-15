@@ -7,16 +7,16 @@
       </v-col>
       <v-col>
         <v-row class="flex-column mt-6">
-          <v-col  v-for="listing in listings" :key="listing.listing_id">
+          <v-col  v-for="listing in listings" :key="listing._listing_id">
             <ListingCard
-              :roleName="listing.listing_name"
-              :Department="listing.dept"
-              :num_openings="listing.num_openings"
-              :created_at="listing.created_date"
-              :open="listing.open"
+              :roleName="listing._listing_name"
+              :Department="listing._dept"
+              :num_openings="listing._num_openings"
+              :created_at="listing._created_date"
+              :open="listing._open"
               :access=this.$store.state.access
               @click.native="gotoListing(listing)"
-              :id="listing.listing_id"
+              :id="listing._listing_id"
             ></ListingCard>
           </v-col>
         </v-row>
@@ -56,6 +56,7 @@ data() {
               axios.get("http://localhost:3003/listing")
               .then((response) => {
                   this.listings = response.data.body;
+                  console.log(this.listings)
               })
           },
           gotoLogin() {
@@ -66,7 +67,7 @@ data() {
           },
           gotoListing(listing) {
             // this.$router.push('/' + listing.id)
-            this.$router.push({ name: 'ListingPage', params: { listing_id: listing.listing_id } })
+            this.$router.push({ name: 'ListingPage', params: { listing_id: listing._listing_id } })
           }
       },
       mounted() {
