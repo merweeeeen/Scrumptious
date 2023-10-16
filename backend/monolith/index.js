@@ -10,6 +10,7 @@ const role = require("./role");
 const role_skill = require("./roleskill");
 const staffClass = require("./StaffClass");
 const staff = require("./Staff");
+const { RoleListing } = require("./rolelisting");
 // const e = require("express");
 
 var allowedOrigins = ["http://127.0.0.1:5173", "http://localhost:5173"];
@@ -48,12 +49,28 @@ app.get("/listing", async (req, res) => {
     .readAllListing()
     .then((results) => {
       // console.log("Results: ", results);
+      let body = [];
+      for (let result of results) {
+        body.push(
+          new RoleListing(
+            result.listing_id,
+            result.listing_name,
+            result.role_name,
+            result.dept,
+            result.country,
+            result.num_openings,
+            result.expiry_date,
+            result.open,
+            result.description,
+            result.created_date
+          )
+        );
+      }
       const response = {
         statusCode: 200,
-        body: results,
+        body: body,
         message: "Retrieved Successfully",
       };
-      console.log(response);
       res.status(200).send(response);
     })
     .catch((error) => {
@@ -80,7 +97,6 @@ app.get("/listing/:listingid?", async (req, res) => {
         body: results,
         message: "Retrieved Successfully",
       };
-      console.log(response);
       res.status(200).send(response);
     })
     .catch((error) => {
@@ -99,7 +115,6 @@ app.get("/listing/:listingid?", async (req, res) => {
 // {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 app.post("/listing", async (req, res) => {
   console.log("POST /listing called"); // This is to check if email parameter contails anything
-  console.log(req.body);
   // if (req.body !== {}){
   // console.log("Body found")
   role
@@ -111,7 +126,6 @@ app.post("/listing", async (req, res) => {
         body: results,
         message: "Posted Data Successfully",
       };
-      console.log(response);
       res.status(201).send(response);
     })
     .catch((error) => {
@@ -126,6 +140,70 @@ app.post("/listing", async (req, res) => {
     });
   // }
   // else{ console.log("No body found")}
+});
+
+app.get("/listing/filter/:filter", async (req, res) => {
+  try {
+    const filter = JSON.parse(req.params.filter);
+
+    const filterKey = Object.keys(filter);
+    var filterString = "";
+    for (let key of filterKey) {
+      if (key === "skills") {
+        // find role that has the skills needed
+        const results = await role_skill.readRolebySkill(filter[key]);
+        let roleString = "";
+        for (let result of results) {
+          if (roleString === "") {
+            roleString += `role_name = '${result.role_name}'`;
+          } else {
+            roleString += ` OR role_name = '${result.role_name}'`;
+          }
+        }
+        if (filterString === "") {
+          filterString += `(${roleString})`;
+        } else {
+          filterString += `AND (${roleString})`;
+        }
+      } else {
+        if (filterString === "") {
+          filterString += `${key} = "${filter[key]}"`;
+        } else {
+          filterString += `AND ${key} = "${filter[key]}"`;
+        }
+      }
+    }
+    const filteredResults = await role.readFilteredListing(filterString);
+    let responseArray = [];
+    for (let result of filteredResults) {
+      responseArray.push(
+        new RoleListing(
+          result.listing_id,
+          result.listing_name,
+          result.role_name,
+          result.dept,
+          result.country,
+          result.num_openings,
+          result.expiry_date,
+          result.open,
+          result.description,
+          result.created_date
+        )
+      );
+    }
+    const response = {
+      statusCode: 200,
+      body: responseArray,
+      message: "Data Filtered Successfully",
+    };
+    res.status(200).send(response);
+  } catch (error) {
+    const response = {
+      statusCode: 200,
+      message: "Data Filtered Unsuccesfully",
+    };
+    res.status(400).send(response);
+  }
 });
 /////////////////////////////////////////////////////
 ////////////// ROLE_SKILL MICROSERVICE //////////////
@@ -230,7 +308,6 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
         };
         res.status(200).send(response);
         return;
-
       });
     })
     .catch((error) => {
@@ -239,6 +316,29 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
         statusCode: 400,
         body: error,
         message: "StaffID not found",
+      };
+      res.status(400).send(response);
+    });
+});
+
+app.delete("/delete/listing/:listingId", async (req, res) => {
+  const listingName = req.params.listingId;
+  console.log(listingName);
+  role
+    .deleteListing(listingName)
+    .then((results) => {
+      const response = {
+        statusCode: 200,
+        body: results,
+        message: "Deleted Successfully",
+      };
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      const response = {
+        statusCode: 400,
+        body: error,
+        message: "Deletion Unsuccessful",
       };
       res.status(400).send(response);
     });
