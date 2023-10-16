@@ -54,7 +54,7 @@
                 :items="depts"
                 label="Department"
                 color="indigo"
-                style="font-size: 10px"
+                style="font-size: 10px; width: 90%;"
                 v-model="selectedDept"
                 id="dept"
               >
@@ -77,6 +77,7 @@
                 :items="skills"
                 label="Skill"
                 color="indigo"
+                style="font-size: 10px; width: 90%;"
                 v-model="selectedSkill"
                 id="skill"
               >
@@ -99,7 +100,7 @@
                 :items="roles"
                 label="Role"
                 color="indigo"
-                style="font-size: 10px"
+                style="font-size: 10px; width: 90%;"
                 v-model="selectedRole"
                 id="role"
               >
@@ -124,7 +125,7 @@
                 :items="vacancies"
                 label="Vacancy"
                 color="indigo"
-                style="font-size: 10px"
+                style="font-size: 10px; width: 90%;"
                 v-model="selectedVacancy"
                 id="vacancy"
               >
