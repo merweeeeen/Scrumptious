@@ -48,7 +48,7 @@
                     </v-col>
                   </v-row>
                   <p class="text-h6 text--primary">
-                    {{ listing._dept }}
+                    {{ listing._role_name }} in {{ listing._dept }}
                   </p>
                   <p class="text-h7 text--primary" id="vacancyAndApplicants">
                     {{ listing._num_openings }} Openings |
