@@ -5,9 +5,10 @@ import CreateListing from '../views/CreateListing.vue';
 import ListingPage from '../views/ListingPage.vue';
 import Login from '../views/Login.vue';
 
+
 const routes = [
       {
-        path: '/',
+        path: '/:skills?/:vacancy?/:dept?/:roleName?',
         name: 'LandingPage',
         component: LandingPage,
       },

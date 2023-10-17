@@ -31,7 +31,6 @@ export default {
     const store = useStore();
     return {
       profile: (profile) => store.commit("profile", profile),
-
     };
   },
   name: "Login",

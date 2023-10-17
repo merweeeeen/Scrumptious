@@ -60,7 +60,6 @@ function createListing(theBody) {
       currentdate.getMinutes() +
       ":" +
       currentdate.getSeconds();
-    console.log(datetime); // YYYY-MM-DD HH:MI:SS format
     const desc = theBody.desc;
     const query = `INSERT INTO listing (listing_name, role_name, dept, country, num_openings, expiry_date, open, created_date, description) VALUES ('${listingName}','${roleName}', '${dept}', '${country}', '${numOpenings}', '${expiryDate}', '${openVal}', '${datetime}', '${desc}');`;
     con.query(query, function (error, results, fields) {
@@ -117,6 +116,24 @@ function removeFavourite(staffid, listingid) {
   });
 }
 
+// createRoleListing({listing_name:"ListName1",role_id:1, role_name:"RoleName1",dept:"asdas",country:"sg",num_openings:2,expiry_date:"2023-07-04",open:1, desc:"desc1"})
+
+// createRoleListing({listing_name:"ListName1",role_id:1, role_name:"RoleName1",dept:"asdas",country:"sg",num_openings:2,expiry_date:"2023-07-04",open:1, desc:"desc1"})
+
+function readFilteredListing(queryString) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM listing WHERE ${queryString};`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+
 function deleteListing(listingId) {
   return new Promise((resolve, reject) => {
     const query = `DELETE FROM listing WHERE (listing_id = '${listingId}')`;
@@ -131,8 +148,6 @@ function deleteListing(listingId) {
   });
 }
 
-// createRoleListing({listing_name:"ListName1",role_id:1, role_name:"RoleName1",dept:"asdas",country:"sg",num_openings:2,expiry_date:"2023-07-04",open:1, desc:"desc1"})
-
 module.exports = {
   readAllListing,
   readOneListing,
@@ -141,4 +156,5 @@ module.exports = {
   postFavourite,
   removeFavourite,
   deleteListing,
+  readFilteredListing,
 };
