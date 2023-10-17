@@ -8,6 +8,8 @@
             :skills="skills"
             :roles="roles"
             :depts="depts"
+            @searchListing="searchListing"
+            @searchStaff="searchStaff"
             @filter="filterFunction"
             @reset="reset"
           ></Filter>
@@ -89,6 +91,22 @@ export default {
       if (this.$store.state.profile === "") {
         this.$router.push("/login");
       }
+    },
+    async searchStaff(staffName){
+      if(staffName === ""){
+        await this.getAllListings();
+        return;
+      }
+      const response = await axios.get(`http://localhost:3003/staff/${staffName}`);
+      this.listings = response.data.body;
+    },
+    async searchListing(listing_name){
+      if(listing_name === ""){
+        await this.getAllListings();
+        return;
+      }
+      const response = await axios.get(`http://localhost:3003/search/${listing_name}`);
+      this.listings = response.data.body;
     },
     async filterFunction(filters) {
       // this.$router.push(
