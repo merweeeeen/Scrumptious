@@ -16,7 +16,7 @@
       <v-col>
         <v-btn elevation="0" class="w-100 justify-start">
           <v-icon>mdi-bookmark-outline</v-icon>
-          &nbsp; Saved Jobs
+          &nbsp; Favourites
         </v-btn>
         <v-btn elevation="0" class=" w-100 justify-start">
           <v-icon>mdi-file-document-edit-outline</v-icon>
@@ -28,7 +28,7 @@
         @click="this.$router.push({path: '/create'})" 
         v-if="this.$store.state.profile._Access_Rights == 1"
         > 
-        <v-icon>mdi-pencil</v-icon>
+        <v-icon>mdi-plus-thick</v-icon>
         &nbsp; Create a new listing
         </v-btn>
       </v-col>
