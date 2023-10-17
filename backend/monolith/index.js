@@ -173,6 +173,7 @@ app.post("/listing", async (req, res) => {
 
 app.get("/listing/filter/:filter", async (req, res) => {
   try {
+    console.log(req.params)
     const filter = JSON.parse(req.params.filter);
 
     const filterKey = Object.keys(filter);
@@ -181,6 +182,7 @@ app.get("/listing/filter/:filter", async (req, res) => {
       if (key === "skills") {
         // find role that has the skills needed
         const results = await role_skill.readRolebySkill(filter[key]);
+        console.log(results)
         let roleString = "";
         for (let result of results) {
           if (roleString === "") {
@@ -203,10 +205,11 @@ app.get("/listing/filter/:filter", async (req, res) => {
       }
     }
     const filteredResults = await role.readFilteredListing(filterString);
+    console.log(filteredResults)
     let responseArray = [];
     for (let result of filteredResults) {
       responseArray.push(
-        new RoleListing(
+        new listingClass.RoleListing(
           result.listing_id,
           result.listing_name,
           result.role_name,
