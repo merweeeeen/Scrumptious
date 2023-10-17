@@ -60,7 +60,7 @@ afterEach(async () => {
   if (favourite) {
     await axios.post("http://localhost:3003/favourite/remove", {
       staffid: profile._Staff_id,
-      listingid: listingIds[listingIds.slice(-1)],
+      listingid: listingIds[listingIds.length - 1].toString()
     });
   }
   console.log("End Test");
