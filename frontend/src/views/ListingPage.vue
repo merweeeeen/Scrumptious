@@ -1,9 +1,6 @@
 <!-- Template -->
 <template>
   <v-app>
-    <!-- Nav Bar -->
-    <NavBar id="NavBar"></NavBar>
-
     <!-- Start of Content -->
     <div class="d-flex justify-center">
       <div class="maxwidth">
@@ -116,9 +113,6 @@
         </v-container>
       </div>
     </div>
-
-    <!-- Footer -->
-    <Footer id="Footer"></Footer>
   </v-app>
 </template>
 
