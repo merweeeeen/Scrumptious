@@ -96,7 +96,6 @@ app.get("/listing", async (req, res) => {
 // THIS IS GET /listing/:listingid? => TO GET ONE ROLE FOR FRONTEND
 app.get("/listing/:listingid?", async (req, res) => {
   console.log("GET /listing/:listingId started");
-  console.log(req.params.listingid);
   const applicants = await application.getApplicants(req.params.listingid);
   const numberOfApplicants = applicants.length;
   role

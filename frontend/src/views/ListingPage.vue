@@ -153,7 +153,6 @@ export default {
         `http://localhost:3003/listing/${this.listing_id}`
       );
       this.listing = response.data.body;
-      console.log(this.listing);
     },
 
     async getRoleSkills() {
@@ -162,14 +161,12 @@ export default {
         .get(`http://localhost:3003/rs/${this.listing._role_name}`)
         .then((response) => {
           const data = response.data.body;
-          console.log(data);
           let requiredSkills = [];
 
           for (let i of data) {
             // console.log(data[i].role_name)
             requiredSkills.push(i.skill_name);
           }
-          console.log(requiredSkills)
           this.listingSkills = requiredSkills;
         })
         .catch((error) => {
@@ -210,7 +207,6 @@ export default {
       const favouriteClass = response.data?.body
         ? response.data.body
         : undefined;
-      console.log(favouriteClass);
       if (favouriteClass) {
         this.saved = true;
         console.log("at first listing saved: " + this.saved);
@@ -230,7 +226,6 @@ export default {
           })
           .then((response) => {
             const favouriteClass = response;
-            console.log(favouriteClass);
             this.saved = favouriteClass;
           })
           .catch((error) => {

@@ -16,6 +16,7 @@ let router;
 let store;
 let mock;
 let listings;
+let favourite;
 
 beforeEach(async () => {
   console.log("Start Test");
@@ -56,11 +57,18 @@ afterEach(async () => {
     console.log(listingIds[i]);
     await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
   }
+  if (favourite) {
+    await axios.post("http://localhost:3003/favourite/remove", {
+      staffid: profile._Staff_id,
+      listingid: listingIds[listingIds.slice(-1)],
+    });
+  }
   console.log("End Test");
 });
 
-async function mockings(listingDetails) {
+async function mockings(listingDetails, fav = "") {
   const listingId = await createListings(listingDetails);
+  const staffId = profile._Staff_id;
   listingIds.push(listingId);
   listings = await axios.get("http://127.0.0.1:3003/listing");
 
@@ -76,6 +84,13 @@ async function mockings(listingDetails) {
     `http://127.0.0.1:3003/rs/${listingDetails.roleName}`
   );
 
+  if (fav) {
+    favourite = await axios.post(`http://localhost:3003/favourite/add`, {
+      staffid: staffId,
+      listingid: listingId.toString(),
+    });
+  }
+
   mock = new MockAdapter(axios);
   mock
     .onGet(`http://localhost:3003/listing`)
@@ -85,8 +100,6 @@ async function mockings(listingDetails) {
     .onGet(`http://localhost:3003/listing/${listingId}`)
     .reply(200, { body: indivListing.data.body });
 
-  const staffId = profile._Staff_id;
-  console.log(getSaved);
   if (getSaved.data?.body) {
     mock
       .onGet(`http://localhost:3003/favourite/read/${staffId}/${listingId}`)
@@ -99,6 +112,15 @@ async function mockings(listingDetails) {
   mock
     .onGet(`http://localhost:3003/rs/${listingDetails.roleName}`)
     .reply(200, { body: getRoleSkills.data.body });
+
+  if (favourite) {
+    mock
+      .onPost(`http://localhost:3003/favourite/add`, {
+        staffid: staffId,
+        listingid: listingId.toString(),
+      })
+      .reply(200);
+  }
 
   return { listings, listingId: listingId };
 }
@@ -294,7 +316,7 @@ describe("Testing ST3-16", () => {
       num_openings: 1,
     };
 
-    const mock = await mockings(listingDetails);
+    const mock = await mockings(listingDetails, true);
     const listingId = mock.listingId;
     listings = mock.listings;
     wrapper = mount(LandingPage, {
