@@ -268,7 +268,7 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
           results[0].dept,
           results[0].country,
           results[0].email,
-          results[0].access_rights,
+          req.params.access,
           skills,
           results[0].password
         );
