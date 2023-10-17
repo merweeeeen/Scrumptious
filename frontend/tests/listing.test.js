@@ -153,6 +153,9 @@ describe("Testing ST3-16", () => {
     const description = await wrapper.find(`#desc`);
     expect(description.text()).toBe("TestCase");
 
+    const dept = await wrapper.find("#roleNameAndDepartment");
+    expect(dept.text()).toBe("Software Developer in IT Support");
+
     const vacancy = await wrapper.find(`#vacancyAndApplicants`);
     expect(vacancy.text()).toBe("1 Openings | 0 Applicant(s)");
 
@@ -330,7 +333,7 @@ describe("Testing ST3-16", () => {
     await nextTick();
     await nextTick();
     await wrapper.find(`#notSaved`).trigger("click");
-    await wrapper.setData({saved: true});
+    await wrapper.setData({ saved: true });
     await nextTick();
     const saved = await wrapper.find(`#saved`);
     expect(saved.exists()).toBe(true);
