@@ -29,11 +29,6 @@ const routes = [
     name: "ListingPage",
     component: ListingPage,
     beforeEnter: authGuard
-  },
-  {
-    path:"/listing",
-    name: "Test",
-    component: Test
   }
 ];
 

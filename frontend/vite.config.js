@@ -21,6 +21,11 @@ export default defineConfig(({ mode }) => {
           provider: "istanbul",
         },
         environment: "happy-dom",
+        server: {
+          deps: {
+            inline: ['element-plus','vuetify'],
+          },
+        },
       },
     };
   } else {

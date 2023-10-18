@@ -4,9 +4,25 @@ import { createStore } from "vuex";
 import LandingPage from "../src/views/LandingPage.vue"; // Importing the page to test the existence of the component=
 import ListingPage from "../src/views/ListingPage.vue"; // Importing the page to test the existence of the component=
 import axios from "axios";
-import { routes } from "../src/router/router";
 import { createRouter, createMemoryHistory } from "vue-router";
 import MockAdapter from "axios-mock-adapter";
+import "vuetify/styles";
+import { createVuetify } from "vuetify";
+import { aliases, mdi } from "vuetify/iconsets/mdi";
+import * as components from "vuetify/components";
+import * as directives from "vuetify/directives";
+
+const vuetify = createVuetify({
+  icons: {
+    defaultSet: "mdi",
+    aliases,
+    sets: {
+      mdi,
+    },
+  },
+  components,
+  directives,
+});
 
 // let response;
 let originalAxios;
@@ -17,6 +33,19 @@ let store;
 let mock;
 let listings;
 let favourite;
+
+const routes = [
+  {
+    path: "/:skills?/:vacancy?/:dept?/:roleName?",
+    name: "LandingPage",
+    component: LandingPage,
+  },
+  {
+    path: "/listing/:listing_id",
+    name: "ListingPage",
+    component: ListingPage,
+  }
+];
 
 beforeEach(async () => {
   console.log("Start Test");
@@ -45,8 +74,6 @@ beforeEach(async () => {
     history: createMemoryHistory(),
     routes,
   });
-  await router.push("/");
-  await router.isReady();
 });
 
 afterEach(async () => {
@@ -60,7 +87,7 @@ afterEach(async () => {
   if (favourite) {
     await axios.post("http://localhost:3003/favourite/remove", {
       staffid: profile._Staff_id,
-      listingid: listingIds[listingIds.length - 1].toString()
+      listingid: listingIds[listingIds.length - 1].toString(),
     });
   }
   console.log("End Test");
@@ -140,7 +167,7 @@ describe("Testing ST3-16", () => {
     listings = mock.listings;
     wrapper = mount(LandingPage, {
       global: {
-        plugins: [store, router],
+        plugins: [store, router, vuetify],
       },
       data() {
         return {
@@ -148,11 +175,9 @@ describe("Testing ST3-16", () => {
         };
       },
     });
-
     const listing = await wrapper.find(`#${listingId}`);
     expect(listing.exists()).toBe(true);
     await wrapper.find(`#${listingId}`).trigger("click");
-
     await wrapper.vm.$router.push({
       name: "ListingPage",
       params: { listing_id: listingId },
@@ -164,7 +189,7 @@ describe("Testing ST3-16", () => {
     wrapper = mount(ListingPage, {
       // Mounting the new ListingPage
       global: {
-        plugins: [store, router],
+        plugins: [store, router, vuetify],
       },
     });
     const listingName = await wrapper.find(`#listingName`);
@@ -205,7 +230,7 @@ describe("Testing ST3-16", () => {
     listings = mock.listings;
     wrapper = mount(LandingPage, {
       global: {
-        plugins: [store, router],
+        plugins: [store, router, vuetify],
       },
       data() {
         return {
@@ -229,7 +254,7 @@ describe("Testing ST3-16", () => {
     wrapper = mount(ListingPage, {
       // Mounting the new ListingPage
       global: {
-        plugins: [store, router],
+        plugins: [store, router ,  vuetify],
       },
     });
     await nextTick();
@@ -259,7 +284,7 @@ describe("Testing ST3-16", () => {
     listings = mock.listings;
     wrapper = mount(LandingPage, {
       global: {
-        plugins: [store, router],
+        plugins: [store, router, vuetify],
       },
       data() {
         return {
@@ -283,7 +308,7 @@ describe("Testing ST3-16", () => {
     wrapper = mount(ListingPage, {
       // Mounting the new ListingPage
       global: {
-        plugins: [store, router],
+        plugins: [store, router, vuetify],
       },
     });
     await nextTick();
@@ -321,7 +346,7 @@ describe("Testing ST3-16", () => {
     listings = mock.listings;
     wrapper = mount(LandingPage, {
       global: {
-        plugins: [store, router],
+        plugins: [store, router, vuetify],
       },
       data() {
         return {
@@ -345,7 +370,7 @@ describe("Testing ST3-16", () => {
     wrapper = mount(ListingPage, {
       // Mounting the new ListingPage
       global: {
-        plugins: [store, router],
+        plugins: [store, router, vuetify],
       },
     });
     await nextTick();
