@@ -26,6 +26,7 @@ export default defineConfig(({ mode }) => {
             inline: ['element-plus','vuetify'],
           },
         },
+        testTimeout: 10000,
       },
     };
   } else {

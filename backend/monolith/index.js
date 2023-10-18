@@ -51,7 +51,6 @@ app.get("/listing", async (req, res) => {
   role
     .readAllListing()
     .then(async (results) => {
-      // console.log("Results: ", results);
       let body = [];
       for (let result of results) {
         const applicants = await application.getApplicants(result.listing_id);
@@ -115,14 +114,11 @@ app.get("/listing/:listingid?", async (req, res) => {
         numberOfApplicants,
         await role_skill.readSkillbyRole(results[0].role_name)
       );
-      // console.log(returnListingClass);
-      console.log("Results: ", returnListingClass);
       const response = {
         statusCode: 200,
         body: returnListingClass,
         message: "Retrieved Successfully",
       };
-      // console.log(response);
       res.status(200).send(response);
       console.log("GET /listing/:listingId ended");
     })
@@ -142,13 +138,9 @@ app.get("/listing/:listingid?", async (req, res) => {
 // {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 app.post("/listing", async (req, res) => {
   console.log("POST /listing started"); // This is to check if email parameter contails anything
-  console.log(req.body);
-  // if (req.body !== {}){
-  // console.log("Body found")
   role
     .createListing(req.body)
     .then((results) => {
-      // console.log("Results: ", results);
       const response = {
         statusCode: 201,
         body: results,
@@ -173,16 +165,13 @@ app.post("/listing", async (req, res) => {
 
 app.get("/listing/filter/:filter", async (req, res) => {
   try {
-    console.log(req.params)
     const filter = JSON.parse(req.params.filter);
-
     const filterKey = Object.keys(filter);
     var filterString = "";
     for (let key of filterKey) {
       if (key === "skills") {
         // find role that has the skills needed
         const results = await role_skill.readRolebySkill(filter[key]);
-        console.log(results)
         let roleString = "";
         for (let result of results) {
           if (roleString === "") {
@@ -205,7 +194,6 @@ app.get("/listing/filter/:filter", async (req, res) => {
       }
     }
     const filteredResults = await role.readFilteredListing(filterString);
-    console.log(filteredResults)
     let responseArray = [];
     for (let result of filteredResults) {
       responseArray.push(
@@ -246,13 +234,11 @@ app.get("/rs", async (req, res) => {
   role_skill
     .readAllRoleSkills()
     .then((results) => {
-      // console.log("Results: ", results);
       const response = {
         statusCode: 200,
         body: results,
         message: "Retrieved Successfully",
       };
-      // console.log(response);
       res.status(200).send(response);
       console.log("GET /rs ended");
     })
@@ -270,17 +256,14 @@ app.get("/rs", async (req, res) => {
 
 app.get("/rs/:roleName?", async (req, res) => {
   console.log("GET /rs/:roleName started");
-  console.log(req.params.roleName);
   role_skill
     .readSkillbyRole(req.params.roleName)
     .then((results) => {
-      // console.log("Results: ", results);
       const response = {
         statusCode: 200,
         body: results,
         message: "Retrieved Successfully",
       };
-      // console.log(response);
       res.status(200).send(response);
       console.log("GET /rs/:roleName ended");
     })
@@ -306,7 +289,6 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
   staff
     .findStaff(req.params.staffId)
     .then((results) => {
-      // console.log("Results: ", results);
       if (results[0].password !== req.params.password) {
         const response = {
           statusCode: 200,
@@ -373,7 +355,6 @@ app.get("/ss", async (req, res) => {
         body: results,
         message: "Retrieved Successfully",
       };
-      console.log(response);
       res.status(200).send(response);
     })
     .catch((error) => {
@@ -389,7 +370,6 @@ app.get("/ss", async (req, res) => {
 });
 
 app.get("/ss/:staffId?", async (req, res) => {
-  console.log(req.params.staffId);
   staff_skill
     .readSkillbyStaffId(req.params.staffId)
     .then((results) => {
@@ -399,7 +379,6 @@ app.get("/ss/:staffId?", async (req, res) => {
         body: results,
         message: "Retrieved Successfully",
       };
-      console.log(response);
       res.status(200).send(response);
     })
     .catch((error) => {
@@ -441,6 +420,7 @@ app.get("/favourite/read/:staffid/:listingid", async (req, res) => {
       });
   } catch (error) {
     console.log(error);
+    res.status(400).send({ status: 400, message: "Reading Favourite Failed" });
   }
 });
 
@@ -452,7 +432,6 @@ app.get("/favourite/read/:staffid/:listingid", async (req, res) => {
 app.post("/favourite/add", async (req, res) => {
   try {
     console.log("POST /favourite/add started");
-    console.log(req.body);
     const staffid = req.body.staffid;
     const listingid = req.body.listingid;
     const favouriteClass = new favourite.Favourite(staffid, listingid);
@@ -462,7 +441,6 @@ app.post("/favourite/add", async (req, res) => {
       return;
     }
     res.status(200).send({ status: 200, message: "Favourited" });
-    console.log("POST /favourite/add ended");
   } catch (error) {
     console.log(error);
     res.status(400).send({ status: 400, message: "Favouriting Failed" });
@@ -472,7 +450,6 @@ app.post("/favourite/add", async (req, res) => {
 app.post("/favourite/remove", async (req, res) => {
   try {
     console.log("POST /favourite/remove started");
-    console.log(req.body);
     const staffid = req.body.staffid;
     const listingid = req.body.listingid;
     const favouriteClass = new favourite.Favourite(staffid, listingid);
@@ -502,7 +479,6 @@ app.get("/application/:listingId", async (req, res) => {
 
 app.delete("/delete/listing/:listingId", async (req, res) => {
   const listingName = req.params.listingId;
-  console.log(listingName);
   role
     .deleteListing(listingName)
     .then((results) => {
