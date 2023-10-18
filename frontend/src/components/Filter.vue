@@ -11,6 +11,7 @@
           bg-color="white"
           single-line
           hide-details
+          id="searchBar"
         ></v-text-field>
       </v-col>
       <v-col>

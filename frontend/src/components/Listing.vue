@@ -8,7 +8,6 @@
         variant="outlined"
         onmouseover="this.style.boxShadow='0 0 10px 0 rgba(0,0,0,0.5)'; show=true"
         onmouseleave="this.style.boxShadow='none';show=false;"
-        v-if="open == 1"
       >
         <!-- Role Name and when done, bookmark/3 dot icon -->
         <v-card-item class="mt-0 w-100">

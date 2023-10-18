@@ -142,7 +142,7 @@ app.post("/listing", async (req, res) => {
   // else{ console.log("No body found")}
 });
 app.get("/search/:name", async (req, res) => {
-  
+    console.log('GET /search/:name started')
     const filteredResults = await role.readFilteredListing(`listing_name LIKE '%${req.params.name}%'`);
     let responseArray = [];
     for (let result of filteredResults) {
@@ -167,6 +167,7 @@ app.get("/search/:name", async (req, res) => {
       message: "Data Filtered Successfully",
     };
     res.status(200).send(response);
+    console.log('GET /search/:name ended')
 });
 app.get("/listing/filter/:filter", async (req, res) => {
   try {
