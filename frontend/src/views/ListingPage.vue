@@ -23,7 +23,9 @@
                       </p>
                     </v-col>
 
-                    <v-col class="d-flex align-center py-0 h-100">
+                    <v-col 
+                    class="d-flex align-center py-0 h-100"
+                    v-if=getRole()>
                       <v-icon
                         class="align-center w-100 justify-end"
                         size="x-large"
@@ -74,9 +76,26 @@
                       variant="flat"
                       v-bind:color="primaryColor"
                       id="applyBtn"
+                      v-if=getRole()
                     >
                       Apply
                     </v-btn>
+                    <v-btn
+                      density="comfortable"
+                      size="small"
+                      variant="flat"
+                      v-bind:color="primaryColor"
+                      id="update"
+                      class="mr-5"
+                      v-else
+                      @click="this.$router.push({
+                        name: 'UpdatePage',
+                        params: {listing_id: listing_id}
+                      })"
+                    >
+                      Update
+                    </v-btn>
+                    
                   </v-col>
                 </v-row>
               </v-card>
@@ -138,6 +157,7 @@ export default {
       savedListings: ["12", "13", "14"],
       saved: false,
       staffid: this.$store.state.profile._Staff_id,
+      profile: this.$store.state.profile,
     };
   },
 
@@ -239,6 +259,10 @@ export default {
         // console.log(this.savedListings)
       }
     },
+    getRole() {
+      if (this.$store.state.profile._Access_Rights == 1) return false;
+      else return true
+    }
   },
 
   async mounted() {

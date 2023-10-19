@@ -167,8 +167,8 @@
         invalid: false,
         errormsg: [],
 
-        access: "HR",
-        idparam: this.$route.query.id
+        profile: this.$store.state.profile,
+        idparam: this.$route.params.listing_id
         }
     },
     methods: {
@@ -181,16 +181,17 @@
         console.log(this.idparam);
         axios.get('http://localhost:3003/listing/' + this.idparam)
         .then(response => {
-            this.responseHolder = response.data
             console.log(response.data)
-            console.log(this.responseHolder.body[0].listing_name)
-            this.jobtitle = this.responseHolder.body[0].listing_name
-            this.rolename = this.responseHolder.body[0].role_name
-            this.jobdescription = this.responseHolder.body[0].description
-            this.dept = this.responseHolder.body[0].dept
-            this.vacancies = this.responseHolder.body[0].num_openings
-            this.country = this.responseHolder.body[0].country
-            this.expirydate = this.responseHolder.body[0].expiry_date
+            this.responseHolder = response.data.body
+            // console.log(response.data)
+            // console.log(this.responseHolder.body[0].listing_name)
+            this.jobtitle = this.responseHolder._listing_name
+            this.rolename = this.responseHolder._role_name
+            this.jobdescription = this.responseHolder._desc
+            this.dept = this.responseHolder._dept
+            this.vacancies = this.responseHolder._num_openings
+            this.country = this.responseHolder._country
+            this.expirydate = this.responseHolder._expiry_date
         })
         .catch(error => {
             console.log(error)
@@ -286,7 +287,7 @@
       this.invalid = false
     },
     checkAccess() {
-      if (this.access == "HR") {
+      if (this.profile._Access_Rights == 1) {
         return true
       } else {
         alert("You do not have access to this page")

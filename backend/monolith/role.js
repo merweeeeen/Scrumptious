@@ -186,6 +186,7 @@ module.exports = {
   readAllListing,
   readOneListing,
   createListing,
+  updateListing,
   readFavourite,
   postFavourite,
   removeFavourite,

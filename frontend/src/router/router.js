@@ -32,9 +32,10 @@ const routes = [
     beforeEnter: authGuard
   },
   {
-    path: '/update',
+    path: '/update/:listing_id',
     name: 'UpdatePage',
     component: Update,
+    beforeEnter: authGuard
   }
 ];
 
