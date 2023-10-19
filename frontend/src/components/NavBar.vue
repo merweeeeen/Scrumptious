@@ -23,7 +23,9 @@
             link!
         </v-btn>
 
-        <v-btn icon>
+        <v-btn icon
+        @click="this.$router.push({path: '/profile'})" 
+        >
             <v-icon :id="Account">mdi-account</v-icon>
         </v-btn>
 

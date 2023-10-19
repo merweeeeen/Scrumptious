@@ -29,20 +29,20 @@
                         ></v-img>
                     </v-sheet>
                     <v-sheet class="text-center">
-                        <h1>{{ staffInfo.staff_FName }} {{ staffInfo.staff_LName }}</h1>
-                        <h3> Developer in IT Department</h3>
-                        <h4> {{ staffInfo.email }}</h4>
+                        <h1>{{ staffInfo._Staff_FName }} {{ staffInfo._Staff_LName }}</h1>
+                        <h3> {{staffInfo._Dept}} Department</h3> <!--STAFF_ROLE in -->
+                        <h4> {{ staffInfo._Email }}</h4>
                     </v-sheet>
                 </v-col>
                 
                 <v-col 
-                    cols="auto"
+                    cols="12"
                 >
                     <v-sheet>
                         <h3>Skills</h3>
                         <hr>
                         <v-chip
-                        v-for="skill in employeeSkills"
+                        v-for="skill in staffInfo._Skills"
                         class="ma-1"
                         variant="tonal"
                         
@@ -68,14 +68,14 @@
                   margin="10px"
                 >
                   <v-card-text>
-                    <v-row class="d-flex align-center">
+                    <!-- <v-row class="d-flex align-center">
                       <v-col>
                         <p class="text-h5 text--primary" id="documents">
                           Documents
                         </p>
                       </v-col>
 
-                      <v-col class="d-flex align-center py-0 h-100">
+                      <v-col class="d-flex align-center py-0 h-100"> -->
                         <!-- Edit documents button: for future development -->
                         <!-- <v-icon
                           class="align-center w-100 justify-end"
@@ -85,7 +85,7 @@
                         >
                           mdi-file-edit-outline
                         </v-icon> -->
-                      </v-col>
+                      <!-- </v-col>
                     </v-row>
                     <p class="text--primary my-1" id="roleNameAndDepartment">
                         <v-icon  id="editBtn">mdi-file-document-outline</v-icon>
@@ -94,12 +94,12 @@
                     <p class="text--primary my-1" id="roleNameAndDepartment">
                         <v-icon  id="editBtn">mdi-file-document-outline</v-icon>
                         Staff_Resume.pdf
-                    </p>
+                    </p> -->
 
-                    <v-row class="d-flex align-center mt-1">
+                    <v-row class="d-flex align-center "> <!--mt-1-->
                       <v-col>
                         <p class="text-h5 text--primary" id="documents">
-                          Staff Information
+                          My Information
                         </p>
                       </v-col>
 
@@ -108,11 +108,11 @@
                     </v-row>
                     <p class="text--primary my-1" id="roleNameAndDepartment">
                         <v-icon  id="editBtn">mdi-earth</v-icon>
-                        Country: {{ staffInfo.country }}
+                        Country: {{ staffInfo._Country }}
                     </p>
                     <p class="text--primary my-1" id="roleNameAndDepartment">
                         <v-icon  id="editBtn">mdi-account-tie</v-icon>
-                        Staff ID: {{ staffInfo.staffid }}
+                        Staff ID: {{ staffInfo._Staff_id }}
                     </p>
 
                   </v-card-text>
@@ -168,9 +168,14 @@
   <script>
   import NavBar from "../components/NavBar.vue";
   import Footer from "../components/Footer.vue";
+  import { useStore } from "vuex";
 //   import axios from "axios";
   
   export default {
+    setup() {
+        const store = useStore();
+    },
+
     components: {
       NavBar,
       Footer,
@@ -185,14 +190,15 @@
         saved: false,
         // staffid: this.$store.state.profile._Staff_id,
         staffid: "1001",
-        staffInfo: {
-            staffid: "1001",
-            staff_FName: "Staff", 
-            staff_LName: "Staff", 
-            dept: "Human Resource",
-            country: "SG",
-            email: "staff@gmail.com",
-        },
+        // staffInfo: {
+        //     staffid: "1001",
+        //     staff_FName: "Staff", 
+        //     staff_LName: "Staff", 
+        //     dept: "Human Resource",
+        //     country: "SG",
+        //     email: "staff@gmail.com",
+        // },
+        staffInfo: this.$store.state.profile,
         staffImg: null, // "https://cdn.vuetifyjs.com/images/john.jpg"
         
       }; 
@@ -220,7 +226,7 @@
     //           requiredSkills.push(i.skill_name);
     //         }
     //         console.log(requiredSkills)
-    //         this.listingSkills = requiredSkills;
+    //         // this.listingSkills = requiredSkills;
     //       })
     //       .catch((error) => {
     //         console.log(error);
@@ -250,6 +256,12 @@
           day: "numeric",
         });
       },
+
+      testing() {
+        console.log(this.$store.state.profile)
+        // axios
+        // .get()
+      }
   
     //   async getSaved() {
     //     // console.log("staffid", this.staffid);
@@ -276,6 +288,7 @@
     //   await this.getListing();
     //   await this.getRoleSkills();
     //   await this.getSaved();
+    await this.testing();
     },
   };
   </script>

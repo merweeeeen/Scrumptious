@@ -311,8 +311,8 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
         });
         const returnStaffClass = new staffClass.Staff(
           results[0].staff_id,
-          results[0].staff_fname,
-          results[0].staff_lname,
+          results[0].staff_FName,
+          results[0].staff_LName,
           results[0].dept,
           results[0].country,
           results[0].email,
