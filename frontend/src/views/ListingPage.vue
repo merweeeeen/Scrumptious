@@ -110,6 +110,43 @@
               </v-card>
             </v-col>
           </v-row>
+
+          <v-row class="ma-0 w-100">
+            <v-col class="pb-0">
+              <p class="text-h6 text--primary">Applicants</p>
+            </v-col>
+          </v-row>
+
+          <v-row class="ma-0 w-100">
+            <v-col class="pb-0">
+              <v-card width="100%" color="black" variant="outlined">
+                <v-card-text>
+                  <p class="text-h6 text--primary">Staff Name Last Name</p>
+                  <p class="text-h7 text--primary" id="desc">
+                    <!-- {{ listing._desc }} -->
+                    Staff ID:
+                    <br />
+                    Email: 
+                  </p>
+                  <!-- <br /> -->
+                  <!-- <p class="text-h6 text--primary">Skills matched</p> -->
+                  <!-- <v-chip
+                    v-for="skill in listingSkills"
+                    class="ma-1"
+                    variant="tonal"
+                    :color="
+                      employeeSkills.includes(skill)
+                        ? 'green-darken-3'
+                        : 'default'
+                    "
+                    :id="skill"
+                  >
+                    {{ skill }}
+                  </v-chip> -->
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
         </v-container>
       </div>
     </div>
