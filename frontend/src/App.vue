@@ -9,5 +9,6 @@ import Footer from './components/Footer.vue';
   <router-view />
   <Footer />
 </v-app>
+  <ListingPage />
 </template>
 
