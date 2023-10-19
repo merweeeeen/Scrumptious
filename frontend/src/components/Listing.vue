@@ -71,6 +71,7 @@
                   variant="flat"
                   v-bind:color="primaryColor"
                   id="apply"
+                  v-show="this.$store.state.profile._Access_Rights == 0"
                   >Apply</v-btn
                 >
               </v-col>
@@ -91,7 +92,7 @@
         variant="flat"
         onmouseover="this.style.boxShadow='0 0 10px 0 rgba(0,0,0,0.5)'; show=true"
         onmouseleave="this.style.boxShadow='none';show=false;"
-        v-if="open == 0 && access == 'HR'"
+        v-if="open == 0 && this.$store.state.profile._Access_Rights == 1"
       >
         <!-- Role Name and when done, bookmark/3 dot icon -->
         <v-card-item class="mt-0 w-100">
@@ -143,21 +144,6 @@
                 <v-text class="text-caption">{{
                   days_posted(created_at)
                 }}</v-text>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-btn
-                  width="100%"
-                  height="100%"
-                  density="comfortable"
-                  size="large"
-                  variant="flat"
-                  v-bind:color="primaryColor"
-                  id="apply"
-                  disabled
-                  >Apply</v-btn
-                >
               </v-col>
             </v-row>
           </v-container>

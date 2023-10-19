@@ -163,34 +163,32 @@ app.post("/listing", async (req, res) => {
   // else{ console.log("No body found")}
 });
 app.get("/search/:name", async (req, res) => {
-  console.log("GET /search/:name started");
-  const filteredResults = await role.readFilteredListing(
-    `listing_name LIKE '%${req.params.name}%'`
-  );
-  let responseArray = [];
-  for (let result of filteredResults) {
-    responseArray.push(
-      new listingClass.RoleListing(
-        result.listing_id,
-        result.listing_name,
-        result.role_name,
-        result.dept,
-        result.country,
-        result.num_openings,
-        result.expiry_date,
-        result.open,
-        result.description,
-        result.created_date
-      )
-    );
-  }
-  const response = {
-    statusCode: 200,
-    body: responseArray,
-    message: "Data Filtered Successfully",
-  };
-  res.status(200).send(response);
-  console.log("GET /search/:name ended");
+    console.log('GET /search/:name started')
+    const filteredResults = await role.readFilteredListing(`listing_name LIKE '%${req.params.name}%'`);
+    let responseArray = [];
+    for (let result of filteredResults) {
+      responseArray.push(
+        new listingClass.RoleListing(
+          result.listing_id,
+          result.listing_name,
+          result.role_name,
+          result.dept,
+          result.country,
+          result.num_openings,
+          result.expiry_date,
+          result.open,
+          result.description,
+          result.created_date
+        )
+      );
+    }
+    const response = {
+      statusCode: 200,
+      body: responseArray,
+      message: "Data Filtered Successfully",
+    };
+    res.status(200).send(response);
+    console.log('GET /search/:name ended')
 });
 app.get("/listing/filter/:filter", async (req, res) => {
   try {
