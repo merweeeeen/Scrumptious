@@ -258,7 +258,7 @@
       },
 
       testing() {
-        console.log(this.$store.state.profile)
+        // console.log(this.$store.state.profile)
         // axios
         // .get()
       }
@@ -288,7 +288,7 @@
     //   await this.getListing();
     //   await this.getRoleSkills();
     //   await this.getSaved();
-    await this.testing();
+    // await this.testing();
     },
   };
   </script>
