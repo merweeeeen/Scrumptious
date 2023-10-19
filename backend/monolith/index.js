@@ -341,6 +341,35 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
     });
 });
 
+app.get("/staff/:id", async (req, res) => {
+  staff.findStaff(req.params.id).then((results) => {
+    // console.log("Results: ", results);
+    staff.findStaffSkill(results[0].staff_id).then((staffSkills) => {
+      const skills = staffSkills.map((staffSkill) => {
+        return staffSkill.skill_name;
+      });
+      const returnStaffClass = new staffClass.Staff(
+        results[0].staff_id,
+        results[0].staff_FName,
+        results[0].staff_LName,
+        results[0].dept,
+        results[0].country,
+        results[0].email,
+        results[0].access_rights,
+        skills,
+        results[0].password
+      );
+      const response = {
+        statusCode: 200,
+        body: returnStaffClass,
+        message: "Retrieved Successfully",
+      };
+      res.status(200).send(response);
+      return;
+    });
+  });
+});
+
 /////////////////////////////////////////////////////
 ////////////// STAFF_SKILL MICROSERVICE /////////////
 /////////////////////////////////////////////////////
