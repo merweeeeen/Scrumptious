@@ -29,6 +29,8 @@
                 :open="listing._open"
                 :access="this.$store.state._access_rights"
                 :identified="listing._listing_name"
+                @click.native="gotoListing(listing)"
+                :id="listing._listing_id"
               ></ListingCard>
             </v-col>
           </v-row>
@@ -140,6 +142,13 @@ export default {
     },
     async reset() {
       await this.getAllListings();
+    },
+    gotoListing(listing) {
+      // this.$router.push('/' + listing.id)
+      this.$router.push({
+        name: "ListingPage",
+        params: { listing_id: listing._listing_id },
+      });
     },
   },
   async created() {
