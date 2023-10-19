@@ -59,6 +59,8 @@ export default {
           return;
         }
         this.profile(response.data.body);
+
+        console.log(this.$store.state.profile);
         this.$router.push("/")
       } catch (err) {
         if (err) {

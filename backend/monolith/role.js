@@ -73,6 +73,51 @@ function createListing(theBody) {
     });
   });
 }
+
+function readFavourite(staffid, listingid) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM favourite WHERE listing_id = ${listingid} AND staff_id = ${staffid};`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+
+function postFavourite(staffid, listingid) {
+  return new Promise((resolve, reject) => {
+    const query = `INSERT INTO favourite (staff_id,listing_id) VALUES ('${staffid}', ${listingid});`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+
+function removeFavourite(staffid, listingid) {
+  return new Promise((resolve, reject) => {
+    const query = `DELETE FROM favourite WHERE staff_id = ${staffid} AND listing_id = ${listingid};`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+
+// createRoleListing({listing_name:"ListName1",role_id:1, role_name:"RoleName1",dept:"asdas",country:"sg",num_openings:2,expiry_date:"2023-07-04",open:1, desc:"desc1"})
+
 // createRoleListing({listing_name:"ListName1",role_id:1, role_name:"RoleName1",dept:"asdas",country:"sg",num_openings:2,expiry_date:"2023-07-04",open:1, desc:"desc1"})
 
 function readFilteredListing(queryString) {
@@ -107,6 +152,9 @@ module.exports = {
   readAllListing,
   readOneListing,
   createListing,
+  readFavourite,
+  postFavourite,
+  removeFavourite,
+  deleteListing,
   readFilteredListing,
-  deleteListing
 };
