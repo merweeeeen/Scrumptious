@@ -95,8 +95,15 @@ app.get("/listing", async (req, res) => {
 // THIS IS GET /listing/:listingid? => TO GET ONE ROLE FOR FRONTEND
 app.get("/listing/:listingid?", async (req, res) => {
   console.log("GET /listing/:listingId started");
+  // const applicants = await application.getApplicants(req.params.listingid).then((a) => {return a.staff_id});
+  // console.log(applicants);
   const applicants = await application.getApplicants(req.params.listingid);
   const numberOfApplicants = applicants.length;
+  const profiles = [];
+  for(let applicant of applicants){
+    const profile = await staff.findStaff(applicant.staff_id);
+    profiles.push(profile[0]);
+  }
   role
     .readOneListing(req.params.listingid)
     .then(async (results) => {
@@ -111,7 +118,8 @@ app.get("/listing/:listingid?", async (req, res) => {
         results[0].open,
         results[0].description,
         results[0].created_date,
-        numberOfApplicants,
+        profiles,
+        // await staff.findStaff(req.params.listingid),
         await role_skill.readSkillbyRole(results[0].role_name)
       );
       const response = {
@@ -311,8 +319,8 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
         });
         const returnStaffClass = new staffClass.Staff(
           results[0].staff_id,
-          results[0].staff_fname,
-          results[0].staff_lname,
+          results[0].staff_FName,
+          results[0].staff_LName,
           results[0].dept,
           results[0].country,
           results[0].email,
