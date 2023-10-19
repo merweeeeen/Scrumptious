@@ -72,10 +72,8 @@ describe("Integration tests", async () => {
     };
 
     axios.get = mockAxios.get;
-
     const filterComponent = wrapper.findComponent("#Filter");
     const searchBar = await filterComponent.find("#searchBar");
-    await wrapper.setData({ listing_name: "ST3-17.1.1" });
     await nextTick();
     mockAxios = {
       get: async () => ({
@@ -86,6 +84,7 @@ describe("Integration tests", async () => {
     };
     axios.get = mockAxios.get;
     await filterComponent.setData({ listing_name: "ST3-17.1.1" });
+    expect(await searchBar.element.value).toBe("ST3-17.1.1");
     await filterComponent.vm.searchListing();
     await searchBar.trigger("searchListing");
     expect(filterComponent.emitted().searchListing[0][0]).toBe("ST3-17.1.1");
@@ -138,6 +137,7 @@ describe("Integration tests", async () => {
     };
     axios.get = mockAxios.get;
     await filterComponent.setData({ listing_name: searchedName });
+    expect(await searchBar.element.value).toBe("ST3-17.1.2s");
     await filterComponent.vm.searchListing();
     await searchBar.trigger("searchListing");
     expect(filterComponent.emitted().searchListing[0][0]).toBe(searchedName);
@@ -190,6 +190,7 @@ describe("Integration tests", async () => {
     };
     axios.get = mockAxios.get;
     await filterComponent.setData({ listing_name: searchedName });
+    expect(await searchBar.element.value).toBe("ST3-17.1.");
     await filterComponent.vm.searchListing();
     await searchBar.trigger("searchListing");
     expect(filterComponent.emitted().searchListing[0][0]).toBe(searchedName);
@@ -215,7 +216,7 @@ describe("Integration tests", async () => {
       roleName: "Software Developer",
       dept: "IT Support",
       num_openings: 1,
-      open: 0
+      open: 0,
     };
     listingIds.push(await createListings(listingDetails));
     const searchResponse = await axios.get(
@@ -242,6 +243,7 @@ describe("Integration tests", async () => {
     };
     axios.get = mockAxios.get;
     await filterComponent.setData({ listing_name: searchedName });
+    expect(await searchBar.element.value).toBe("ST3-17.2.1");
     await filterComponent.vm.searchListing();
     await searchBar.trigger("searchListing");
     expect(filterComponent.emitted().searchListing[0][0]).toBe(searchedName);
@@ -268,7 +270,7 @@ async function createListings(listingDetails) {
     num_openings: listingDetails.num_openings,
     country: "SG",
     expiry_date: "2024-01-01",
-    open: listingDetails?.open >= 0 ? listingDetails.open : 1, 
+    open: listingDetails?.open >= 0 ? listingDetails.open : 1,
   };
   const response = await axios.post("http://127.0.0.1:3003/listing", bodyInfo);
   return response.data.body.insertId;
