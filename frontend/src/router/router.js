@@ -25,7 +25,6 @@ const routes = [
     component: CreateListing,
     beforeEnter: authGuard
   },
-  // DELETE BELOW?
   {
     path: '/profile',
     name: 'Profile',
