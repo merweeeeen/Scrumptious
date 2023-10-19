@@ -1,42 +1,38 @@
 <template>
-    <div class="d-flex align-center flex-column">  
-
-    <div>
-        <v-card 
-            width="100%"
-            min-width="400px"
-            color="black" 
-            variant="outlined"
-            onmouseover="this.style.boxShadow='0 0 10px 0 rgba(0,0,0,0.5)'; show=true"
-            onmouseleave="this.style.boxShadow='none';show=false;"
-            id="card"
-            v-if="open == 1"
-        > 
+  <div class="d-flex align-center flex-column">
+    <div :identified="identified">
+      <v-card
+        width="100%"
+        min-width="400px"
+        color="black"
+        variant="outlined"
+        onmouseover="this.style.boxShadow='0 0 10px 0 rgba(0,0,0,0.5)'; show=true"
+        onmouseleave="this.style.boxShadow='none';show=false;"
+        v-if="open == 1"
+      >
         <!-- Role Name and when done, bookmark/3 dot icon -->
         <v-card-item class="mt-0 w-100">
-        <v-container class="pa-0 mt-1">
-            <v-row no-gutters align="center" style="height: 25px;">
-                <v-col class="pa-0">
-                    <v-card-title>{{roleName}}</v-card-title>
-                </v-col>
-                
-                <!-- This should be where the bookmark/3 dot icon should go -->
-                <v-col class="pa-0">
-                    <!-- <v-icon icon="fa:fas fa-list"></v-icon> -->
-                    <!-- <v-text class="text-caption text-grey-darken-2">More</v-text> -->
-                </v-col>
+          <v-container class="pa-0 mt-1">
+            <v-row no-gutters align="center" style="height: 25px">
+              <v-col class="pa-0">
+                <v-card-title>{{ roleName }}</v-card-title>
+              </v-col>
+
+              <!-- This should be where the bookmark/3 dot icon should go -->
+              <v-col class="pa-0">
+                <!-- <v-icon icon="fa:fas fa-list"></v-icon> -->
+                <!-- <v-text class="text-caption text-grey-darken-2">More</v-text> -->
+              </v-col>
             </v-row>
-        </v-container>
+          </v-container>
 
-        <!-- Info about role: Department, Openings, Applicants, Full Time -->
-        <v-text 
-                class="text-caption text-grey-darken-2"
-            >
-            {{Department}} | {{num_openings}} Opening(s)
-        </v-text>
+          <!-- Info about role: Department, Openings, Applicants, Full Time -->
+          <v-text class="text-caption text-grey-darken-2">
+            {{ Department }} | {{ num_openings }} Opening(s)
+          </v-text>
 
-        <!-- Skills Matched Percentage Bar -->
-        <!-- <v-container class="pa-0 mt-1">
+          <!-- Skills Matched Percentage Bar -->
+          <!-- <v-container class="pa-0 mt-1">
             <v-row no-gutters align="center" style="height: 25px;">
                 <v-text class="text-subtitle-1">Skills Matched</v-text>
             </v-row>
@@ -57,134 +53,135 @@
             </v-row>
         </v-container>
     -->
-        <!-- Last Updated -->
-        <v-container class="pa-0">
-            <v-row no-gutters justify="space-between" style="height: 25px;">
-                <v-col cols="auto">
-                    <v-text class="text-caption text-grey-darken-2">{{ days_posted(created_at) }}</v-text>
-                </v-col>
+          <!-- Last Updated -->
+          <v-container class="pa-0">
+            <v-row no-gutters justify="space-between" style="height: 25px">
+              <v-col cols="auto">
+                <v-text class="text-caption text-grey-darken-2">{{
+                  days_posted(created_at)
+                }}</v-text>
+              </v-col>
             </v-row>
             <v-row>
-                <v-col>
-                    <!-- <v-btn 
-                    width="100%"
-                    height="100%"
-                    density="comfortable"
-                    size="large"
-                    variant="flat"
-                    v-bind:color="primaryColor"
-                    id="apply"
-                    >Apply</v-btn> -->
+              <v-col>
+                <!-- <v-btn
+                  width="100%"
+                  height="100%"
+                  density="comfortable"
+                  size="large"
+                  variant="flat"
+                  v-bind:color="primaryColor"
+                  id="apply"
+                  >Apply</v-btn
+                > -->
                     <ApplyRLPopup
                     :roleName="this.roleName"
                     />
-                </v-col>
+              </v-col>
             </v-row>
-        </v-container>
-
+          </v-container>
         </v-card-item>
 
-    <v-expand-transition>
-    <div v-show="show">
-        <v-divider></v-divider>
-    </div>
-    </v-expand-transition>
-    </v-card> 
-    <v-card 
+        <v-expand-transition>
+          <div v-show="show">
+            <v-divider></v-divider>
+          </div>
+        </v-expand-transition>
+      </v-card>
+      <v-card
         width="100%"
         min-width="400px"
-        color="red" 
+        color="red"
         variant="flat"
         onmouseover="this.style.boxShadow='0 0 10px 0 rgba(0,0,0,0.5)'; show=true"
         onmouseleave="this.style.boxShadow='none';show=false;"
         v-if="open == 0 && access == 'HR'"
-    > 
-    <!-- Role Name and when done, bookmark/3 dot icon -->
-    <v-card-item class="mt-0 w-100">
-    <v-container class="pa-0 mt-1">
-        <v-row no-gutters align="center" style="height: 25px;">
-            <v-col class="pa-0">
-                <v-card-title>{{roleName}}</v-card-title>
-            </v-col>
-            
-            <!-- This should be where the bookmark/3 dot icon should go -->
-            <v-col class="pa-0">
+      >
+        <!-- Role Name and when done, bookmark/3 dot icon -->
+        <v-card-item class="mt-0 w-100">
+          <v-container class="pa-0 mt-1">
+            <v-row no-gutters align="center" style="height: 25px">
+              <v-col class="pa-0">
+                <v-card-title>{{ roleName }}</v-card-title>
+              </v-col>
+
+              <!-- This should be where the bookmark/3 dot icon should go -->
+              <v-col class="pa-0">
                 <!-- <v-icon icon="fa:fas fa-list"></v-icon> -->
                 <!-- <v-text class="text-caption text-grey-darken-2">More</v-text> -->
+              </v-col>
+            </v-row>
+          </v-container>
+
+          <!-- Info about role: Department, Openings, Applicants, Full Time -->
+          <v-text class="text-caption">
+            {{ Department }} | {{ num_openings }} Opening(s)
+          </v-text>
+
+          <!-- Skills Matched Percentage Bar -->
+          <!-- <v-container class="pa-0 mt-1">
+            <v-row no-gutters align="center" style="height: 25px;">
+                <v-text class="text-subtitle-1">Skills Matched</v-text>
+            </v-row>
+            <v-row no-gutters align="center" style="height: 25px;">
+            <v-col class="pa-1">
+                <v-sheet class="rounded-5 bg-transparent" style="border: solid 1px black; border-radius: 10px;">
+                    <v-progress-linear 
+                        v-bind:model-value="skillsPctMatch"
+                        v-bind:bg-color="primaryColor"
+                        v-bind:color="secondaryColor"
+                        rounded
+                        :height="15"
+                    >
+                    <v-text class="text-caption">{{getSkillsPctMatch(this.employeeSkills, this.roleInfo.Skills_Required)}}%</v-text>
+                </v-progress-linear>
+                </v-sheet>
             </v-col>
-        </v-row>
-    </v-container>
-
-    <!-- Info about role: Department, Openings, Applicants, Full Time -->
-    <v-text 
-            class="text-caption"
-        >
-        {{Department}} | {{num_openings}} Opening(s)
-    </v-text>
-
-    <!-- Skills Matched Percentage Bar -->
-    <!-- <v-container class="pa-0 mt-1">
-        <v-row no-gutters align="center" style="height: 25px;">
-            <v-text class="text-subtitle-1">Skills Matched</v-text>
-        </v-row>
-        <v-row no-gutters align="center" style="height: 25px;">
-        <v-col class="pa-1">
-            <v-sheet class="rounded-5 bg-transparent" style="border: solid 1px black; border-radius: 10px;">
-                <v-progress-linear 
-                    v-bind:model-value="skillsPctMatch"
-                    v-bind:bg-color="primaryColor"
-                    v-bind:color="secondaryColor"
-                    rounded
-                    :height="15"
+            </v-row>
+        </v-container>
+    -->
+          <!-- Last Updated -->
+          <v-container class="pa-0">
+            <v-row no-gutters justify="space-between" style="height: 25px">
+              <v-col cols="auto">
+                <v-text class="text-caption">{{
+                  days_posted(created_at)
+                }}</v-text>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-btn
+                  width="100%"
+                  height="100%"
+                  density="comfortable"
+                  size="large"
+                  variant="flat"
+                  v-bind:color="primaryColor"
+                  id="apply"
+                  disabled
+                  >Apply</v-btn
                 >
-                <v-text class="text-caption">{{getSkillsPctMatch(this.employeeSkills, this.roleInfo.Skills_Required)}}%</v-text>
-            </v-progress-linear>
-            </v-sheet>
-        </v-col>
-        </v-row>
-    </v-container>
--->
-    <!-- Last Updated -->
-    <v-container class="pa-0">
-        <v-row no-gutters justify="space-between" style="height: 25px;">
-            <v-col cols="auto">
-                <v-text class="text-caption">{{ days_posted(created_at) }}</v-text>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-                <v-btn 
-                width="100%"
-                height="100%"
-                density="comfortable"
-                size="large"
-                variant="flat"
-                v-bind:color="primaryColor"
-                id="apply"
-                disabled
-                >Apply</v-btn>
-            </v-col>
-        </v-row>
-    </v-container>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-item>
 
-    </v-card-item>
-
-    <v-expand-transition>
-        <div v-show="show">
-        <v-divider></v-divider>
-        </div>
-    </v-expand-transition>
-    </v-card> 
+        <v-expand-transition>
+          <div v-show="show">
+            <v-divider></v-divider>
+          </div>
+        </v-expand-transition>
+      </v-card>
     </div>
-
-    </div> 
-</template> 
+  </div>
+</template>
 
 <script>
 import ApplyRLPopup from './ApplyRLPopup.vue';
 
 export default {
-    name: "ListingCard",
+  name: "ListingCard",
     props: {
         roleName: String,
         Department: String,
@@ -192,6 +189,7 @@ export default {
         created_at: String,
         open: Number,
         access: String,
+        identified: String,
         // employeeSkills: Array,
         // lastUpdated: String,
         // primaryColor: String,
@@ -199,15 +197,15 @@ export default {
     },
     data() {
         // skillsPctMatch = getSkillsPctMatch(this.employeeSkills, this.employeeSkills);
-        
+    
         return {
-            roleName: this.roleName,
-            show: false,
-            employeeSkills: ["Python", "C++"],
-            skillsPctMatch: "",
-            primaryColor: "grey",
-            secondaryColor: "grey-lighten-1",
-            // access: (access) => store.commit("access", access)
+          roleName: this.roleName,
+          show: false,
+          employeeSkills: ["Python", "C++"],
+          skillsPctMatch: "",
+          primaryColor: "grey",
+          secondaryColor: "grey-lighten-1",
+          // access: (access) => store.commit("access", access)
         };
     },
     methods: {
@@ -248,19 +246,19 @@ export default {
 };
 
 function getSkillsPctMatch(employeeSkills, roleSkills) {
-    var numSkillsMatched = 0;
-    for (var i = 0; i < employeeSkills.length; i++) {
-        if (roleSkills.includes(employeeSkills[i])) {
-            numSkillsMatched++;
-        }
+  var numSkillsMatched = 0;
+  for (var i = 0; i < employeeSkills.length; i++) {
+    if (roleSkills.includes(employeeSkills[i])) {
+      numSkillsMatched++;
     }
-    return Math.round((numSkillsMatched / roleSkills.length) * 100);
+  }
+  return Math.round((numSkillsMatched / roleSkills.length) * 100);
 }
 </script>
 
 <style>
-    .v-card-item * {  
-        justify-content: start;
-        margin: 0px;
-    }
+.v-card-item * {
+  justify-content: start;
+  margin: 0px;
+}
 </style>

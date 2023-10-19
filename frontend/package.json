@@ -22,6 +22,7 @@
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitest/coverage-istanbul": "^0.34.6",
     "@vue/test-utils": "^2.4.1",
+    "axios-mock-adapter": "^1.22.0",
     "vite": "^4.4.9",
     "vitest": "^0.34.6"
   }

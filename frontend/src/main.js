@@ -24,26 +24,19 @@ const vuetify = createVuetify({
 
 const store = createStore({
   state: {
-    access: "",
-    skills: "",
-    staff: {},
+    profile: "",
+    //staff: {},
   },
   mutations: {
-    access(state, access) {
-      state.access = access;
-    },
-    skills(state, skills) {
-      state.skills = skills;
-    },
-    staff(state, staff) {
-      state.staff = staff;
+    profile(state, profile) {
+      state.profile = profile;
     },
   },
 });
-
+export default store
 const app = createApp(App);
-
 app.use(store);
-app.use(vuetify);
 app.use(router);
+app.use(vuetify);
 app.mount("#app");
+

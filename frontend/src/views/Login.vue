@@ -30,9 +30,7 @@ export default {
   setup() {
     const store = useStore();
     return {
-      access: (access) => store.commit("access", access),
-      skills: (skills) => store.commit("skills", skills),
-      staff: (staff) => store.commit("staff", staff),
+      profile: (profile) => store.commit("profile", profile),
     };
   },
   name: "Login",
@@ -60,13 +58,9 @@ export default {
           alert("Wrong Password");
           return;
         }
+        this.profile(response.data.body);
 
-        this.access(this.selected);
-        this.skills(response.data.body._Skills);
-        this.staff(response.data.body);
-        console.log(this.$store.state.access);
-        console.log(this.$store.state.skills);
-        console.log(this.$store.state.staff);
+        console.log(this.$store.state.profile);
         this.$router.push("/")
       } catch (err) {
         if (err) {
