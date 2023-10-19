@@ -119,7 +119,7 @@
             You have successfully updated the role listing!
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" block @click="reloadPage()">Okay</v-btn>
+            <v-btn color="primary" block @click="this.$router.push('/')">Okay</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
