@@ -5,9 +5,9 @@ name: Test pipeline
 
 on:
   push:
-    branches: [ "prod" ]
+    branches: ["prod"]
   pull_request:
-    branches: [ "prod" ]
+    branches: ["prod"]
 
 permissions:
   actions: read
@@ -26,7 +26,6 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -35,39 +34,51 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup Backend Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: backend/monolith/package-lock.json
-    - run: npm ci
-      working-directory: backend/monolith
-    # - run: npm run build --if-present
-    - name: Backend Test
-      run: |
-        if find . -type f \( -name '*.test.js' -o -name '*.spec.js' \) -exec false {} +; then
-          echo "No test files found."
-        else
-          npm run test
-        fi
-      working-directory: backend/monolith
-    - name: Setup Frontend Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
-    - run: npm ci
-      working-directory: frontend
-    # - run: npm run build --if-present
-    - name: frontend Test
-      run: |
-        if find . -type f \( -name '*.test.js' -o -name '*.spec.js' \) -exec false {} +; then
-          echo "No test files found."
-        else
-          npm run test
-        fi
-        
-      working-directory: frontend
+      - uses: actions/checkout@v3
+      - name: Setup Backend Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: backend/monolith/package-lock.json
+      - run: npm ci
+        working-directory: backend/monolith
+      # - run: npm run build --if-present
+      - name: Backend Test
+        run: |
+          if find . -type f \( -name '*.test.js' -o -name '*.spec.js' \) -exec false {} +; then
+            echo "No test files found."
+          else
+            npm run test
+          fi
+        working-directory: backend/monolith
+      - name: Setup Frontend Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      # - run: npm run build --if-present
+      - name: Set up environment variables
+        run: |
+          echo "hostname=${{ secrets.HOSTNAME }}" > backend/monolith/.env
+          echo "user=${{ secrets.USER }}" >> backend/monolith/.env
+          echo "password=${{ secrets.PASSWORD }}" >> backend/monolith/.env
+        working-directory: ${{ github.workspace }}
+      - name: frontend Test
+        run: |
+          cd ../backend/monolith
+          node index &
+          echo "Backend is running."
+          cd ../../frontend
+          echo "Frontend dir"
+          echo "Running test"
+          if find . -type f \( -name '*.test.js' -o -name '*.spec.js' \) -exec false {} +; then
+            echo "No test files found."
+          else
+            npm run test
+          fi
+          echo "End test"
+        working-directory: frontend

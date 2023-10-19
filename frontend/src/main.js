@@ -24,15 +24,11 @@ const vuetify = createVuetify({
 
 const store = createStore({
   state: {
-    access: "",
-    skills: "",
+    profile: "",
   },
   mutations: {
-    access(state, access) {
-      state.access = access;
-    },
-    skills(state, skills) {
-      state.skills = skills;
+    profile(state, profile) {
+      state.profile = profile;
     },
   },
 });
