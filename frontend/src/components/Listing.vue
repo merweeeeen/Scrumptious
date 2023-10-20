@@ -32,7 +32,7 @@
           </v-text>
 
           <!-- Skills Matched Percentage Bar -->
-          <!-- <v-container class="pa-0 mt-1">
+          <v-container class="pa-0 mt-1">
             <v-row no-gutters align="center" style="height: 25px;">
                 <v-text class="text-subtitle-1">Skills Matched</v-text>
             </v-row>
@@ -46,13 +46,13 @@
                         rounded
                         :height="15"
                     >
-                    <v-text class="text-caption">{{getSkillsPctMatch(this.employeeSkills, this.roleInfo.Skills_Required)}}%</v-text>
+                    <v-text class="text-caption">{{this.getSkillsPctMatch(this.employeeSkills, this.$props.skills)}}%</v-text>
                 </v-progress-linear>
                 </v-sheet>
             </v-col>
             </v-row>
         </v-container>
-    -->
+   
           <!-- Last Updated -->
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
@@ -116,7 +116,7 @@
           </v-text>
 
           <!-- Skills Matched Percentage Bar -->
-          <!-- <v-container class="pa-0 mt-1">
+          <v-container class="pa-0 mt-1">
             <v-row no-gutters align="center" style="height: 25px;">
                 <v-text class="text-subtitle-1">Skills Matched</v-text>
             </v-row>
@@ -130,13 +130,13 @@
                         rounded
                         :height="15"
                     >
-                    <v-text class="text-caption">{{getSkillsPctMatch(this.employeeSkills, this.roleInfo.Skills_Required)}}%</v-text>
+                    <v-text class="text-caption">{{this.getSkillsPctMatch(this.employeeSkills, this.$props.skills)}}%</v-text>
                 </v-progress-linear>
                 </v-sheet>
             </v-col>
             </v-row>
         </v-container>
-    -->
+   
           <!-- Last Updated -->
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
@@ -185,36 +185,43 @@ export default {
     open: Number,
     access: String,
     identified: String,
-    // employeeSkills: Array,
+    skills: Array,
     // lastUpdated: String,
     // primaryColor: String,
     // secondaryColor: String
   },
   data() {
-    // skillsPctMatch = getSkillsPctMatch(this.employeeSkills, this.employeeSkills);
 
     return {
       show: false,
-      employeeSkills: ["Python", "C++"],
-      skillsPctMatch: "",
+      employeeSkills: this.$store.state.profile._Skills ?? [],
+      skillsPctMatch: 0,
       primaryColor: "grey",
       secondaryColor: "grey-lighten-1",
       // access: (access) => store.commit("access", access)
     };
   },
   methods: {
-    // getSkillsPctMatch(employeeSkills, roleSkills) {
-    //     var numSkillsMatched = 0;
-    //     for (var i = 0; i < employeeSkills.length; i++) {
-    //         if (roleSkills.includes(employeeSkills[i])) {
-    //             numSkillsMatched++;
-    //         }
-    //     }
-
-    //     // The line below updates the skillsPctMatch variable
-    //     this.skillsPctMatch = Math.round((numSkillsMatched / roleSkills.length) * 100);
-    //     return Math.round((numSkillsMatched / roleSkills.length) * 100);
-    // },
+    getSkillsPctMatch(employeeSkills, roleSkills) {
+      const Rskills = [];
+      for (var i = 0; i < roleSkills.length; i++) {
+        Rskills.push(roleSkills[i].skill_name);
+      }
+        var numSkillsMatched = 0;
+        for (var i = 0; i < employeeSkills.length; i++) {
+            if (Rskills.includes(employeeSkills[i])) {
+                numSkillsMatched++;
+            }
+        }
+        console.log("employee skills " + employeeSkills)
+        console.log("role skills " + Rskills)
+        // console.log("num skills " + numSkillsMatched);
+        // console.log("role skills " + roleSkills.length);
+        // console.log("skills matched " + numSkillsMatched / roleSkills.length * 100);
+        // The line below updates the skillsPctMatch variable
+        this.skillsPctMatch = Math.round((numSkillsMatched / roleSkills.length) * 100);
+        return Math.round(numSkillsMatched / roleSkills.length * 100);
+    },
     days_posted(created_at) {
       var today = new Date();
       var created = new Date(created_at);
@@ -231,16 +238,6 @@ export default {
   },
   mounted() {},
 };
-
-function getSkillsPctMatch(employeeSkills, roleSkills) {
-  var numSkillsMatched = 0;
-  for (var i = 0; i < employeeSkills.length; i++) {
-    if (roleSkills.includes(employeeSkills[i])) {
-      numSkillsMatched++;
-    }
-  }
-  return Math.round((numSkillsMatched / roleSkills.length) * 100);
-}
 </script>
 
 <style>
