@@ -123,12 +123,12 @@
             class="pb-0">
               <v-card width="100%" color="black" variant="outlined">
                 <v-card-text>
-                  <p class="text-h6 text--primary">{{ this.applicant._Staff_FName }} {{ this.applicant._Staff_LName }}</p>
+                  <p class="text-h6 text--primary">Staff Name Last Name</p>
                   <p class="text-h7 text--primary" id="desc">
                     <!-- {{ listing._desc }} -->
-                    Staff ID: {{ this.$store.state.profile._Staff_id }}
+                    Staff ID:
                     <br />
-                    Email: {{ this.$store.state.profile._Email }}
+                    Email: 
                   </p>
                   <!-- <br /> -->
                   <!-- <p class="text-h6 text--primary">Skills matched</p> -->
