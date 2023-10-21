@@ -121,12 +121,12 @@
             <v-col class="pb-0">
               <v-card width="100%" color="black" variant="outlined">
                 <v-card-text>
-                  <p class="text-h6 text--primary">Staff Name Last Name</p>
+                  <p class="text-h6 text--primary">{{ this.applicant._Staff_FName }} {{ this.applicant._Staff_LName }}</p>
                   <p class="text-h7 text--primary" id="desc">
                     <!-- {{ listing._desc }} -->
-                    Staff ID:
+                    Staff ID: {{ this.$store.state.profile._Staff_id }}
                     <br />
-                    Email: 
+                    Email: {{ this.$store.state.profile._Email }}
                   </p>
                   <!-- <br /> -->
                   <!-- <p class="text-h6 text--primary">Skills matched</p> -->
@@ -175,10 +175,18 @@ export default {
       savedListings: ["12", "13", "14"],
       saved: false,
       staffid: this.$store.state.profile._Staff_id,
+      applicant: "",
     };
   },
 
   methods: {
+    async getApplicant() {
+      const response = await axios.get(
+        `http://localhost:3003/staff/${this.$store.state.profile._Staff_id}`
+      ); 
+      this.applicant = response.data.body;
+    },
+
     async getListing() {
       const response = await axios.get(
         `http://localhost:3003/listing/${this.listing_id}`
@@ -282,7 +290,9 @@ export default {
     await this.getListing();
     await this.getRoleSkills();
     await this.getSaved();
+    await this.getApplicant();
     // this.getFavouriteListings()
+    console.log(this.applicant)
   },
 };
 </script>
