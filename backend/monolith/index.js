@@ -137,8 +137,7 @@ app.get("/listing/:listingid?", async (req, res) => {
 // THIS IS PUT /listing => TO update A ROLE
 // {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 app.put('/listing/:listingid?', async (req, res) => {
-  console.log(req.body)
-  console.log(req.params.listingid)
+  console.log("PUT /listing/:listingid started")
   role.updateListing(req.body, req.params.listingid)
   .then((results) => {
       console.log("Results: ", results);

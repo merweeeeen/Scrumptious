@@ -50,6 +50,7 @@
           <v-textarea 
             variant="outlined"
             counter
+            id="desc"
             :rules="[v => v.length <= 250 || 'Max 250 characters']"
             v-model="jobdescription" placeholder="Provide additional description on the listing here">
           </v-textarea>
@@ -105,7 +106,7 @@
             v-model="expirydate" type="date" label="Expiry Date" placeholder="edit me"></v-text-field>
         </v-col>
       </v-row>
-      <v-btn @click="submit()">SUBMIT</v-btn>
+      <v-btn @click="submit()" id="submit">SUBMIT</v-btn>
     </v-form>
     </v-container>
     </div>
@@ -115,11 +116,11 @@
         width="auto"
       >
         <v-card>
-          <v-card-text>
+          <v-card-text id="successText">
             You have successfully updated the role listing!
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" block @click="this.$router.push('/')">Okay</v-btn>
+            <v-btn color="primary" block @click="this.$router.push('/')" id="closePrompt">Okay</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -178,7 +179,6 @@
         //     console.log(this.$route.params.update.listingid);
         // }
         // const idparam = this.$route.query.id;
-        console.log(this.idparam);
         axios.get('http://localhost:3003/listing/' + this.idparam)
         .then(response => {
             console.log(response.data)
@@ -200,23 +200,17 @@
     async getRoleSkills() {
       axios.get('http://localhost:3003/rs')
       .then(response => {
-        this.responseHolder = response.data
-        // console.log(response.data)
-        console.log(this.responseHolder)
+        this.responseHolder = response.data        
         // this.content = this.responseHolder.body[0].role_name
         for (var i = 0; i < this.responseHolder.body.length; i++) {
           // this.content += [this.responseHolder.body[i].rolename]
-          console.log(this.responseHolder.body[i].role_name)
           if (this.roleslist.indexOf(this.responseHolder.body[i].role_name) !== -1) {
             this.listtoskills[this.responseHolder.body[i].role_name].push(this.responseHolder.body[i].skill_name)
           } else {
-            console.log("not in list")
             this.roleslist.push(this.responseHolder.body[i].role_name)
             this.listtoskills[this.responseHolder.body[i].role_name] = [this.responseHolder.body[i].skill_name]
           }
         }
-        console.log(this.listtoskills)
-        console.log(this.roleslist)
       })
       .catch(error => {
         console.log(error)
@@ -255,7 +249,7 @@
       // if ( this.isValid(this.jobtitle) == false || this.isValid(this.rolename) == false || this.isValid(this.jobdescription) == false || this.isValid(this.dept) == false || this.isValid(this.vacancies) == false || this.isValid(this.country) == false || this.isValid(this.expirydate) == false) {
       if (this.validform == false){
         // alert(this.errormsg)
-        console.log(this.errormsg)
+        // console.log(this.errormsg)
         this.invalid = true
       } else {
         const bodyInfo = {
@@ -269,10 +263,10 @@
           open: 1
         }
         // const jsonInfo = JSON.stringify(bodyInfo)
-        console.log(bodyInfo)
+        // console.log(bodyInfo)
         axios.put('http://localhost:3003/listing/'+ this.idparam, bodyInfo)
         .then(response => {
-          console.log(response)
+          // console.log(response)
           // alert("Role Listing created successfully!")
           this.dialog = true
           // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
