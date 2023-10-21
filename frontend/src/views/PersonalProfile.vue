@@ -28,10 +28,10 @@
                         src="https://cdn.vuetifyjs.com/images/john.jpg"
                         ></v-img>
                     </v-sheet>
-                    <v-sheet class="text-center">
-                        <h1>{{ staffInfo._Staff_FName }} {{ staffInfo._Staff_LName }}</h1>
-                        <h3> {{staffInfo._Dept}} Department</h3> <!--STAFF_ROLE in -->
-                        <h4> {{ staffInfo._Email }}</h4>
+                    <v-sheet class="text-center" >
+                        <h1 id="staffName">{{ staffInfo._Staff_FName }} {{ staffInfo._Staff_LName }}</h1>
+                        <h3 id="dept"> {{staffInfo._Dept}} Department</h3> <!--STAFF_ROLE in -->
+                        <h4 id="email"> {{ staffInfo._Email }}</h4>
                     </v-sheet>
                 </v-col>
                 
@@ -106,13 +106,13 @@
                       <!-- <v-col class="d-flex align-center py-0 h-100">
                       </v-col> -->
                     </v-row>
-                    <p class="text--primary my-1" id="roleNameAndDepartment">
-                        <v-icon  id="editBtn">mdi-earth</v-icon>
-                        Country: {{ staffInfo._Country }}
+                    <p class="text--primary my-1" >
+                        <v-icon>mdi-earth</v-icon>
+                        <p style="display:inline" id="country"> Country: {{ staffInfo._Country }}</p>
                     </p>
-                    <p class="text--primary my-1" id="roleNameAndDepartment">
-                        <v-icon  id="editBtn">mdi-account-tie</v-icon>
-                        Staff ID: {{ staffInfo._Staff_id }}
+                    <p class="text--primary my-1">
+                        <v-icon>mdi-account-tie</v-icon>
+                        <p style="display:inline" id="staffId"> Staff ID: {{ staffInfo._Staff_id }}</p>
                     </p>
 
                   </v-card-text>
