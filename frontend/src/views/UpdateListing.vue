@@ -190,10 +190,6 @@
     methods: {
     // async 
     getCurrListing(){
-        // if (this.$route.params.update.listingid != null){
-        //     console.log(this.$route.params.update.listingid);
-        // }
-        // const idparam = this.$route.query.id;
         axios.get('http://localhost:3003/listing/' + this.idparam)
         .then(response => {
             console.log(response.data)
@@ -259,11 +255,7 @@
     },
     submit() {
       this.validation()
-      // console.log(this.isValid(this.jobtitle) + "\n" + this.isValid(this.rolename) + "\n" + this.isValid(this.jobdescription) + "\n" + this.isValid(this.dept) + "\n" + this.isValid(this.vacancies) + "\n" + this.isValid(this.country) + "\n" + this.isValid(this.expirydate))
-      // if ( this.isValid(this.jobtitle) == false || this.isValid(this.rolename) == false || this.isValid(this.jobdescription) == false || this.isValid(this.dept) == false || this.isValid(this.vacancies) == false || this.isValid(this.country) == false || this.isValid(this.expirydate) == false) {
       if (this.validform == false){
-        // alert(this.errormsg)
-        // console.log(this.errormsg)
         this.invalid = true
       } else {
         if (this.open == "Available") {
@@ -282,16 +274,13 @@
           expiry_date: this.expirydate,
           open: openstatus
         }
-        // const jsonInfo = JSON.stringify(bodyInfo)
-        // console.log(bodyInfo)
+
         axios.put('http://localhost:3003/listing/'+ this.idparam, bodyInfo)
         .then(response => {
-          // console.log(response)
-          // alert("Role Listing created successfully!")
           this.dialog = true
         })
         .catch(error => {
-          console.log(error)
+          // console.log(error)
           this.invalid = true;
         })
         
@@ -329,10 +318,6 @@
     this.checkAccess();
     this.getRoleSkills();
     this.getCurrListing();
-
-    // this.getCurrListing();
-    // console.log(this.$route.params);
-    // console.log(this.$route.params.id);
   }
 }
   </script>
