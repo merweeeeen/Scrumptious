@@ -49,7 +49,7 @@
                   </p>
                   <p class="text-h7 text--primary" id="vacancyAndApplicants">
                     {{ listing._num_openings }} Openings |
-                    {{ listing._applicants }} Applicant(s)
+                    {{ this.applicants.length }} Applicant(s)
                   </p>
                   <p class="text-h7 text--primary" id="country">
                     Country: {{ listing._country }}
@@ -118,7 +118,9 @@
           </v-row>
 
           <v-row class="ma-0 w-100">
-            <v-col class="pb-0">
+            <v-col 
+            v-for="applicant in listing._applicants"
+            class="pb-0">
               <v-card width="100%" color="black" variant="outlined">
                 <v-card-text>
                   <p class="text-h6 text--primary">{{ this.applicant._Staff_FName }} {{ this.applicant._Staff_LName }}</p>
@@ -176,6 +178,7 @@ export default {
       saved: false,
       staffid: this.$store.state.profile._Staff_id,
       applicant: "",
+      applicants: []
     };
   },
 
@@ -188,10 +191,12 @@ export default {
     },
 
     async getListing() {
+      console.log("listing id", this.listing_id);
       const response = await axios.get(
         `http://localhost:3003/listing/${this.listing_id}`
       );
       this.listing = response.data.body;
+      this.applicants = response.data.body._applicants;
     },
 
     async getRoleSkills() {
