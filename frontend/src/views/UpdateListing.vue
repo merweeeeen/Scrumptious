@@ -98,6 +98,20 @@
       </v-row>
       <v-row>
         <v-col cols="2" class="contentCenter">
+          <p class="text">Opening Status</p>
+        </v-col>
+        <v-col cols="8">
+          <v-autocomplete
+            v-model="open"
+            variant="outlined"
+            clearable
+            :items='["Available","Unavailable"]'
+            placeholder="Select availability of listing"
+          ></v-autocomplete>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="2" class="contentCenter">
           <p class="text">Expiry Date</p>
         </v-col>
         <v-col cols="8">
@@ -159,6 +173,7 @@
         vacancies: "",
         country: "",
         expirydate: "",
+        open: "Available",
         
         roleslist: [],
         listtoskills: {},
@@ -183,8 +198,6 @@
         .then(response => {
             console.log(response.data)
             this.responseHolder = response.data.body
-            // console.log(response.data)
-            // console.log(this.responseHolder.body[0].listing_name)
             this.jobtitle = this.responseHolder._listing_name
             this.rolename = this.responseHolder._role_name
             this.jobdescription = this.responseHolder._desc
@@ -192,6 +205,7 @@
             this.vacancies = this.responseHolder._num_openings
             this.country = this.responseHolder._country
             this.expirydate = this.responseHolder._expiry_date
+            // this.open = this.responseHolder._open
         })
         .catch(error => {
             console.log(error)
@@ -252,6 +266,12 @@
         // console.log(this.errormsg)
         this.invalid = true
       } else {
+        if (this.open == "Available") {
+          var openstatus = 1
+        }
+        else {
+          var openstatus = 0
+        }
         const bodyInfo = {
           listing_name: this.jobtitle,
           role_name: this.rolename,
@@ -260,7 +280,7 @@
           num_openings: this.vacancies,
           country: this.country,
           expiry_date: this.expirydate,
-          open: 1
+          open: openstatus
         }
         // const jsonInfo = JSON.stringify(bodyInfo)
         // console.log(bodyInfo)
@@ -269,10 +289,10 @@
           // console.log(response)
           // alert("Role Listing created successfully!")
           this.dialog = true
-          // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
         })
         .catch(error => {
           console.log(error)
+          this.invalid = true;
         })
         
       }
