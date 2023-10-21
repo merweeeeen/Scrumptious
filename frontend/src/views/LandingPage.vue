@@ -21,6 +21,7 @@
             >
               <ListingCard
                 :roleName="listing._listing_name"
+                :roleId="listing._listing_id"
                 :Department="listing._dept"
                 :num_openings="listing._num_opening"
                 :created_at="listing._created_date"

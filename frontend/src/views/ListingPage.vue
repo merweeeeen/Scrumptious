@@ -68,7 +68,7 @@
                     </v-card-text>
                   </v-col>
                   <v-col cols="auto" class="me-4">
-                    <v-btn
+                    <!-- <v-btn
                       density="comfortable"
                       size="small"
                       variant="flat"
@@ -76,12 +76,17 @@
                       id="applyBtn"
                     >
                       Apply
-                    </v-btn>
+                    </v-btn> -->
+                    <ApplyRLPopup
+                    :roleName="this.roleName"
+                    :roleId="this.listing_id"
+                    />
                   </v-col>
                 </v-row>
               </v-card>
             </v-col>
           </v-row>
+
 
           <v-row class="ma-0 w-100">
             <v-col class="pb-0">
@@ -121,11 +126,13 @@
 import NavBar from "../components/NavBar.vue";
 import Footer from "../components/Footer.vue";
 import axios from "axios";
+import ApplyRLPopup from '../components/ApplyRLPopup.vue';
 
 export default {
   components: {
     NavBar,
     Footer,
+    ApplyRLPopup,
   },
 
   data() {

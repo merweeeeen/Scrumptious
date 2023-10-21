@@ -76,6 +76,8 @@
                 > -->
                     <ApplyRLPopup
                     :roleName="this.roleName"
+                    :roleId="this.roleId"
+                    :applied="this.applied"
                     />
               </v-col>
             </v-row>
@@ -184,6 +186,7 @@ export default {
   name: "ListingCard",
     props: {
         roleName: String,
+        roleId: Number,
         Department: String,
         num_openings: Number,
         created_at: String,
@@ -199,13 +202,16 @@ export default {
         // skillsPctMatch = getSkillsPctMatch(this.employeeSkills, this.employeeSkills);
     
         return {
-          roleName: this.roleName,
-          show: false,
-          employeeSkills: ["Python", "C++"],
-          skillsPctMatch: "",
-          primaryColor: "grey",
-          secondaryColor: "grey-lighten-1",
-          // access: (access) => store.commit("access", access)
+            roleName: this.roleName,
+            roleId: this.roleId,
+            show: false,
+            employeeSkills: ["Python", "C++"],
+            skillsPctMatch: "",
+            primaryColor: "grey",
+            secondaryColor: "grey-lighten-1",
+            applications: this.$store.state.profile._Applications,
+            applied: false
+            // access: (access) => store.commit("access", access)
         };
     },
     methods: {
@@ -235,10 +241,20 @@ export default {
             else {
             return "Posted " + days + " days ago";
             }
-        }
+        },
+        // isapplied(){
+        //   for (eachapplicant in this.$store.state.profile._Applications){
+        //     if (eachapplicant._listing_id = this.roleId){
+        //       this.applied = true
+        //     }
+        //   }
+        // }
     },
+
     mounted() {
-        console.log(this.access);
+        // console.log(this.$store.state.profile);
+        // this.isapplied()
+        
     },
     components: {
         ApplyRLPopup,

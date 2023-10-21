@@ -8,6 +8,7 @@
         size="large"
         variant="flat" 
         id = "Apply"
+        :disabled = "this.applied"
         >
         Apply
 
@@ -136,7 +137,7 @@
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
-
+                        <!-- V-DIALOG FOR WHEN THE APPLICATION FAILS BZZZZ -->
                         <v-dialog
                         v-model="dialog5"
                         width="auto"
@@ -165,6 +166,36 @@
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
+                    <!-- V-DIALOG FOR WHEN THE THEY HAVE ALREADY APPLIED BEFORE??? -->
+                    <v-dialog
+                    v-model="dialog6"
+                    width="auto"
+                    >
+                    <v-card>
+                        <div class="py-12 mx-9 text-center">
+                            <v-icon
+                                class="mb-6"
+                                color="orange"
+                                icon="mdi-alert-circle-outline"
+                                size="120"
+                            ></v-icon>
+                            <div class="text-h6 font-weight-bold">Already Applied!</div>
+                            <div class="text">You have already applied for this role listing</div>
+                            <!-- <div class="text">Thank you for your application, kindly look out for an update on your application status which will be sent via email</div> -->
+                        </div>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="primary" 
+                            class="text-none text-subtitle-1"
+                            size="small"
+                            variant="flat" 
+                            @click="dialog6 = false;"
+                            >
+                            Close
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
 
                         </v-col>
                     </v-row>
@@ -185,7 +216,8 @@
                 dialog: false,
                 dialog4: false,
                 dialog5: false,
-                staff: this.$store.state.staff,
+                dialog6: false,
+                staff: this.$store.state.profile,
                 writeUp: '', // Bind the input value to this data property
             }
         },
@@ -197,8 +229,14 @@
                 .then((passable) => {
                         if (passable){
                             console.log('Validation passed');
-                            this.dialog4 = true; // should also clear the this.writeUp
+                            console.log(this.staff._Staff_id)
+                            console.log(this.roleId)
+                            const bodyInfo = {'staffId': this.staff._Staff_id, 'listingId': this.roleId, 'writeUp': this.writeUp}
+                            this.postApply(bodyInfo)
+
+                            //.dialog4 = true; // should also clear the this.writeUp
                             //call function here to run the back end..
+
                         }
                         else{console.log('Validation failed!'); this.dialog5 = true;}
                     })
@@ -214,13 +252,35 @@
                 else { 
                     console.log('valid false')
                     return false}
+            },
+            async postApply(bodyInfo) {
+                axios.post('http://localhost:3003/application', bodyInfo)
+                    .then(response => {
+                    console.log(response)
+                    // alert("Role Listing created successfully!")
+                    if (response.data.body.affectedRows == 0) {
+                        //alert("You've already applied previously??")
+                        this.dialog6 = true
+                    }
+                    else{this.dialog4 = true}
+                    // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
+                    })
+                    .catch(error => {
+                    console.log(error)
+                })
             }
+        },
+        mounted() {
+            // console.log(this.applied)
         },
         props: {
             roleName: String,
+            roleId: Number,
             currRole: String,
             phone: String,
+            applied: Boolean
         },
+        
         
     }
 </script>
