@@ -210,7 +210,7 @@ export default {
             primaryColor: "grey",
             secondaryColor: "grey-lighten-1",
             applications: this.$store.state.profile._Applications,
-            applied: false
+            //applied: false
             // access: (access) => store.commit("access", access)
         };
     },

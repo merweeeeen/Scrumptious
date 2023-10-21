@@ -219,6 +219,7 @@
                 dialog6: false,
                 staff: this.$store.state.profile,
                 writeUp: '', // Bind the input value to this data property
+                applied: false
             }
         },
         methods: {
@@ -262,16 +263,26 @@
                         //alert("You've already applied previously??")
                         this.dialog6 = true
                     }
-                    else{this.dialog4 = true}
+                    else{this.dialog4 = true; this.applied = true}
                     // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
                     })
                     .catch(error => {
                     console.log(error)
                 })
+            },
+        isapplied(){
+        let apply = this.$store.state.profile._Applications
+          for (var j = 0; j < apply.length; j++){
+            var obj = apply[j]
+            if (obj._listing_Id == this.roleId){
+              this.applied = true
             }
+          }
+        }
         },
         mounted() {
             // console.log(this.applied)
+            this.isapplied()
         },
         props: {
             roleName: String,
