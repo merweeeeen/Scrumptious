@@ -104,6 +104,5 @@ jobs:
             echo "Finished processing $file"
             stop_node_process
           done
-          fi
           echo "End test"
         working-directory: frontend
