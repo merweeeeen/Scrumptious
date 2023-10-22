@@ -49,7 +49,7 @@
                   </p>
                   <p class="text-h7 text--primary" id="vacancyAndApplicants">
                     {{ listing._num_openings }} Openings |
-                    {{ listing._applicants }} Applicant(s)
+                    {{ applicants }} Applicant(s)
                   </p>
                   <p class="text-h7 text--primary" id="country">
                     Country: {{ listing._country }}
@@ -78,16 +78,15 @@
                       Apply
                     </v-btn> -->
                     <ApplyRLPopup
-                    :roleName="this.roleName"
-                    :roleId="this.listing_id"
-                    id="ApplyRLPopup"
+                      :roleName="this.roleName"
+                      :roleId="this.listing_id"
+                      id="ApplyRLPopup"
                     />
                   </v-col>
                 </v-row>
               </v-card>
             </v-col>
           </v-row>
-
 
           <v-row class="ma-0 w-100">
             <v-col class="pb-0">
@@ -127,7 +126,7 @@
 import NavBar from "../components/NavBar.vue";
 import Footer from "../components/Footer.vue";
 import axios from "axios";
-import ApplyRLPopup from '../components/ApplyRLPopup.vue';
+import ApplyRLPopup from "../components/ApplyRLPopup.vue";
 
 export default {
   components: {
@@ -146,6 +145,7 @@ export default {
       savedListings: ["12", "13", "14"],
       saved: false,
       staffid: this.$store.state.profile._Staff_id,
+      applicants: 0,
     };
   },
 
@@ -155,6 +155,8 @@ export default {
         `http://localhost:3003/listing/${this.listing_id}`
       );
       this.listing = response.data.body;
+      console.log(this.listing._applicants)
+      this.applicants = response.data.body._applicants.length;
     },
 
     async getRoleSkills() {
