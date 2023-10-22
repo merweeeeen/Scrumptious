@@ -69,6 +69,21 @@ jobs:
         working-directory: ${{ github.workspace }}
       - name: frontend Test
         run: |
+          # Find the Node.js process by name
+          find_node_process() {
+            pgrep -f "node index"
+          }
+
+          # Stop the Node.js process if it's running
+          stop_node_process() {
+            local node_pid
+            node_pid=$(find_node_process)
+            if [ -n "$node_pid" ]; then
+              echo "Stopping Node.js process (PID $node_pid)"
+              kill "$node_pid"
+            fi
+          }
+
           # Directory containing the files you want to process
           directory_path="/home/runner/work/Scrumptious/Scrumptious/frontend/tests"
           echo "$(pwd)"
@@ -87,6 +102,7 @@ jobs:
             npm test "$file"
 
             echo "Finished processing $file"
+            stop_node_process
           done
           fi
           echo "End test"
