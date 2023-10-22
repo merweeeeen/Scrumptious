@@ -155,7 +155,6 @@ export default {
         `http://localhost:3003/listing/${this.listing_id}`
       );
       this.listing = response.data.body;
-      console.log(this.listing._applicants)
       this.applicants = response.data.body._applicants.length;
     },
 
@@ -213,10 +212,8 @@ export default {
         : undefined;
       if (favouriteClass) {
         this.saved = true;
-        console.log("at first listing saved: " + this.saved);
       } else {
         this.saved = false;
-        console.log("at first listing saved: " + this.saved);
       }
     },
 
@@ -243,7 +240,6 @@ export default {
           })
           .then((response) => {
             this.saved = false;
-            console.log(response);
           })
           .catch(console.log("error"));
         // console.log(this.savedListings)

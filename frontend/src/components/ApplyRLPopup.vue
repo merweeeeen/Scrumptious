@@ -281,7 +281,6 @@ export default {
       axios
         .post("http://localhost:3003/application", bodyInfo)
         .then((response) => {
-          console.log(response);
           // alert("Role Listing created successfully!")
           if (response.data.body.affectedRows == 0) {
             //alert("You've already applied previously??")
@@ -296,7 +295,6 @@ export default {
             };
             this.staff._Applications.push(thisobj);
             this.profile(this.staff);
-            console.log(this.$store.state.profile);
           }
         })
         .catch((error) => {
