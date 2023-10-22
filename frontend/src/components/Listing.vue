@@ -33,26 +33,36 @@
 
           <!-- Skills Matched Percentage Bar -->
           <v-container class="pa-0 mt-1">
-            <v-row no-gutters align="center" style="height: 25px;">
-                <v-text class="text-subtitle-1">Skills Matched</v-text>
+            <v-row no-gutters align="center" style="height: 25px">
+              <v-text class="text-subtitle-1">Skills Matched</v-text>
             </v-row>
-            <v-row no-gutters align="center" style="height: 25px;">
-            <v-col class="pa-1">
-                <v-sheet class="rounded-5 bg-transparent" style="border: solid 1px black; border-radius: 10px;">
-                    <v-progress-linear 
-                        v-bind:model-value="skillsPctMatch"
-                        v-bind:bg-color="primaryColor"
-                        v-bind:color="secondaryColor"
-                        rounded
-                        :height="15"
+            <v-row no-gutters align="center" style="height: 25px">
+              <v-col class="pa-1">
+                <v-sheet
+                  class="rounded-5 bg-transparent"
+                  style="border: solid 1px black; border-radius: 10px"
+                >
+                  <v-progress-linear
+                    v-bind:model-value="skillsPctMatch"
+                    v-bind:bg-color="primaryColor"
+                    v-bind:color="secondaryColor"
+                    rounded
+                    :height="15"
+                  >
+                    <v-text class="text-caption" id="skillsMatchPct"
+                      >{{
+                        this.getSkillsPctMatch(
+                          this.employeeSkills,
+                          this.$props.skills
+                        )
+                      }}%</v-text
                     >
-                    <v-text class="text-caption">{{this.getSkillsPctMatch(this.employeeSkills, this.$props.skills)}}%</v-text>
-                </v-progress-linear>
+                  </v-progress-linear>
                 </v-sheet>
-            </v-col>
+              </v-col>
             </v-row>
-        </v-container>
-   
+          </v-container>
+
           <!-- Last Updated -->
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
@@ -117,26 +127,36 @@
 
           <!-- Skills Matched Percentage Bar -->
           <v-container class="pa-0 mt-1">
-            <v-row no-gutters align="center" style="height: 25px;">
-                <v-text class="text-subtitle-1">Skills Matched</v-text>
+            <v-row no-gutters align="center" style="height: 25px">
+              <v-text class="text-subtitle-1">Skills Matched</v-text>
             </v-row>
-            <v-row no-gutters align="center" style="height: 25px;">
-            <v-col class="pa-1">
-                <v-sheet class="rounded-5 bg-transparent" style="border: solid 1px black; border-radius: 10px;">
-                    <v-progress-linear 
-                        v-bind:model-value="skillsPctMatch"
-                        v-bind:bg-color="primaryColor"
-                        v-bind:color="secondaryColor"
-                        rounded
-                        :height="15"
+            <v-row no-gutters align="center" style="height: 25px">
+              <v-col class="pa-1">
+                <v-sheet
+                  class="rounded-5 bg-transparent"
+                  style="border: solid 1px black; border-radius: 10px"
+                >
+                  <v-progress-linear
+                    v-bind:model-value="skillsPctMatch"
+                    v-bind:bg-color="primaryColor"
+                    v-bind:color="secondaryColor"
+                    rounded
+                    :height="15"
+                  >
+                    <v-text class="text-caption"
+                      >{{
+                        this.getSkillsPctMatch(
+                          this.employeeSkills,
+                          this.$props.skills
+                        )
+                      }}%</v-text
                     >
-                    <v-text class="text-caption">{{this.getSkillsPctMatch(this.employeeSkills, this.$props.skills)}}%</v-text>
-                </v-progress-linear>
+                  </v-progress-linear>
                 </v-sheet>
-            </v-col>
+              </v-col>
             </v-row>
-        </v-container>
-   
+          </v-container>
+
           <!-- Last Updated -->
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
@@ -191,7 +211,6 @@ export default {
     // secondaryColor: String
   },
   data() {
-
     return {
       show: false,
       employeeSkills: this.$store.state.profile._Skills ?? [],
@@ -207,20 +226,20 @@ export default {
       for (var i = 0; i < roleSkills.length; i++) {
         Rskills.push(roleSkills[i].skill_name);
       }
-        var numSkillsMatched = 0;
-        for (var i = 0; i < employeeSkills.length; i++) {
-            if (Rskills.includes(employeeSkills[i])) {
-                numSkillsMatched++;
-            }
+      var numSkillsMatched = 0;
+      for (var i = 0; i < employeeSkills.length; i++) {
+        if (Rskills.includes(employeeSkills[i])) {
+          numSkillsMatched++;
         }
-        console.log("employee skills " + employeeSkills)
-        console.log("role skills " + Rskills)
-        // console.log("num skills " + numSkillsMatched);
-        // console.log("role skills " + roleSkills.length);
-        // console.log("skills matched " + numSkillsMatched / roleSkills.length * 100);
-        // The line below updates the skillsPctMatch variable
-        this.skillsPctMatch = Math.round((numSkillsMatched / roleSkills.length) * 100);
-        return Math.round(numSkillsMatched / roleSkills.length * 100);
+      }
+      // console.log("num skills " + numSkillsMatched);
+      // console.log("role skills " + roleSkills.length);
+      // console.log("skills matched " + numSkillsMatched / roleSkills.length * 100);
+      // The line below updates the skillsPctMatch variable
+      this.skillsPctMatch = Math.round(
+        (numSkillsMatched / roleSkills.length) * 100
+      );
+      return Math.round((numSkillsMatched / roleSkills.length) * 100);
     },
     days_posted(created_at) {
       var today = new Date();
