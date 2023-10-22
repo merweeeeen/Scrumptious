@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex align-center flex-column">
-    <div :identified="identified">
+    <div>
       <v-card
         width="100%"
         min-width="400px"
@@ -8,7 +8,8 @@
         variant="outlined"
         onmouseover="this.style.boxShadow='0 0 10px 0 rgba(0,0,0,0.5)'; show=true"
         onmouseleave="this.style.boxShadow='none';show=false;"
-        v-if="open == 1"
+        :id="identified"
+        v-if="open === 1 || this.$store.state.profile._Access_Rights === '1'"
       >
         <!-- Role Name and when done, bookmark/3 dot icon -->
         <v-card-item class="mt-0 w-100">

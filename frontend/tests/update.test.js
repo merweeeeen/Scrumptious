@@ -86,9 +86,7 @@ beforeEach(async () => {
 afterEach(async () => {
   axios.get = originalAxios;
   mock.restore();
-  console.log(listingIds);
   for (let i = 0; i < listingIds.length; i++) {
-    console.log(listingIds[i]);
     await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
   }
   if (favourite) {
@@ -109,7 +107,6 @@ async function mockings(listingDetails, bodyInfo = "", fav = "") {
   const indivListing = await axios.get(
     `http://127.0.0.1:3003/listing/${listingId}`
   );
-  // console.log(indivListing);
   const getSaved = await axios.get(
     `http://127.0.0.1:3003/favourite/read/${profile._Staff_id}/${listingId}`
   );
@@ -383,7 +380,7 @@ describe("Testing ST3-13", () => {
       },
     });
     await nextTick();
-    console.log(await wrapper.vm.listings);
+    await wrapper.vm.listings;
     const updatedListing = await wrapper.find(`#${listingId}`);
     await updatedListing.trigger("click");
     await wrapper.vm.$router.push({
@@ -590,7 +587,7 @@ describe("Testing ST3-13", () => {
       },
     });
     await nextTick();
-    console.log(await wrapper.vm.listings);
+    await wrapper.vm.listings;
     const updatedListing = await wrapper.find(`#${listingId}`);
     await updatedListing.trigger("click");
     await wrapper.vm.$router.push({
@@ -708,7 +705,7 @@ describe("Testing ST3-13", () => {
       },
     });
     await nextTick();
-    console.log(await wrapper.vm.listings);
+    await wrapper.vm.listings;
     const updatedListing = await wrapper.find(`#${listingId}`);
     await updatedListing.trigger("click");
     await wrapper.vm.$router.push({
@@ -727,7 +724,9 @@ describe("Testing ST3-13", () => {
     await nextTick();
     await nextTick();
     await wrapper.vm;
-    expect(await wrapper.find("#roleNameAndDepartment").text()).toBe("Accountant in Finance");
+    expect(await wrapper.find("#roleNameAndDepartment").text()).toBe(
+      "Accountant in Finance"
+    );
   });
 
   test("ST3-13.7.1", async () => {
@@ -803,7 +802,7 @@ describe("Testing ST3-13", () => {
     });
     await nextTick();
     await wrapper.setData({
-        vacancies: 2,
+      vacancies: 2,
     });
     await nextTick();
     const submit = await wrapper.find("#submit");
@@ -826,7 +825,7 @@ describe("Testing ST3-13", () => {
       },
     });
     await nextTick();
-    console.log(await wrapper.vm.listings);
+    await wrapper.vm.listings;
     const updatedListing = await wrapper.find(`#${listingId}`);
     await updatedListing.trigger("click");
     await wrapper.vm.$router.push({
@@ -845,7 +844,9 @@ describe("Testing ST3-13", () => {
     await nextTick();
     await nextTick();
     await wrapper.vm;
-    expect(await wrapper.find("#vacancyAndApplicants").text()).toBe("2 Openings | 0 Applicant(s)");
+    expect(await wrapper.find("#vacancyAndApplicants").text()).toBe(
+      "2 Openings | 0 Applicant(s)"
+    );
   });
 
   test("ST3-13.8.1", async () => {
@@ -944,7 +945,7 @@ describe("Testing ST3-13", () => {
       },
     });
     await nextTick();
-    console.log(await wrapper.vm.listings);
+    await wrapper.vm.listings;
     const updatedListing = await wrapper.find(`#${listingId}`);
     await updatedListing.trigger("click");
     await wrapper.vm.$router.push({
@@ -963,7 +964,196 @@ describe("Testing ST3-13", () => {
     await nextTick();
     await nextTick();
     await wrapper.vm;
-    expect(await wrapper.find("#expiryDate").text()).toBe("Closing on: 2024-01-05");
+    expect(await wrapper.find("#expiryDate").text()).toBe(
+      "Closing on: 2024-01-05"
+    );
+  });
+
+  test("ST3-13.9.1", async () => {
+    let wrapper;
+    const listingDetails = {
+      listingName: "ST3-13.9.1",
+      roleName: "Software Engineer",
+      dept: "IT Support",
+      num_openings: 2,
+    };
+    const bodyInfo = {
+      listing_name: listingDetails.listingName,
+      role_name: listingDetails.roleName,
+      desc: "TestCase",
+      dept: listingDetails.dept,
+      num_openings: listingDetails.num_openings,
+      country: "SG",
+      expiry_date: "2024-01-05",
+      open: 1,
+    };
+
+    const mock = await mockings(listingDetails, bodyInfo);
+    const listingId = mock.listingId;
+    listings = mock.listings;
+    wrapper = mount(LandingPage, {
+      global: {
+        plugins: [store, router, vuetify],
+      },
+      data() {
+        return {
+          listings: listings.data.body,
+        };
+      },
+    });
+    const listing = await wrapper.find(`#${listingId}`);
+    expect(listing.exists()).toBe(true);
+    await wrapper.find(`#${listingId}`).trigger("click");
+    await wrapper.vm.$router.push({
+      name: "ListingPage",
+      params: { listing_id: listingId },
+    });
+    await wrapper.vm.$router.isReady();
+    await nextTick();
+    expect(wrapper.vm.$route.path).toBe("/listing/" + listingId); // Testing whether the Route has been called and parsed
+
+    wrapper = mount(ListingPage, {
+      // Mounting the new ListingPage
+      global: {
+        plugins: [store, router, vuetify],
+      },
+    });
+    const updateButton = await wrapper.find(`#update`);
+    expect(updateButton.exists()).toBe(true);
+    await updateButton.trigger("click");
+
+    // Assert that $router.push was called with the expected argument
+
+    await nextTick();
+    await wrapper.vm;
+    await wrapper.vm.$router.isReady();
+    await nextTick();
+    await wrapper.vm.$router.push({
+      name: "UpdatePage",
+      params: { listing_id: listingId },
+    });
+    expect(wrapper.vm.$route.path).toBe("/update/" + listingId);
+
+    wrapper = mount(Update, {
+      // Mounting the new ListingPage
+      global: {
+        plugins: [store, router, vuetify],
+      },
+    });
+    await nextTick();
+    await wrapper.setData({
+      open: "Unavailable",
+    });
+    await nextTick();
+    const submit = await wrapper.find("#submit");
+    await submit.trigger("click");
+    expect(wrapper.vm.jobtitle).toBe("ST3-13.9.1");
+    expect(wrapper.vm.open).toBe("Unavailable");
+    expect(wrapper.find("#successText").text()).toBe(
+      "You have successfully updated the role listing!"
+    );
+    await wrapper.find("#closePrompt").trigger("click");
+    profile._Access_Rights = 0;
+    await nextTick();
+    await remock(mock, listingDetails);
+    await wrapper.vm.$router.push({
+      name: "LandingPage",
+    });
+    wrapper = mount(LandingPage, {
+      // Mounting the new ListingPage
+      global: {
+        plugins: [store, router, vuetify],
+      },
+    });
+    await nextTick();
+    await wrapper.vm.listings;
+    const updatedListing = await wrapper.find(`#${listingId}`);
+    expect(updatedListing.find("#ST3-13.9.1").exists()).toBe(false);
+  });
+
+  test("ST3-13.10.1", async () => {
+    let wrapper;
+    const listingDetails = {
+      listingName: "ST3-13.10.1",
+      roleName: "Software Engineer",
+      dept: "IT Support",
+      num_openings: 2,
+    };
+    const bodyInfo = {
+      listing_name: listingDetails.listingName,
+      role_name: listingDetails.roleName,
+      desc: "TestCase",
+      dept: listingDetails.dept,
+      num_openings: listingDetails.num_openings,
+      country: "SG",
+      expiry_date: "2024-01-05",
+      open: 1,
+    };
+
+    const mock = await mockings(listingDetails, bodyInfo);
+    const listingId = mock.listingId;
+    listings = mock.listings;
+    wrapper = mount(LandingPage, {
+      global: {
+        plugins: [store, router, vuetify],
+      },
+      data() {
+        return {
+          listings: listings.data.body,
+        };
+      },
+    });
+    const listing = await wrapper.find(`#${listingId}`);
+    expect(listing.exists()).toBe(true);
+    await wrapper.find(`#${listingId}`).trigger("click");
+    await wrapper.vm.$router.push({
+      name: "ListingPage",
+      params: { listing_id: listingId },
+    });
+    await wrapper.vm.$router.isReady();
+    await nextTick();
+    expect(wrapper.vm.$route.path).toBe("/listing/" + listingId); // Testing whether the Route has been called and parsed
+
+    wrapper = mount(ListingPage, {
+      // Mounting the new ListingPage
+      global: {
+        plugins: [store, router, vuetify],
+      },
+    });
+    const updateButton = await wrapper.find(`#update`);
+    expect(updateButton.exists()).toBe(true);
+    await updateButton.trigger("click");
+
+    // Assert that $router.push was called with the expected argument
+
+    await nextTick();
+    await wrapper.vm;
+    await wrapper.vm.$router.isReady();
+    await nextTick();
+    await wrapper.vm.$router.push({
+      name: "UpdatePage",
+      params: { listing_id: listingId },
+    });
+    expect(wrapper.vm.$route.path).toBe("/update/" + listingId);
+
+    wrapper = mount(Update, {
+      // Mounting the new ListingPage
+      global: {
+        plugins: [store, router, vuetify],
+      },
+    });
+    await nextTick();
+    await wrapper.setData({
+      jobdescription: "",
+    });
+    await nextTick();
+    const submit = await wrapper.find("#submit");
+    await submit.trigger("click");
+    expect(wrapper.vm.jobtitle).toBe("ST3-13.10.1");
+    expect(wrapper.vm.jobdescription).toBe("");
+    const errorMsg = wrapper.find("#errorMsg");
+    expect(errorMsg.exists()).toBe(true);
+    expect(errorMsg.text()).toBe("Please fill in all the fields");
   });
 });
 
@@ -988,7 +1178,6 @@ async function remock(mocked, listingDetails) {
   const indivListing = await axios.get(
     `http://127.0.0.1:3003/listing/${mocked.listingId}`
   );
-  console.log(indivListing.data.body);
   const getSaved = mocked.getSaved;
   const getRoleSkills = mocked.getRoleSkills;
   const getAllRoleSkills = mocked.getAllRoleSkills;
@@ -1031,5 +1220,4 @@ async function remock(mocked, listingDetails) {
       })
       .reply(200);
   }
-  
 }
