@@ -83,6 +83,7 @@ jobs:
             # Replace this with your actual command
             cd /home/runner/work/Scrumptious/Scrumptious/backend/monolith
             node index &
+            cd /home/runner/work/Scrumptious/Scrumptious/frontend
             npm test "$file"
 
             echo "Finished processing $file"
