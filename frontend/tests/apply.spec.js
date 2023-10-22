@@ -203,11 +203,11 @@ describe("Testing ST3-16", () => {
     expect(await apply.find("#popup").exists()).toBe(true);
     await apply.setData({ writeUp: writeUp });
     await apply.find("#submitForm").trigger("click");
-    console.log(await apply.vm.dialog4);
-    expect(await apply.vm.dialog4).toBe(true);
-    const dialog4 = await apply.find("#dialog4");
-    console.log(dialog4.html());
-    expect(dialog4.find("#successMsg").text()).toEqual(
+    console.log(await apply.vm.SuccessDialog);
+    expect(await apply.vm.SuccessDialog).toBe(true);
+    const successDialog = await apply.find("#successDialog");
+    console.log(successDialog.html());
+    expect(successDialog.find("#successMsg").text()).toEqual(
       "Application Submitted Successfully!"
     );
     expect(apply.find("#successText").text()).toEqual(
@@ -262,11 +262,11 @@ describe("Testing ST3-16", () => {
     expect(await apply.find("#popup").exists()).toBe(true);
     await apply.setData({ writeUp: writeUp });
     await apply.find("#submitForm").trigger("click");
-    console.log(await apply.vm.dialog4);
-    expect(await apply.vm.dialog4).toBe(true);
-    const dialog4 = await apply.find("#dialog4");
-    console.log(dialog4.html());
-    expect(dialog4.find("#successMsg").text()).toEqual(
+    console.log(await apply.vm.SuccessDialog);
+    expect(await apply.vm.SuccessDialog).toBe(true);
+    const successDialog = await apply.find("#successDialog");
+    console.log(successDialog.html());
+    expect(successDialog.find("#successMsg").text()).toEqual(
       "Application Submitted Successfully!"
     );
     expect(apply.find("#successText").text()).toEqual(
@@ -306,9 +306,9 @@ describe("Testing ST3-16", () => {
     expect(await apply.find("#popup").exists()).toBe(true);
     await apply.setData({ writeUp: writeUp });
     await apply.find("#submitForm").trigger("click");
-    expect(await apply.vm.dialog5).toBe(true);
-    const dialog5 = await apply.find("#dialog5");
-    expect(dialog5.find("#failedMsg").text()).toEqual("Application Failed!");
+    expect(await apply.vm.ApplyFailDialog).toBe(true);
+    const failDialog = await apply.find("#failDialog");
+    expect(failDialog.find("#failedMsg").text()).toEqual("Application Failed!");
   });
 
   test("ST3-18.1.2 (ListingPage)", async () => {
@@ -358,9 +358,9 @@ describe("Testing ST3-16", () => {
     expect(await apply.find("#popup").exists()).toBe(true);
     await apply.setData({ writeUp: writeUp });
     await apply.find("#submitForm").trigger("click");
-    expect(await apply.vm.dialog5).toBe(true);
-    const dialog5 = await apply.find("#dialog5");
-    expect(dialog5.find("#failedMsg").text()).toEqual("Application Failed!");
+    expect(await apply.vm.ApplyFailDialog).toBe(true);
+    const failDialog = await apply.find("#failDialog");
+    expect(failDialog.find("#failedMsg").text()).toEqual("Application Failed!");
   });
 
   test("ST3-18.2.1 (LandingPage)", async () => {
@@ -395,11 +395,11 @@ describe("Testing ST3-16", () => {
     expect(await apply.find("#popup").exists()).toBe(true);
     await apply.setData({ writeUp: writeUp });
     await apply.find("#submitForm").trigger("click");
-    console.log(await apply.vm.dialog4);
-    expect(await apply.vm.dialog4).toBe(true);
-    const dialog4 = await apply.find("#dialog4");
-    console.log(dialog4.html());
-    expect(dialog4.find("#successMsg").text()).toEqual(
+    console.log(await apply.vm.SuccessDialog);
+    expect(await apply.vm.SuccessDialog).toBe(true);
+    const successDialog = await apply.find("#successDialog");
+    console.log(successDialog.html());
+    expect(successDialog.find("#successMsg").text()).toEqual(
       "Application Submitted Successfully!"
     );
     expect(apply.find("#successText").text()).toEqual(
@@ -439,11 +439,11 @@ describe("Testing ST3-16", () => {
     expect(await apply.find("#popup").exists()).toBe(true);
     await apply.setData({ writeUp: writeUp });
     await apply.find("#submitForm").trigger("click");
-    console.log(await apply.vm.dialog4);
-    expect(await apply.vm.dialog4).toBe(true);
-    const dialog4 = await apply.find("#dialog4");
-    console.log(dialog4.html());
-    expect(dialog4.find("#successMsg").text()).toEqual(
+    console.log(await apply.vm.SuccessDialog);
+    expect(await apply.vm.SuccessDialog).toBe(true);
+    const successDialog = await apply.find("#successDialog");
+    console.log(successDialog.html());
+    expect(successDialog.find("#successMsg").text()).toEqual(
       "Application Submitted Successfully!"
     );
     expect(apply.find("#successText").text()).toEqual(
@@ -486,16 +486,16 @@ describe("Testing ST3-16", () => {
       writeUp: writeUp,
     });
     await apply.find("#submitForm").trigger("click");
-    expect(await apply.vm.dialog4).toBe(true);
-    const dialog4 = await apply.find("#dialog4");
-    expect(dialog4.find("#successMsg").text()).toEqual(
+    expect(await apply.vm.SuccessDialog).toBe(true);
+    const successDialog = await apply.find("#successDialog");
+    expect(successDialog.find("#successMsg").text()).toEqual(
       "Application Submitted Successfully!"
     );
     expect(apply.find("#successText").text()).toEqual(
       "Thank you for your application, kindly look out for an update on your application status which will be sent via email"
     );
   });
-  
+
   test("ST3-18.2.2 (ListingPage)", async () => {
     let wrapper;
     const listingDetails = {
@@ -546,9 +546,9 @@ describe("Testing ST3-16", () => {
       writeUp: writeUp,
     });
     await apply.find("#submitForm").trigger("click");
-    expect(await apply.vm.dialog4).toBe(true);
-    const dialog4 = await apply.find("#dialog4");
-    expect(dialog4.find("#successMsg").text()).toEqual(
+    expect(await apply.vm.SuccessDialog).toBe(true);
+    const successDialog = await apply.find("#successDialog");
+    expect(successDialog.find("#successMsg").text()).toEqual(
       "Application Submitted Successfully!"
     );
     expect(apply.find("#successText").text()).toEqual(
@@ -591,9 +591,9 @@ describe("Testing ST3-16", () => {
       writeUp: writeUp,
     });
     await apply.find("#submitForm").trigger("click");
-    expect(await apply.vm.dialog5).toBe(true);
-    const dialog5 = await apply.find("#dialog5");
-    expect(dialog5.find("#failedMsg").text()).toEqual("Application Failed!");
+    expect(await apply.vm.ApplyFailDialog).toBe(true);
+    const failDialog = await apply.find("#failDialog");
+    expect(failDialog.find("#failedMsg").text()).toEqual("Application Failed!");
   });
 
   test("ST3-18.2.3 (ListingPage)", async () => {
@@ -646,9 +646,9 @@ describe("Testing ST3-16", () => {
       writeUp: writeUp,
     });
     await apply.find("#submitForm").trigger("click");
-    expect(await apply.vm.dialog5).toBe(true);
-    const dialog5 = await apply.find("#dialog5");
-    expect(dialog5.find("#failedMsg").text()).toEqual("Application Failed!");
+    expect(await apply.vm.ApplyFailDialog).toBe(true);
+    const failDialog = await apply.find("#failDialog");
+    expect(failDialog.find("#failedMsg").text()).toEqual("Application Failed!");
   });
 
   //   test("ST3-18.3.1 (LandingPage)", async () => {
