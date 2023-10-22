@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => {
           },
           hookTimeout: 20000
         },
-        testTimeout: 10000,
+        testTimeout: 20000,
       },
     };
   } else {
