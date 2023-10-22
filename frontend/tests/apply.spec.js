@@ -71,6 +71,11 @@ beforeEach(async () => {
         profile,
       };
     },
+    mutations:{
+      profile(state, profile) {
+        state.profile = profile;
+      },
+    }
   });
 
   router = createRouter({
@@ -82,9 +87,7 @@ beforeEach(async () => {
 afterEach(async () => {
   axios.get = originalAxios;
   mock.restore();
-  console.log(listingIds);
   for (let i = 0; i < listingIds.length; i++) {
-    console.log(listingIds[i]);
     await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
   }
   if (favourite) {
@@ -105,7 +108,6 @@ async function mockings(listingDetails, fav = "") {
   const indivListing = await axios.get(
     `http://127.0.0.1:3003/listing/${listingId}`
   );
-  // console.log(indivListing);
   const getSaved = await axios.get(
     `http://127.0.0.1:3003/favourite/read/${profile._Staff_id}/${listingId}`
   );
@@ -203,10 +205,8 @@ describe("Testing ST3-16", () => {
     expect(await apply.find("#popup").exists()).toBe(true);
     await apply.setData({ writeUp: writeUp });
     await apply.find("#submitForm").trigger("click");
-    console.log(await apply.vm.SuccessDialog);
     expect(await apply.vm.SuccessDialog).toBe(true);
     const successDialog = await apply.find("#successDialog");
-    console.log(successDialog.html());
     expect(successDialog.find("#successMsg").text()).toEqual(
       "Application Submitted Successfully!"
     );
@@ -262,10 +262,8 @@ describe("Testing ST3-16", () => {
     expect(await apply.find("#popup").exists()).toBe(true);
     await apply.setData({ writeUp: writeUp });
     await apply.find("#submitForm").trigger("click");
-    console.log(await apply.vm.SuccessDialog);
     expect(await apply.vm.SuccessDialog).toBe(true);
     const successDialog = await apply.find("#successDialog");
-    console.log(successDialog.html());
     expect(successDialog.find("#successMsg").text()).toEqual(
       "Application Submitted Successfully!"
     );
@@ -395,10 +393,8 @@ describe("Testing ST3-16", () => {
     expect(await apply.find("#popup").exists()).toBe(true);
     await apply.setData({ writeUp: writeUp });
     await apply.find("#submitForm").trigger("click");
-    console.log(await apply.vm.SuccessDialog);
     expect(await apply.vm.SuccessDialog).toBe(true);
     const successDialog = await apply.find("#successDialog");
-    console.log(successDialog.html());
     expect(successDialog.find("#successMsg").text()).toEqual(
       "Application Submitted Successfully!"
     );
@@ -439,10 +435,8 @@ describe("Testing ST3-16", () => {
     expect(await apply.find("#popup").exists()).toBe(true);
     await apply.setData({ writeUp: writeUp });
     await apply.find("#submitForm").trigger("click");
-    console.log(await apply.vm.SuccessDialog);
     expect(await apply.vm.SuccessDialog).toBe(true);
     const successDialog = await apply.find("#successDialog");
-    console.log(successDialog.html());
     expect(successDialog.find("#successMsg").text()).toEqual(
       "Application Submitted Successfully!"
     );

@@ -78,8 +78,8 @@
                       Apply
                     </v-btn> -->
                     <ApplyRLPopup
-                      :roleName="this.roleName"
-                      :roleId="this.listing_id"
+                      :roleName="listing._listing_name"
+                      :roleId="listing_id"
                       id="ApplyRLPopup"
                     />
                   </v-col>
@@ -138,7 +138,7 @@ export default {
   data() {
     return {
       listing: "",
-      listing_id: this.$route.params.listing_id,
+      listing_id: parseInt(this.$route.params.listing_id),
       listingSkills: [],
       primaryColor: "black",
       employeeSkills: this.$store.state.profile._Skills,

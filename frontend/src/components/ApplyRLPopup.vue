@@ -8,25 +8,23 @@
       size="large"
       variant="flat"
       id="Apply"
-      :disabled="this.applied"
+      :disabled="applied"
     >
       Apply
 
       <v-dialog v-model="dialog" activator="parent" width="700">
         <v-card id="popup">
-          <v-card-title>Apply for role: {{ this.roleName }} </v-card-title>
+          <v-card-title>Apply for role: {{ roleName }} </v-card-title>
           <v-card-item>
             <div>
               <!--Staff's personal details so they can check that the dettails-->
               <!--are correct before applying-->
               <div class="text-h6 mb-1">Contact Info</div>
               <div class="text">
-                {{ this.staff._Staff_FName }} {{ this.staff._Staff_LName }}
+                {{ staff._Staff_FName }} {{ staff._Staff_LName }}
               </div>
-              <div class="text-caption">Department: {{ this.staff._Dept }}</div>
-              <div class="text-caption">
-                E-mail address: {{ this.staff._Email }}
-              </div>
+              <div class="text-caption">Department: {{ staff._Dept }}</div>
+              <div class="text-caption">E-mail address: {{ staff._Email }}</div>
 
               <!-- <div class="text-h6">
                         Resume
@@ -99,14 +97,14 @@
                       Submit
                     </v-btn>
                     <v-btn
-                        size="small" 
-                        type="submit" 
-                        color="purple" 
-                        class="mt-2" 
-                        text="Close"
-                        id="close"
-                        @click="this.dialog = false"
-                        style="margin-left: 15px;"
+                      size="small"
+                      type="submit"
+                      color="purple"
+                      class="mt-2"
+                      text="Close"
+                      id="close"
+                      @click="this.dialog = false"
+                      style="margin-left: 15px"
                     ></v-btn>
                   </v-form>
 
@@ -255,8 +253,6 @@ export default {
       // Check if the validation rule is satisfied
       if (this.validating()) {
         console.log("Validation passed");
-        // console.log(this.staff._Staff_id);
-        // console.log(this.roleId);
         const bodyInfo = {
           staffId: this.staff._Staff_id,
           listingId: parseInt(this.roleId),
@@ -266,6 +262,7 @@ export default {
 
         //.dialog4 = true; // should also clear the this.writeUp
         //call function here to run the back end..
+        location.reload();
       } else {
         console.log("Validation failed!");
         this.ApplyFailDialog = true;
@@ -287,7 +284,6 @@ export default {
             this.AlreadyAppDialog = true;
           } else {
             this.SuccessDialog = true;
-            this.applied = true;
             let thisobj = {
               _staff_Id: this.staff._Staff_id,
               _listing_Id: parseInt(this.roleId),
@@ -311,26 +307,13 @@ export default {
       }
       // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
     },
-    isapplied() {
-      let apply = this.$store.state.profile._Applications;
-      for (var j = 0; j < apply.length; j++) {
-        var obj = apply[j];
-        if (obj._listing_Id == this.roleId) {
-          this.applied = true;
-        }
-      }
-    },
   },
   mounted() {
-    // console.log(this.applied)
     this.isapplied();
   },
   props: {
     roleName: String,
     roleId: Number,
-    currRole: String,
-    phone: String,
-    applied: Boolean,
   },
 };
 </script>

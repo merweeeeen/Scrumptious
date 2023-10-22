@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import router from "./router/router.js";
 import App from "./App.vue";
 import { createStore } from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 // Vuetify
 import "vuetify/styles";
@@ -32,6 +33,7 @@ const store = createStore({
       state.profile = profile;
     },
   },
+  plugins:[createPersistedState()]
 });
 export default store
 const app = createApp(App);

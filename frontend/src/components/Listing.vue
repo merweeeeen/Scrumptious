@@ -77,7 +77,6 @@
                     <ApplyRLPopup
                     :roleName="this.roleName"
                     :roleId="this.roleId"
-                    :applied="this.applied"
                     id="ApplyRLPopup"
                     />
               </v-col>
@@ -203,8 +202,6 @@ export default {
         // skillsPctMatch = getSkillsPctMatch(this.employeeSkills, this.employeeSkills);
     
         return {
-            roleName: this.roleName,
-            roleId: this.roleId,
             show: false,
             employeeSkills: ["Python", "C++"],
             skillsPctMatch: "",
