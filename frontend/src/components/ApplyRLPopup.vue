@@ -110,7 +110,7 @@
                         <!-- v-dialog should only pop up when the rule of the text field is satisfied -->
                         <!-- else form validation should be performed and error message should show. confirmation popup should not appear-->
                         <v-dialog
-                            v-model="dialog4"
+                            v-model="SuccessDialog"
                             width="auto"
                             >
                             <v-card>
@@ -130,7 +130,7 @@
                                     class="text-none text-subtitle-1"
                                     size="small"
                                     variant="flat" 
-                                    @click="dialog4 = false;dialog = false"
+                                    @click="SuccessDialog = false;dialog = false"
                                     >
                                     Close
                                     </v-btn>
@@ -139,7 +139,7 @@
                         </v-dialog>
                         <!-- V-DIALOG FOR WHEN THE APPLICATION FAILS BZZZZ -->
                         <v-dialog
-                        v-model="dialog5"
+                        v-model="ApplyFailDialog"
                         width="auto"
                         >
                         <v-card>
@@ -159,7 +159,7 @@
                                 class="text-none text-subtitle-1"
                                 size="small"
                                 variant="flat" 
-                                @click="dialog5 = false;"
+                                @click="ApplyFailDialog = false;"
                                 >
                                 Close
                                 </v-btn>
@@ -168,7 +168,7 @@
                     </v-dialog>
                     <!-- V-DIALOG FOR WHEN THE THEY HAVE ALREADY APPLIED BEFORE??? -->
                     <v-dialog
-                    v-model="dialog6"
+                    v-model="AlreadyAppDialog"
                     width="auto"
                     >
                     <v-card>
@@ -189,7 +189,7 @@
                             class="text-none text-subtitle-1"
                             size="small"
                             variant="flat" 
-                            @click="dialog6 = false;"
+                            @click="AlreadyAppDialog = false;"
                             >
                             Close
                             </v-btn>
@@ -209,14 +209,22 @@
 
 <script>
     import axios from 'axios';
+    import { useStore } from "vuex";
+
     export default {
+        setup() {
+            const store = useStore();
+            return {
+            profile: (profile) => store.commit("profile", profile),
+            };
+        },
         name: "ApplyRLPopup",
         data () {
             return {
                 dialog: false,
-                dialog4: false,
-                dialog5: false,
-                dialog6: false,
+                SuccessDialog: false,
+                ApplyFailDialog: false,
+                AlreadyAppDialog: false,
                 staff: this.$store.state.profile,
                 writeUp: '', // Bind the input value to this data property
                 applied: false
@@ -235,11 +243,11 @@
                             const bodyInfo = {'staffId': this.staff._Staff_id, 'listingId': this.roleId, 'writeUp': this.writeUp}
                             this.postApply(bodyInfo)
 
-                            //.dialog4 = true; // should also clear the this.writeUp
+                            //.SuccessDialog = true; // should also clear the this.writeUp
                             //call function here to run the back end..
 
                         }
-                        else{console.log('Validation failed!'); this.dialog5 = true;}
+                        else{console.log('Validation failed!'); this.ApplyFailDialog = true;}
                     })
                 .catch((error) => console.log(error))
             },
@@ -261,10 +269,16 @@
                     // alert("Role Listing created successfully!")
                     if (response.data.body.affectedRows == 0) {
                         //alert("You've already applied previously??")
-                        this.dialog6 = true
+                        this.AlreadyAppDialog = true
                     }
-                    else{this.dialog4 = true; this.applied = true}
-                    // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
+                    else{
+                        this.SuccessDialog = true;
+                        this.applied = true
+                        let thisobj = {'_staff_Id': this.staff._Staff_id, '_listing_Id': parseInt(this.roleId), '_write_Up': this.writeUp}
+                        this.staff._Applications.push(thisobj)
+                        this.profile(this.staff)
+                        console.log(this.$store.state.profile)
+                    }
                     })
                     .catch(error => {
                     console.log(error)
