@@ -1,50 +1,42 @@
 <template>
-    <div class="text-center">
-        <v-btn
-        color="primary"
-        width = 100%
-        height="100%"
-        density="comfortable"
-        size="large"
-        variant="flat" 
-        id = "Apply"
-        :disabled = "this.applied"
-        >
-        Apply
+  <div class="text-center">
+    <v-btn
+      color="primary"
+      width="100%"
+      height="100%"
+      density="comfortable"
+      size="large"
+      variant="flat"
+      id="Apply"
+      :disabled="this.applied"
+    >
+      Apply
 
-        <v-dialog
-            v-model="dialog"
-            activator="parent"
-            width="700"
-        >
-            <v-card id="popup">
-            <v-card-title>Apply for role: {{this.roleName}}</v-card-title>
-            <v-card-item>
-                <div>
-                    <!--Staff's personal details so they can check that the dettails-->
-                    <!--are correct before applying-->
-                    <div class="text-h6 mb-1">
-                        Contact Info
-                    </div>
-                    <div class="text">
-                        {{ this.staff._Staff_FName }} {{ this.staff._Staff_LName }}
-                    </div>
-                    <div class="text-caption">
-                        Department: {{ this.staff._Dept }}
-                    </div>
-                    <div class="text-caption">
-                        E-mail address: {{ this.staff._Email }}
-                    </div>
+      <v-dialog v-model="dialog" activator="parent" width="700">
+        <v-card id="popup">
+          <v-card-title>Apply for role: {{ this.roleName }} </v-card-title>
+          <v-card-item>
+            <div>
+              <!--Staff's personal details so they can check that the dettails-->
+              <!--are correct before applying-->
+              <div class="text-h6 mb-1">Contact Info</div>
+              <div class="text">
+                {{ this.staff._Staff_FName }} {{ this.staff._Staff_LName }}
+              </div>
+              <div class="text-caption">Department: {{ this.staff._Dept }}</div>
+              <div class="text-caption">
+                E-mail address: {{ this.staff._Email }}
+              </div>
 
-                    <!-- <div class="text-h6">
+              <!-- <div class="text-h6">
                         Resume
                     </div> -->
-                    <!-- <div class="text-caption mb-1">
+              <!-- <div class="text-caption mb-1">
                         Be sure to include an updated resume*
                     </div> -->
-                    
-                    <!--Select previously used resume-->
-                    <!-- <v-combobox
+
+              <!--Select previously used resume-->
+              <!-- <v-combobox
                     clearable
                     chips
                     label="Select Resume"
@@ -52,18 +44,18 @@
                     variant="outlined"
                     ></v-combobox> -->
 
-                    <!-- <div class="text">
+              <!-- <div class="text">
                         Upload Resume
                     </div> -->
-                    <!-- <v-btn color="primary" 
+              <!-- <v-btn color="primary" 
                         class="text-none text-subtitle-1"
                         size="small"
                         variant="outlined" 
                         @click="dialog = false">Upload Resume
                     </v-btn> -->
 
-                    <!--for staff to upload an updated resume-->
-                    <!-- <v-file-input
+              <!--for staff to upload an updated resume-->
+              <!-- <v-file-input
                         chips
                         clearable
                         accept="image/png, image/jpeg, image/bmp, application/pdf"
@@ -71,227 +63,233 @@
                         density = "compact"
                         color="deep-purple-accent-4"
                     ></v-file-input> -->
-                </div>
-            </v-card-item>
+            </div>
+          </v-card-item>
 
-            <v-card-text>
-                <v-container>
-                    <v-row>
-                    <!--Section for staff to include more details for their application-->
-                    <!-- write up should not be longer than 500 words-->
-                    <v-col cols="2">
-                    <div class="text mr-1">
-                            Write-up
-                        </div>
-                    </v-col>
-                        <v-col>
-                        <v-form @submit.prevent ref="form">
-                            <v-text-field
-                                colour="deep-purple-accent-4"
-                                label="Write a brief summary of why you should be chosen for this role"
-                                id = "writeUp"
-                                :rules="[
-                                    v => !!v || 'Write-up is required',
-                                    v => (v.length > 0 && v.length <= 500) || 'Write-up must be less than 500 characters',
-                                    ]"
-                                v-model = "writeUp"
-                            ></v-text-field>
-                            <v-btn 
-                            size="small" 
-                            type="submit" 
-                            color="primary" 
-                            class="mt-2" 
-                            @click = "this.submitForm()"
-                            >
-                            Submit
-                            </v-btn>
-                        </v-form>
-
-                        <!-- v-dialog should only pop up when the rule of the text field is satisfied -->
-                        <!-- else form validation should be performed and error message should show. confirmation popup should not appear-->
-                        <v-dialog
-                            v-model="dialog4"
-                            width="auto"
-                            >
-                            <v-card>
-                                <div class="py-12 mx-9 text-center">
-                                    <v-icon
-                                        class="mb-6"
-                                        color="success"
-                                        icon="mdi-check-circle-outline"
-                                        size="120"
-                                    ></v-icon>
-                                    <div class="text-h6 font-weight-bold">Application Submitted Successfully!</div>
-                                    <div class="text">Thank you for your application, kindly look out for an update on your application status which will be sent via email</div>
-                                </div>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="primary" 
-                                    class="text-none text-subtitle-1"
-                                    size="small"
-                                    variant="flat" 
-                                    @click="dialog4 = false;dialog = false"
-                                    >
-                                    Close
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                        <!-- V-DIALOG FOR WHEN THE APPLICATION FAILS BZZZZ -->
-                        <v-dialog
-                        v-model="dialog5"
-                        width="auto"
-                        >
-                        <v-card>
-                            <div class="py-12 mx-9 text-center">
-                                <v-icon
-                                    class="mb-6"
-                                    color="red"
-                                    icon="mdi-alert-circle-outline"
-                                    size="120"
-                                ></v-icon>
-                                <div class="text-h6 font-weight-bold">Application Failed!</div>
-                                <!-- <div class="text">Thank you for your application, kindly look out for an update on your application status which will be sent via email</div> -->
-                            </div>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="primary" 
-                                class="text-none text-subtitle-1"
-                                size="small"
-                                variant="flat" 
-                                @click="dialog5 = false;"
-                                >
-                                Close
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <!-- V-DIALOG FOR WHEN THE THEY HAVE ALREADY APPLIED BEFORE??? -->
-                    <v-dialog
-                    v-model="dialog6"
-                    width="auto"
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <!--Section for staff to include more details for their application-->
+                <!-- write up should not be longer than 500 words-->
+                <v-col cols="2">
+                  <div class="text mr-1">Write-up</div>
+                </v-col>
+                <v-col>
+                  <v-form @submit.prevent>
+                    <v-text-field
+                      colour="deep-purple-accent-4"
+                      label="Write a brief summary of why you should be chosen for this role"
+                      id="writeUp"
+                      :rules="[
+                        (v) => !!v || 'Write-up is required',
+                        (v) =>
+                          (v.length > 0 && v.length <= 500) ||
+                          'Write-up must be less than 500 characters',
+                      ]"
+                      v-model="writeUp"
+                    ></v-text-field>
+                    <v-btn
+                      size="small"
+                      type="submit"
+                      color="primary"
+                      class="mt-2"
+                      id="submitForm"
+                      @click="this.submitForm()"
                     >
-                    <v-card>
-                        <div class="py-12 mx-9 text-center">
-                            <v-icon
-                                class="mb-6"
-                                color="orange"
-                                icon="mdi-alert-circle-outline"
-                                size="120"
-                            ></v-icon>
-                            <div class="text-h6 font-weight-bold">Already Applied!</div>
-                            <div class="text">You have already applied for this role listing</div>
-                            <!-- <div class="text">Thank you for your application, kindly look out for an update on your application status which will be sent via email</div> -->
-                        </div>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="primary" 
-                            class="text-none text-subtitle-1"
-                            size="small"
-                            variant="flat" 
-                            @click="dialog6 = false;"
-                            >
-                            Close
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
+                      Submit
+                    </v-btn>
+                  </v-form>
 
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-card-text>
+                  <!-- v-dialog should only pop up when the rule of the text field is satisfied -->
+                  <!-- else form validation should be performed and error message should show. confirmation popup should not appear-->
+                  <v-dialog v-model="dialog4" width="auto" id="dialog4">
+                    <v-card>
+                      <div class="py-12 mx-9 text-center">
+                        <v-icon
+                          class="mb-6"
+                          color="success"
+                          icon="mdi-check-circle-outline"
+                          size="120"
+                        ></v-icon>
+                        <div class="text-h6 font-weight-bold" id="successMsg">
+                          Application Submitted Successfully!
+                        </div>
+                        <div class="text" id="successText">
+                          Thank you for your application, kindly look out for an
+                          update on your application status which will be sent
+                          via email
+                        </div>
+                      </div>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="primary"
+                          class="text-none text-subtitle-1"
+                          size="small"
+                          variant="flat"
+                          @click="
+                            dialog4 = false;
+                            dialog = false;
+                          "
+                        >
+                          Close
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                  <!-- V-DIALOG FOR WHEN THE APPLICATION FAILS BZZZZ -->
+                  <v-dialog v-model="dialog5" width="auto" id="dialog5">
+                    <v-card>
+                      <div class="py-12 mx-9 text-center">
+                        <v-icon
+                          class="mb-6"
+                          color="red"
+                          icon="mdi-alert-circle-outline"
+                          size="120"
+                        ></v-icon>
+                        <div class="text-h6 font-weight-bold" id="failedMsg">
+                          Application Failed!
+                        </div>
+                        <!-- <div class="text">Thank you for your application, kindly look out for an update on your application status which will be sent via email</div> -->
+                      </div>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="primary"
+                          class="text-none text-subtitle-1"
+                          size="small"
+                          variant="flat"
+                          @click="dialog5 = false"
+                        >
+                          Close
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                  <!-- V-DIALOG FOR WHEN THE THEY HAVE ALREADY APPLIED BEFORE??? -->
+                  <v-dialog v-model="dialog6" width="auto">
+                    <v-card>
+                      <div class="py-12 mx-9 text-center">
+                        <v-icon
+                          class="mb-6"
+                          color="orange"
+                          icon="mdi-alert-circle-outline"
+                          size="120"
+                        ></v-icon>
+                        <div class="text-h6 font-weight-bold">
+                          Already Applied!
+                        </div>
+                        <div class="text">
+                          You have already applied for this role listing
+                        </div>
+                        <!-- <div class="text">Thank you for your application, kindly look out for an update on your application status which will be sent via email</div> -->
+                      </div>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="primary"
+                          class="text-none text-subtitle-1"
+                          size="small"
+                          variant="flat"
+                          @click="dialog6 = false"
+                        >
+                          Close
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
         </v-card>
-        </v-dialog>
-        </v-btn>
-    </div>
+      </v-dialog>
+    </v-btn>
+  </div>
 </template>
 
 <script>
-    import axios from 'axios';
-    export default {
-        name: "ApplyRLPopup",
-        data () {
-            return {
-                dialog: false,
-                dialog4: false,
-                dialog5: false,
-                dialog6: false,
-                staff: this.$store.state.profile,
-                writeUp: '', // Bind the input value to this data property
-                applied: false
-            }
-        },
-        methods: {
-            async submitForm() {
-                console.log('Submit button clicked');
-                // Check if the validation rule is satisfied
-                this.validate()
-                .then((passable) => {
-                        if (passable){
-                            console.log('Validation passed');
-                            console.log(this.staff._Staff_id)
-                            console.log(this.roleId)
-                            const bodyInfo = {'staffId': this.staff._Staff_id, 'listingId': this.roleId, 'writeUp': this.writeUp}
-                            this.postApply(bodyInfo)
+import axios from "axios";
+export default {
+  name: "ApplyRLPopup",
+  data() {
+    return {
+      dialog: false,
+      dialog4: false,
+      dialog5: false,
+      dialog6: false,
+      staff: this.$store.state.profile,
+      writeUp: "", // Bind the input value to this data property
+      applied: false,
+    };
+  },
+  methods: {
+    async submitForm() {
+      console.log("Submit button clicked");
+      // Check if the validation rule is satisfied
+      if (this.validating()) {
+        console.log("Validation passed");
+        // console.log(this.staff._Staff_id);
+        // console.log(this.roleId);
+        const bodyInfo = {
+          staffId: this.staff._Staff_id,
+          listingId: parseInt(this.roleId),
+          writeUp: this.writeUp,
+        };
+        this.postApply(bodyInfo);
 
-                            //.dialog4 = true; // should also clear the this.writeUp
-                            //call function here to run the back end..
-
-                        }
-                        else{console.log('Validation failed!'); this.dialog5 = true;}
-                    })
-                .catch((error) => console.log(error))
-            },
-            async validate () {
-                const { valid } = await this.$refs.form.validate()
-
-                if (valid) {
-                    console.log('valid true')
-                    return true
-                }
-                else { 
-                    console.log('valid false')
-                    return false}
-            },
-            async postApply(bodyInfo) {
-                axios.post('http://localhost:3003/application', bodyInfo)
-                    .then(response => {
-                    console.log(response)
-                    // alert("Role Listing created successfully!")
-                    if (response.data.body.affectedRows == 0) {
-                        //alert("You've already applied previously??")
-                        this.dialog6 = true
-                    }
-                    else{this.dialog4 = true; this.applied = true}
-                    // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
-                    })
-                    .catch(error => {
-                    console.log(error)
-                })
-            },
-        isapplied(){
-        let apply = this.$store.state.profile._Applications
-          for (var j = 0; j < apply.length; j++){
-            var obj = apply[j]
-            if (obj._listing_Id == this.roleId){
-              this.applied = true
-            }
+        //.dialog4 = true; // should also clear the this.writeUp
+        //call function here to run the back end..
+      } else {
+        console.log("Validation failed!");
+        this.dialog5 = true;
+      }
+    },
+    validating() {
+      if (this.writeUp.length > 500 || this.writeUp === "") {
+        return false;
+      }
+      return true;
+    },
+    async postApply(bodyInfo) {
+      axios
+        .post("http://localhost:3003/application", bodyInfo)
+        .then((response) => {
+          console.log(response);
+          // alert("Role Listing created successfully!")
+          if (response.data.body.affectedRows == 0) {
+            //alert("You've already applied previously??")
+            this.dialog6 = true;
+          } else {
+            this.dialog4 = true;
+            this.applied = true;
           }
+          // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    isapplied() {
+      let apply = this.$store.state.profile._Applications;
+      for (var j = 0; j < apply.length; j++) {
+        var obj = apply[j];
+        if (obj._listing_Id == this.roleId) {
+          this.applied = true;
         }
-        },
-        mounted() {
-            // console.log(this.applied)
-            this.isapplied()
-        },
-        props: {
-            roleName: String,
-            roleId: Number,
-            currRole: String,
-            phone: String,
-            applied: Boolean
-        },
-        
-        
-    }
+      }
+    },
+  },
+  mounted() {
+    // console.log(this.applied)
+    this.isapplied();
+  },
+  props: {
+    roleName: String,
+    roleId: Number,
+    currRole: String,
+    phone: String,
+    applied: Boolean,
+  },
+};
 </script>

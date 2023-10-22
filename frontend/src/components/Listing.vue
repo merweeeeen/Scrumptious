@@ -78,6 +78,7 @@
                     :roleName="this.roleName"
                     :roleId="this.roleId"
                     :applied="this.applied"
+                    id="ApplyRLPopup"
                     />
               </v-col>
             </v-row>

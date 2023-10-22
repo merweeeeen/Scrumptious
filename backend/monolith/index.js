@@ -341,6 +341,7 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
           results[0].password
         );
         await returnStaffClass.updateApplications()
+        console.log(returnStaffClass)
         const response = {
           statusCode: 200,
           body: returnStaffClass,

@@ -80,6 +80,7 @@
                     <ApplyRLPopup
                     :roleName="this.roleName"
                     :roleId="this.listing_id"
+                    id="ApplyRLPopup"
                     />
                   </v-col>
                 </v-row>

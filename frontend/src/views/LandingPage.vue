@@ -32,7 +32,7 @@
                 :id="listing._listing_id"
               ></ListingCard>
             </v-col>
-          </v-row>
+            </v-row>
         </v-col>
       </v-row>
     </v-container>
