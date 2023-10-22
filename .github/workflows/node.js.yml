@@ -69,16 +69,40 @@ jobs:
         working-directory: ${{ github.workspace }}
       - name: frontend Test
         run: |
-          cd ../backend/monolith
-          node index &
-          echo "Backend is running."
-          cd ../../frontend
-          echo "Frontend dir"
-          echo "Running test"
-          if find . -type f \( -name '*.test.js' -o -name '*.spec.js' \) -exec false {} +; then
-            echo "No test files found."
-          else
-            npm run test
-          fi
+          # Find the Node.js process by name
+          find_node_process() {
+            pgrep -f "node index"
+          }
+
+          # Stop the Node.js process if it's running
+          stop_node_process() {
+            local node_pid
+            node_pid=$(find_node_process)
+            if [ -n "$node_pid" ]; then
+              echo "Stopping Node.js process (PID $node_pid)"
+              kill "$node_pid"
+            fi
+          }
+
+          # Directory containing the files you want to process
+          directory_path="/home/runner/work/Scrumptious/Scrumptious/frontend/tests"
+          echo "$(pwd)"
+          # Use the find command to generate a list of files in the directory
+          files=($(find "$directory_path" -type f))
+
+          # Loop through the list of files
+          for file in "${files[@]}"; do
+            echo "Processing $file"
+
+            # Run your script or command on each file
+            # Replace this with your actual command
+            cd /home/runner/work/Scrumptious/Scrumptious/backend/monolith
+            node index &
+            cd /home/runner/work/Scrumptious/Scrumptious/frontend
+            npm test "$file"
+
+            echo "Finished processing $file"
+            stop_node_process
+          done
           echo "End test"
         working-directory: frontend
