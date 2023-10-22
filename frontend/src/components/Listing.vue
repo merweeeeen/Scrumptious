@@ -146,8 +146,8 @@
                     <v-text class="text-caption"
                       >{{
                         this.getSkillsPctMatch(
-                          this.employeeSkills,
-                          this.$props.skills
+                          employeeSkills,
+                          skills
                         )
                       }}%</v-text
                     >

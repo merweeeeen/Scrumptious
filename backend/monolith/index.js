@@ -196,6 +196,8 @@ app.get("/listing/filter/:filter", async (req, res) => {
     const filteredResults = await role.readFilteredListing(filterString);
     let responseArray = [];
     for (let result of filteredResults) {
+      const applicants = await application.getApplicants(result.listing_id);
+      const numberOfApplicants = applicants.length;
       responseArray.push(
         new listingClass.RoleListing(
           result.listing_id,
@@ -207,7 +209,9 @@ app.get("/listing/filter/:filter", async (req, res) => {
           result.expiry_date,
           result.open,
           result.description,
-          result.created_date
+          result.created_date,
+          numberOfApplicants,
+          await role_skill.readSkillbyRole(result.role_name)
         )
       );
     }

@@ -22,7 +22,7 @@
               <ListingCard
                 :roleName="listing._listing_name"
                 :Department="listing._dept"
-                :num_openings="listing._num_opening"
+                :num_openings="listing._num_openings"
                 :created_at="listing._created_date"
                 :open="listing._open"
                 :access="this.$store.state._access_rights"
