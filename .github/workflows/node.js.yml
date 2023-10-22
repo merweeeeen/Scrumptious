@@ -69,12 +69,6 @@ jobs:
         working-directory: ${{ github.workspace }}
       - name: frontend Test
         run: |
-          cd ../backend/monolith
-          node index &
-          echo "Backend is running."
-          cd ../../frontend
-          echo "Frontend dir"
-
           # Directory containing the files you want to process
           directory_path="/home/runner/work/Scrumptious/Scrumptious/frontend/tests"
           echo "$(pwd)"
@@ -87,6 +81,8 @@ jobs:
 
             # Run your script or command on each file
             # Replace this with your actual command
+            cd /home/runner/work/Scrumptious/Scrumptious/backend/monolith
+            node index &
             npm test "$file"
 
             echo "Finished processing $file"
