@@ -98,6 +98,15 @@
                     >
                       Submit
                     </v-btn>
+                    <v-btn
+                        size="small" 
+                        type="submit" 
+                        color="purple" 
+                        class="mt-2" 
+                        text="Close"
+                        @click="this.dialog = false"
+                        style="margin-left: 15px;"
+                    ></v-btn>
                   </v-form>
 
                   <!-- v-dialog should only pop up when the rule of the text field is satisfied -->
