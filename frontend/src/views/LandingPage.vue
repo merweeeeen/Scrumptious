@@ -85,7 +85,15 @@ export default {
     },
     async getAllListings() {
       const response = await axios.get("http://localhost:3003/listing");
-      this.listings = response.data.body;
+      if (this.$store.state.profile._Access_Rights === "0") {
+        this.listings = response.data.body.filter(
+          (listing) =>
+            listing._open === 1 &&
+            Date.parse(listing._expiry_date) > Date.now()
+        );
+      } else {
+        this.listings = response.data.body;
+      }
     },
     gotoLogin() {
       if (this.$store.state.profile === "") {
