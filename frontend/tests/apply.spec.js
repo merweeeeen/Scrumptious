@@ -651,41 +651,90 @@ describe("Testing ST3-16", () => {
     expect(failDialog.find("#failedMsg").text()).toEqual("Application Failed!");
   });
 
-  //   test("ST3-18.3.1 (LandingPage)", async () => {
-  //     let wrapper;
-  //     const listingDetails = {
-  //       listingName: "ST3-18.3.1",
-  //       roleName: "Software Developer",
-  //       dept: "IT Support",
-  //       num_openings: 1,
-  //     };
-  //     writeUp =
-  //       "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus";
+  test("ST3-18.3.1 (LandingPage)", async () => {
+    let wrapper;
+    const listingDetails = {
+      listingName: "ST3-18.3.1",
+      roleName: "Software Developer",
+      dept: "IT Support",
+      num_openings: 1,
+    };
+    writeUp = "123";
 
-  //     const mock = await mockings(listingDetails);
-  //     const listingId = mock.listingId;
-  //     listings = mock.listings;
-  //     wrapper = mount(LandingPage, {
-  //       global: {
-  //         plugins: [store, router, vuetify],
-  //       },
+    const mock = await mockings(listingDetails);
+    const listingId = mock.listingId;
+    listings = mock.listings;
+    wrapper = mount(LandingPage, {
+      global: {
+        plugins: [store, router, vuetify],
+      },
 
-  //       data() {
-  //         return {
-  //           listings: listings.data.body,
-  //         };
-  //       },
-  //     });
-  //     const listing = await wrapper.find(`#${listingId}`);
-  //     expect(listing.exists()).toBe(true);
-  //     const apply = await listing.findComponent(`#ApplyRLPopup`);
-  //     expect(apply.exists()).toBe(true);
-  //     await apply.find("#Apply").trigger("click");
-  //     expect(await apply.find("#popup").exists()).toBe(true);
-  //     const filter = await wrapper.findComponent("#Filter");
-  //     await filter.find("#checkDept").trigger("click");
-  //     expect(await apply.find("#popup").exists()).toBe(false);
-  //   });
+      data() {
+        return {
+          listings: listings.data.body,
+        };
+      },
+    });
+    const listing = await wrapper.find(`#${listingId}`);
+    expect(listing.exists()).toBe(true);
+    const apply = await listing.findComponent(`#ApplyRLPopup`);
+    expect(apply.exists()).toBe(true);
+    await apply.find("#Apply").trigger("click");
+    expect(await apply.find("#popup").exists()).toBe(true);
+    await apply.find("#close").trigger("click");
+    await nextTick();
+    expect(await apply.vm.dialog).toBe(false);
+  });
+
+  test("ST3-18.3.1 (ListingPage)", async () => {
+    let wrapper;
+    const listingDetails = {
+      listingName: "ST3-18.3.1",
+      roleName: "Software Developer",
+      dept: "IT Support",
+      num_openings: 1,
+    };
+    writeUp = "123";
+
+    const mock = await mockings(listingDetails);
+    const listingId = mock.listingId;
+    listings = mock.listings;
+    wrapper = mount(LandingPage, {
+      global: {
+        plugins: [store, router, vuetify],
+      },
+
+      data() {
+        return {
+          listings: listings.data.body,
+        };
+      },
+    });
+    const listing = await wrapper.find(`#${listingId}`);
+    expect(listing.exists()).toBe(true);
+    await wrapper.find(`#${listingId}`).trigger("click");
+    await wrapper.vm.$router.push({
+      name: "ListingPage",
+      params: { listing_id: listingId },
+    });
+    await wrapper.vm.$router.isReady();
+    await nextTick();
+    expect(wrapper.vm.$route.path).toBe("/listing/" + listingId); // Testing whether the Route has been called and parsed
+
+    wrapper = mount(ListingPage, {
+      // Mounting the new ListingPage
+      global: {
+        plugins: [store, router, vuetify],
+      },
+    });
+    const apply = await wrapper.findComponent(`#ApplyRLPopup`);
+    expect(apply.exists()).toBe(true);
+    await apply.find("#Apply").trigger("click");
+    expect(await apply.find("#popup").exists()).toBe(true);
+    await apply.find("#close").trigger("click");
+    await nextTick();
+    expect(await apply.vm.dialog).toBe(false);
+  });
 });
 
 async function createListings(listingDetails) {

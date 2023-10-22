@@ -104,6 +104,7 @@
                         color="purple" 
                         class="mt-2" 
                         text="Close"
+                        id="close"
                         @click="this.dialog = false"
                         style="margin-left: 15px;"
                     ></v-btn>
