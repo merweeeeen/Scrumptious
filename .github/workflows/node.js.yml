@@ -76,8 +76,8 @@ jobs:
           echo "Frontend dir"
 
           # Directory containing the files you want to process
-          directory_path="/frontend/tests"
-
+          directory_path="Scrumptious/frontend/tests"
+          echo "$(pwd)"
           # Use the find command to generate a list of files in the directory
           files=($(find "$directory_path" -type f))
 
