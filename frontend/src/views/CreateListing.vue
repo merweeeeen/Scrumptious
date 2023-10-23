@@ -264,7 +264,7 @@
       if (this.profile._Access_Rights == 1) {
         return true
       } else {
-        alert("You do not have access to this page")
+        // alert("You do not have access to this page")
         this.$router.push('/')
         return false
       }
@@ -288,8 +288,8 @@
   created() {
     this.checkAccess();
     this.getRoleSkills();
+  },
   }
-}
   </script>
   
   <style scoped>

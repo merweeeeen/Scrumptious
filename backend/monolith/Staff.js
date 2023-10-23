@@ -23,6 +23,20 @@ function findStaff(id) {
   });
 }
 
+function findStaffFromName(name) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM staff WHERE staff_FName LIKE '%${name}%' OR staff_LName LIKE '%${name}%';`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+
 function findStaffSkill(id) {
     return new Promise((resolve, reject) => {
       const query = `SELECT * FROM staff_skill WHERE staff_id = ${id};`;
@@ -37,4 +51,4 @@ function findStaffSkill(id) {
     });
   }
 
-module.exports = { findStaff, findStaffSkill };
+module.exports = { findStaff, findStaffFromName, findStaffSkill };
