@@ -312,7 +312,7 @@ describe("Testing ST3-16", () => {
   test("ST3-18.1.2 (ListingPage)", async () => {
     let wrapper;
     const listingDetails = {
-      listingName: "ST3-18.1.1",
+      listingName: "ST3-18.1.2",
       roleName: "Software Developer",
       dept: "IT Support",
       num_openings: 1,
