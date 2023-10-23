@@ -55,7 +55,7 @@ beforeEach(async () => {
   originalAxios = axios.get;
 
   profile = {
-    _Access_Rights: 0,
+    _Access_Rights: "0",
     _Country: "SG",
     _Dept: "Human Resource",
     _Email: "Ding@gmail.com",

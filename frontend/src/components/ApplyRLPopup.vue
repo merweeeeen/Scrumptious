@@ -9,6 +9,7 @@
       variant="flat"
       id="Apply"
       :disabled="applied"
+      v-if="this.$store.state.profile._Access_Rights === '0'"
     >
       Apply
 
