@@ -11,30 +11,33 @@
             SBRP
         </v-app-bar-title>
 
-        <!-- <v-btn icon>
-            <v-icon>mdi-magnify</v-icon>
-        </v-btn> -->
-
-        <v-btn 
+        <!-- <v-btn 
         variant="text"
         @click="this.$router.push({path: '/create'})" 
         :id="Link"
         > 
             link!
-        </v-btn>
+        </v-btn> -->
 
         <v-btn icon>
             <v-icon :id="Account">mdi-account</v-icon>
         </v-btn>
 
-        <!-- <v-btn icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn> -->
+        <v-btn icon @click="logout">
+            <v-icon>mdi-logout</v-icon>
+        </v-btn>
     </v-app-bar>
 </template>
 
 <script>
+import { useStore } from "vuex";
 export default {
+    setup() {
+        const store = useStore();
+        return {
+            profile: (profile) => store.commit("profile", profile),
+        };
+    },
     data() {
         return {
             NavBar: "NavBar",
@@ -43,6 +46,13 @@ export default {
             Link: "Link",
             Account: "Account",
         };
+    },
+    methods: {
+        logout() {
+            this.profile("");
+            console.log(this.$store.state.profile);
+            this.$router.push({ path: "/login" });
+        },
     },
 };
 </script>

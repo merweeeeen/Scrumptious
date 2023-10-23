@@ -33,9 +33,8 @@
         &nbsp; Create a new listing
         </v-btn>
       </v-col>
-
     </v-row>
-    <v-row v-if="this.$store.state.profile._Access_Rights == 1">
+    <v-row>
       <v-col> </v-col>
     </v-row>
     <!-- <v-row class="border rounded-xl" v-if="this.$store.state.profile._Access_Rights == 1">
