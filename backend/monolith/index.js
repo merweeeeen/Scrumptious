@@ -162,7 +162,34 @@ app.post("/listing", async (req, res) => {
   // }
   // else{ console.log("No body found")}
 });
-
+app.get("/search/:name", async (req, res) => {
+    console.log('GET /search/:name started')
+    const filteredResults = await role.readFilteredListing(`listing_name LIKE '%${req.params.name}%'`);
+    let responseArray = [];
+    for (let result of filteredResults) {
+      responseArray.push(
+        new listingClass.RoleListing(
+          result.listing_id,
+          result.listing_name,
+          result.role_name,
+          result.dept,
+          result.country,
+          result.num_openings,
+          result.expiry_date,
+          result.open,
+          result.description,
+          result.created_date
+        )
+      );
+    }
+    const response = {
+      statusCode: 200,
+      body: responseArray,
+      message: "Data Filtered Successfully",
+    };
+    res.status(200).send(response);
+    console.log('GET /search/:name ended')
+});
 app.get("/listing/filter/:filter", async (req, res) => {
   try {
     const filter = JSON.parse(req.params.filter);
@@ -311,8 +338,8 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
         });
         const returnStaffClass = new staffClass.Staff(
           results[0].staff_id,
-          results[0].staff_fname,
-          results[0].staff_lname,
+          results[0].staff_FName,
+          results[0].staff_LName,
           results[0].dept,
           results[0].country,
           results[0].email,
@@ -340,7 +367,34 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
       res.status(400).send(response);
     });
 });
-
+app.get("/staff/:name", async (req, res) => {
+  staff.findStaffFromName(req.params.name).then((results) => {
+    // console.log("Results: ", results);
+    staff.findStaffSkill(results[0].staff_id).then((staffSkills) => {
+      const skills = staffSkills.map((staffSkill) => {
+        return staffSkill.skill_name;
+      });
+      const returnStaffClass = new staffClass.Staff(
+        results[0].staff_id,
+        results[0].staff_FName,
+        results[0].staff_LName,
+        results[0].dept,
+        results[0].country,
+        results[0].email,
+        results[0].access_rights,
+        skills,
+        results[0].password
+      );
+      const response = {
+        statusCode: 200,
+        body: returnStaffClass,
+        message: "Retrieved Successfully",
+      };
+      res.status(200).send(response);
+      return;
+    });
+  });
+});
 /////////////////////////////////////////////////////
 ////////////// STAFF_SKILL MICROSERVICE /////////////
 /////////////////////////////////////////////////////
@@ -362,9 +416,8 @@ app.get("/ss", async (req, res) => {
       const response = {
         statusCode: 400,
         body: error,
-        message: "Retrieval Unsuccessful",
+        message: "No staff with this name found",
       };
-      console.log(response);
       res.status(400).send(response);
     });
 });
