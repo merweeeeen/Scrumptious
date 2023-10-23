@@ -8,7 +8,8 @@ exports.Staff = class {
     Email,
     Access_Rights,
     Skills,
-    Password
+    Password,
+    Role_Name
   ) {
     this._Staff_id = Staff_id;
     this._Staff_FName = Staff_FName;
@@ -19,6 +20,7 @@ exports.Staff = class {
     this._Access_Rights = Access_Rights;
     this._Skills = Skills;
     this._Password = Password;
+    this._Role_Name = Role_Name
   }
 
   get Staff_id() {
@@ -48,5 +50,9 @@ exports.Staff = class {
 
   get Password() {
     return this._Password;
+  }
+
+  get RoleName() {
+    return this._Role_Name
   }
 };

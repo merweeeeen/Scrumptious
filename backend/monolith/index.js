@@ -345,8 +345,10 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
           results[0].email,
           req.params.access,
           skills,
-          results[0].password
+          results[0].password,
+          results[0].role_name
         );
+        console.log(returnStaffClass)
         const response = {
           statusCode: 200,
           body: returnStaffClass,
@@ -383,7 +385,8 @@ app.get("/staff/:name", async (req, res) => {
         results[0].email,
         results[0].access_rights,
         skills,
-        results[0].password
+        results[0].password,
+        results[0].role_name
       );
       const response = {
         statusCode: 200,

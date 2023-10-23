@@ -29,6 +29,7 @@ beforeEach(async () => {
     _Staff_id: 1001,
     _Staff_FName: "John",
     _Staff_LName: "Doe",
+    _Role_Name: 'Accountant'
   };
 
   store = createStore({
@@ -88,7 +89,7 @@ describe("Integration tests", async () => {
     });
     await nextTick();
     expect(await wrapper.find("#staffName").text()).toBe("John Doe");
-    expect(await wrapper.find("#dept").text()).toBe("Finance Department");
+    expect(await wrapper.find("#roleAndDept").text()).toBe("Accountant in Finance Department");
     expect(await wrapper.find("#email").text()).toBe("johndoe@gmail.com");
     expect(await wrapper.find("#country").text()).toBe("Country: SG");
     expect(await wrapper.find("#staffId").text()).toBe("Staff ID: 1001");
