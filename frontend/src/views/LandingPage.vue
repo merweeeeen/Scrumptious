@@ -29,6 +29,7 @@
                 :created_at="listing._created_date"
                 :open="listing._open"
                 :access="this.$store.state._access_rights"
+                :expiry_date="listing._expiry_date"
                 :identified="listing._listing_name"
                 @click.native="gotoListing(listing)"
                 :id="listing._listing_id"

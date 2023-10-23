@@ -60,13 +60,14 @@ beforeEach(async () => {
   originalAxios = axios.get;
 
   profile = {
-    _Access_Rights: 1,
+    _Access_Rights: '1',
     _Country: "SG",
     _Dept: "Human Resource",
     _Email: "Ding@gmail.com",
     _Password: "imaHR",
     _Skills: ["Computational Problem Solving", "Python"],
     _Staff_id: 5173,
+    _Applications: []
   };
 
   store = createStore({
@@ -220,6 +221,7 @@ describe("Testing ST3-13", () => {
         plugins: [store, router, vuetify],
       },
     });
+    console.log(wrapper.html())
     const updateButton = await wrapper.find(`#update`);
     expect(updateButton.exists()).toBe(true);
     await updateButton.trigger("click");

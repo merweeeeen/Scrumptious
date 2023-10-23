@@ -23,9 +23,7 @@
                       </p>
                     </v-col>
 
-                    <v-col 
-                    class="d-flex align-center py-0 h-100"
-                    v-if=getRole()>
+                    <v-col class="d-flex align-center py-0 h-100">
                       <v-icon
                         class="align-center w-100 justify-end"
                         size="x-large"
@@ -79,7 +77,15 @@
                       v-if=getRole()
                     >
                       Apply
-                    </v-btn>
+                    </v-btn> -->
+
+                    <ApplyRLPopup
+                      :roleName="listing._listing_name"
+                      :roleId="listing_id"
+                      id="ApplyRLPopup"
+                      v-if="getRole()"
+                    />
+
                     <v-btn
                       density="comfortable"
                       size="small"
@@ -88,20 +94,15 @@
                       id="update"
                       class="mr-5"
                       v-else
-                      @click="this.$router.push({
-                        name: 'UpdatePage',
-                        params: {listing_id: listing_id}
-                      })"
+                      @click="
+                        this.$router.push({
+                          name: 'UpdatePage',
+                          params: { listing_id: listing_id },
+                        })
+                      "
                     >
                       Update
                     </v-btn>
-                    
-                    </v-btn> -->
-                    <ApplyRLPopup
-                      :roleName="listing._listing_name"
-                      :roleId="listing_id"
-                      id="ApplyRLPopup"
-                    />
                   </v-col>
                 </v-row>
               </v-card>
@@ -267,9 +268,11 @@ export default {
       }
     },
     getRole() {
-      if (this.$store.state.profile._Access_Rights == 1) return false;
-      else return true
-    }
+      if (this.$store.state.profile._Access_Rights === "1") {
+        return false;
+      }
+      return true;
+    },
   },
 
   async mounted() {
