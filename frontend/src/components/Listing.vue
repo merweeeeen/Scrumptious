@@ -63,7 +63,7 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn
+                <!-- <v-btn
                   width="100%"
                   height="100%"
                   density="comfortable"
@@ -73,7 +73,12 @@
                   id="apply"
                   v-show="this.$store.state.profile._Access_Rights == 0"
                   >Apply</v-btn
-                >
+                > -->
+                    <ApplyRLPopup
+                    :roleName="this.roleName"
+                    :roleId="this.roleId"
+                    id="ApplyRLPopup"
+                    />
               </v-col>
             </v-row>
           </v-container>
@@ -160,61 +165,83 @@
 </template>
 
 <script>
+import ApplyRLPopup from './ApplyRLPopup.vue';
+
 export default {
   name: "ListingCard",
-  props: {
-    roleName: String,
-    Department: String,
-    num_openings: Number,
-    created_at: String,
-    open: Number,
-    access: String,
-    identified: String,
-    // employeeSkills: Array,
-    // lastUpdated: String,
-    // primaryColor: String,
-    // secondaryColor: String
-  },
-  data() {
-    // skillsPctMatch = getSkillsPctMatch(this.employeeSkills, this.employeeSkills);
-
-    return {
-      show: false,
-      employeeSkills: ["Python", "C++"],
-      skillsPctMatch: "",
-      primaryColor: "grey",
-      secondaryColor: "grey-lighten-1",
-      // access: (access) => store.commit("access", access)
-    };
-  },
-  methods: {
-    // getSkillsPctMatch(employeeSkills, roleSkills) {
-    //     var numSkillsMatched = 0;
-    //     for (var i = 0; i < employeeSkills.length; i++) {
-    //         if (roleSkills.includes(employeeSkills[i])) {
-    //             numSkillsMatched++;
-    //         }
-    //     }
-
-    //     // The line below updates the skillsPctMatch variable
-    //     this.skillsPctMatch = Math.round((numSkillsMatched / roleSkills.length) * 100);
-    //     return Math.round((numSkillsMatched / roleSkills.length) * 100);
-    // },
-    days_posted(created_at) {
-      var today = new Date();
-      var created = new Date(created_at);
-      var diff = today - created;
-      var days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      if (days == 1) {
-        return "Posted " + days + " day ago";
-      } else if (days == 0) {
-        return "Posted today";
-      } else {
-        return "Posted " + days + " days ago";
-      }
+    props: {
+        roleName: String,
+        roleId: Number,
+        Department: String,
+        num_openings: Number,
+        created_at: String,
+        open: Number,
+        access: String,
+        identified: String,
+        // employeeSkills: Array,
+        // lastUpdated: String,
+        // primaryColor: String,
+        // secondaryColor: String
     },
-  },
-  mounted() {},
+    data() {
+        // skillsPctMatch = getSkillsPctMatch(this.employeeSkills, this.employeeSkills);
+    
+        return {
+            show: false,
+            employeeSkills: ["Python", "C++"],
+            skillsPctMatch: "",
+            primaryColor: "grey",
+            secondaryColor: "grey-lighten-1",
+            applications: this.$store.state.profile._Applications,
+            //applied: false
+            // access: (access) => store.commit("access", access)
+        };
+    },
+    methods: {
+        // getSkillsPctMatch(employeeSkills, roleSkills) {
+        //     var numSkillsMatched = 0;
+        //     for (var i = 0; i < employeeSkills.length; i++) {
+        //         if (roleSkills.includes(employeeSkills[i])) {
+        //             numSkillsMatched++;
+        //         }
+        //     }
+
+        //     // The line below updates the skillsPctMatch variable
+        //     this.skillsPctMatch = Math.round((numSkillsMatched / roleSkills.length) * 100);
+        //     return Math.round((numSkillsMatched / roleSkills.length) * 100);
+        // },
+        days_posted(created_at) {
+            var today = new Date();
+            var created = new Date(created_at);
+            var diff = today - created;
+            var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            if (days == 1) {
+                return "Posted " + days + " day ago";
+            }
+            else if (days == 0) {
+                return "Posted today";
+            }
+            else {
+            return "Posted " + days + " days ago";
+            }
+        },
+        // isapplied(){
+        //   for (eachapplicant in this.$store.state.profile._Applications){
+        //     if (eachapplicant._listing_id = this.roleId){
+        //       this.applied = true
+        //     }
+        //   }
+        // }
+    },
+
+    mounted() {
+        // console.log(this.$store.state.profile);
+        // this.isapplied()
+        
+    },
+    components: {
+        ApplyRLPopup,
+    }
 };
 
 function getSkillsPctMatch(employeeSkills, roleSkills) {

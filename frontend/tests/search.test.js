@@ -22,6 +22,7 @@ beforeEach(async () => {
     _Password: "imaStaff",
     _Skills: ["Adaptability", "Microsoft Excel"],
     _Staff_id: 1001,
+    _Applications: []
   };
 
   const store = createStore({
