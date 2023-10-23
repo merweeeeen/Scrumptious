@@ -1,38 +1,60 @@
 <template>
   <v-container class="justify-center">
-    <v-row class="flex-column border rounded-xl">
+    <v-row class=" flex-column border rounded-xl">
       <v-col>
-        <p>Search for a role listing:</p>
+        <p>Search for a job listing: </p>
         <v-text-field
+          label="Search listing"
           append-icon="mdi-magnify"
-          label="Search"
+          @click:append="searchListing"
+          v-model="listing_name"
           bg-color="white"
           single-line
           hide-details
+          id="searchBar"
         ></v-text-field>
       </v-col>
       <v-col>
         <v-btn elevation="0" class="w-100 justify-start">
           <v-icon>mdi-bookmark-outline</v-icon>
-          &nbsp; Saved Jobs
+          &nbsp; Favourites
         </v-btn>
-      </v-col>
-      <v-col>
-        <v-btn elevation="0" class="mt-n8 w-100 justify-start">
-          <v-icon>mdi-clock-outline</v-icon>
-          &nbsp; Recently viewed
-        </v-btn>
-      </v-col>
-      <v-col>
-        <v-btn elevation="0" class="mt-n12 w-100 justify-start">
+        <v-btn elevation="0" class=" w-100 justify-start">
           <v-icon>mdi-file-document-edit-outline</v-icon>
           &nbsp; My applications
         </v-btn>
+        <v-btn 
+        elevation="0"
+        class="w-100 justify-start"
+        @click="this.$router.push({path: '/create'})" 
+        v-if="this.$store.state.profile._Access_Rights == 1"
+        > 
+        <v-icon>mdi-plus-thick</v-icon>
+        &nbsp; Create a new listing
+        </v-btn>
+      </v-col>
+
+    </v-row>
+    <v-row v-if="this.$store.state.profile._Access_Rights == 1">
+      <v-col> </v-col>
+    </v-row>
+    <!-- <v-row class="border rounded-xl" v-if="this.$store.state.profile._Access_Rights == 1">
+        <v-col>
+        <p>Search for a staff profile: </p>
+        <v-text-field
+          append-icon="mdi-magnify"
+          @click:append="searchStaff"
+          v-model="staff_name"
+          label="Search staff"
+          bg-color="white"
+          single-line
+          hide-details
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-row>
       <v-col> </v-col>
-    </v-row>
+    </v-row> -->
     <v-row class="border rounded-xl">
       <v-col style="padding: 30px">
         <v-row> Filter by: </v-row>
@@ -142,10 +164,12 @@
 
 <script>
 export default {
-  emits: ["filter", "reset"],
+  emits: ["filter", "reset", "searchListing", "searchStaff"],
   props: ["skills", "roles", "depts"],
   data() {
     return {
+      listing_name: "",
+      staff_name: "",
       skill: [],
       role: [],
       dept: [],
@@ -158,6 +182,14 @@ export default {
     };
   },
   methods: {
+    searchListing() {
+        console.log(this.listing_name)
+        this.$emit("searchListing", this.listing_name);
+        this.listing_name = "";
+    },
+    searchStaff() {
+      this.$emit("searchStaff", this.staff_name);
+    },
 
     emitFunction() {
       const filters = {
