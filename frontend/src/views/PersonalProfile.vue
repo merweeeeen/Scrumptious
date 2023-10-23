@@ -30,7 +30,7 @@
                     </v-sheet>
                     <v-sheet class="text-center" >
                         <h1 id="staffName">{{ staffInfo._Staff_FName }} {{ staffInfo._Staff_LName }}</h1>
-                        <h3 id="dept"> {{staffInfo._Dept}} Department</h3> <!--STAFF_ROLE in -->
+                        <h3 id="roleAndDept">{{ staffInfo._Role_Name }} in {{staffInfo._Dept}} Department</h3> <!--STAFF_ROLE in -->
                         <h4 id="email"> {{ staffInfo._Email }}</h4>
                     </v-sheet>
                 </v-col>
