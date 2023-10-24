@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex align-center flex-column">
-    <div>
+    <div style="width:40vw">
       <v-card
         width="100%"
         min-width="400px"
@@ -79,6 +79,15 @@
           <v-text class="text-caption text-grey-darken-2">
             {{ Department }} | {{ num_openings }} Opening(s)
           </v-text>
+          <v-container class="pa-0">
+            <v-row no-gutters justify="space-between" style="height: 25px">
+              <v-col cols="auto">
+                <v-text class="text-caption">{{
+                  days_posted(created_at)
+                }}</v-text>
+              </v-col>
+            </v-row>
+          </v-container>
 
           <!-- Skills Matched Percentage Bar -->
           <v-container
@@ -87,6 +96,27 @@
           >
             <v-row no-gutters align="center" style="height: 25px">
               <v-text class="text-subtitle-1">Skills Matched</v-text>
+            </v-row>
+            <v-row class="ma-0 ">
+              <v-col class="pb-0">
+                <v-card width="100%" color="black" variant="outlined">
+                  <v-card-text>
+                    <v-chip
+                      v-for="skill in listingSkills"
+                      class="ma-1"
+                      variant="tonal"
+                      :color="
+                        employeeSkills.includes(skill)
+                          ? 'green-darken-3'
+                          : 'default'
+                      "
+                      :id="skill"
+                    >
+                      {{ skill }}
+                    </v-chip>
+                  </v-card-text>
+                </v-card>
+              </v-col>
             </v-row>
             <v-row no-gutters align="center" style="height: 25px">
               <v-col class="pa-1">
@@ -117,13 +147,6 @@
 
           <!-- Last Updated -->
           <v-container class="pa-0">
-            <v-row no-gutters justify="space-between" style="height: 25px">
-              <v-col cols="auto">
-                <v-text class="text-caption">{{
-                  days_posted(created_at)
-                }}</v-text>
-              </v-col>
-            </v-row>
             <v-row v-if="this.$store.state.profile._Access_Rights === '0'">
               <v-col>
                 <ApplyRLPopup
@@ -169,6 +192,7 @@ export default {
       applications: this.$store.state.profile._Applications,
       //applied: false
       // access: (access) => store.commit("access", access)
+      listingSkills: [],
     };
   },
   methods: {
@@ -177,6 +201,7 @@ export default {
       for (var i = 0; i < roleSkills.length; i++) {
         Rskills.push(roleSkills[i].skill_name);
       }
+      this.listingSkills = Rskills;
       var numSkillsMatched = 0;
       for (var i = 0; i < employeeSkills.length; i++) {
         if (Rskills.includes(employeeSkills[i])) {
