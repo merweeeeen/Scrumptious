@@ -5,6 +5,7 @@ import ListingPage from "../views/ListingPage.vue";
 import Login from "../views/Login.vue";
 import Test from '../views/Test.vue'
 import authGuard from "./authGuard";
+import Update from "../views/updateListing.vue"
 
 const routes = [
   {
@@ -28,6 +29,12 @@ const routes = [
     path: "/listing/:listing_id",
     name: "ListingPage",
     component: ListingPage,
+    beforeEnter: authGuard
+  },
+  {
+    path: '/update/:listing_id',
+    name: 'UpdatePage',
+    component: Update,
     beforeEnter: authGuard
   }
 ];
