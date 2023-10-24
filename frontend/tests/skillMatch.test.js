@@ -115,19 +115,19 @@ async function mockings(listingDetails, fav = "") {
 }
 
 describe("Testing ST3-39", () => {
-  test("ST3-39.1.1", async () => {
+  test("ST3-39.1.1 and ST3-39.2.1", async () => {
     let wrapper;
     const listingDetails = [
       {
         listingName: "ST3-39.1.1",
-        roleName: "Software Developer",
-        dept: "IT Support",
+        roleName: "Accountant",
+        dept: "Finance",
         num_openings: 1,
       },
       {
         listingName: "ST3-39.2.1",
-        roleName: "Accountant",
-        dept: "Finance",
+        roleName: "Software Developer",
+        dept: "IT Support",
         num_openings: 1,
       },
     ];
@@ -146,13 +146,15 @@ describe("Testing ST3-39", () => {
         };
       },
     });
+
     const listing1 = await wrapper.find(`#${listingId1}`);
     expect(listing1.exists()).toBe(true);
-    expect(await listing1.find("#Python").attributes('color')).toEqual("default");
+    expect(await listing1.find("[id=Microsoft Excel]").attributes('color')).toEqual("green-darken-3"); 
 
     const listing2 = await wrapper.find(`#${listingId2}`);
     expect(listing2.exists()).toBe(true);
-    expect(await listing2.find("[id=Microsoft Excel]").attributes('color')).toEqual("green-darken-3");  });
+    expect(await listing2.find("#Python").attributes('color')).toEqual("default");
+  });
 
   test("ST3-39.3.1", async () => {
     let wrapper;
