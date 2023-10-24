@@ -49,7 +49,7 @@
                   </p>
                   <p class="text-h7 text--primary" id="vacancyAndApplicants">
                     {{ listing._num_openings }} Openings |
-                    {{ listing._applicants }} Applicant(s)
+                    {{ applicants }} Applicant(s)
                   </p>
                   <p class="text-h7 text--primary" id="country">
                     Country: {{ listing._country }}
@@ -68,14 +68,40 @@
                     </v-card-text>
                   </v-col>
                   <v-col cols="auto" class="me-4">
-                    <v-btn
+                    <!-- <v-btn
                       density="comfortable"
                       size="small"
                       variant="flat"
                       v-bind:color="primaryColor"
                       id="applyBtn"
+                      v-if=getRole()
                     >
                       Apply
+                    </v-btn> -->
+
+                    <ApplyRLPopup
+                      :roleName="listing._listing_name"
+                      :roleId="listing_id"
+                      id="ApplyRLPopup"
+                      v-if="getRole()"
+                    />
+
+                    <v-btn
+                      density="comfortable"
+                      size="small"
+                      variant="flat"
+                      v-bind:color="primaryColor"
+                      id="update"
+                      class="mr-5"
+                      v-else
+                      @click="
+                        this.$router.push({
+                          name: 'UpdatePage',
+                          params: { listing_id: listing_id },
+                        })
+                      "
+                    >
+                      Update
                     </v-btn>
                   </v-col>
                 </v-row>
@@ -121,23 +147,27 @@
 import NavBar from "../components/NavBar.vue";
 import Footer from "../components/Footer.vue";
 import axios from "axios";
+import ApplyRLPopup from "../components/ApplyRLPopup.vue";
 
 export default {
   components: {
     NavBar,
     Footer,
+    ApplyRLPopup,
   },
 
   data() {
     return {
       listing: "",
-      listing_id: this.$route.params.listing_id,
+      listing_id: parseInt(this.$route.params.listing_id),
       listingSkills: [],
       primaryColor: "black",
       employeeSkills: this.$store.state.profile._Skills,
       savedListings: ["12", "13", "14"],
       saved: false,
       staffid: this.$store.state.profile._Staff_id,
+      profile: this.$store.state.profile,
+      applicants: 0,
     };
   },
 
@@ -147,6 +177,7 @@ export default {
         `http://localhost:3003/listing/${this.listing_id}`
       );
       this.listing = response.data.body;
+      this.applicants = response.data.body._applicants.length;
     },
 
     async getRoleSkills() {
@@ -203,10 +234,8 @@ export default {
         : undefined;
       if (favouriteClass) {
         this.saved = true;
-        console.log("at first listing saved: " + this.saved);
       } else {
         this.saved = false;
-        console.log("at first listing saved: " + this.saved);
       }
     },
 
@@ -233,11 +262,16 @@ export default {
           })
           .then((response) => {
             this.saved = false;
-            console.log(response);
           })
           .catch(console.log("error"));
         // console.log(this.savedListings)
       }
+    },
+    getRole() {
+      if (this.$store.state.profile._Access_Rights === "1") {
+        return false;
+      }
+      return true;
     },
   },
 

@@ -167,7 +167,7 @@
         invalid: false,
         errormsg: [],
 
-        access: this.$store.state.access
+        profile: this.$store.state.profile,
         }
     },
     methods: {
@@ -261,10 +261,10 @@
       this.invalid = false
     },
     checkAccess() {
-      if (this.access == "HR") {
+      if (this.profile._Access_Rights == 1) {
         return true
       } else {
-        alert("You do not have access to this page")
+        // alert("You do not have access to this page")
         this.$router.push('/')
         return false
       }
@@ -288,8 +288,8 @@
   created() {
     this.checkAccess();
     this.getRoleSkills();
+  },
   }
-}
   </script>
   
   <style scoped>

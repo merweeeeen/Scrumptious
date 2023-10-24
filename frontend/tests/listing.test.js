@@ -58,6 +58,7 @@ beforeEach(async () => {
     _Password: "imaHR",
     _Skills: ["Computational Problem Solving", "Python"],
     _Staff_id: 5173,
+    _Applications: [],
   };
 
   store = createStore({

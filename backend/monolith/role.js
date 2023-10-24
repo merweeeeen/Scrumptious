@@ -37,6 +37,40 @@ function readOneListing(listingid) {
   });
 }
 
+//PUT, should take in object like this: {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"msia","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
+function updateListing(theBody,listingid) {
+  return new Promise((resolve, reject) => {
+      const listingName = theBody.listing_name;
+      const roleName = theBody.role_name;
+      const dept = theBody.dept;
+      const country = theBody.country;
+      const numOpenings = theBody.num_openings;
+      const expiryDate = theBody.expiry_date; // YYYY-MM-DD format
+      const openVal = theBody.open;
+      const desc = theBody.desc;
+      const query =`UPDATE listing SET 
+                    listing_name='${listingName}', 
+                    role_name='${roleName}', 
+                    dept='${dept}', 
+                    country='${country}',
+                    num_openings='${numOpenings}',
+                    expiry_date='${expiryDate}',
+                    open='${openVal}',
+                    description='${desc}'
+                    WHERE listing_id = ${listingid}`;
+
+      con.query(query, function (error, results, fields) {
+        if (error) {
+            console.log("error: " + error)
+            reject(error);
+        } else {
+            console.log("results: " + results)         
+            resolve(results);
+        }
+      });
+  })
+}
+
 // POST, should take in an object like this: {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 function createListing(theBody) {
   return new Promise((resolve, reject) => {
@@ -152,6 +186,7 @@ module.exports = {
   readAllListing,
   readOneListing,
   createListing,
+  updateListing,
   readFavourite,
   postFavourite,
   removeFavourite,
