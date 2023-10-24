@@ -53,13 +53,14 @@ beforeEach(async () => {
   originalAxios = axios.get;
 
   profile = {
-    _Access_Rights: 0,
+    _Access_Rights: "0",
     _Country: "SG",
     _Dept: "Finance",
     _Email: "johndoe@gmail.com",
     _Password: "imaStaff",
     _Skills: ["Adaptability", "Microsoft Excel"],
     _Staff_id: 1001,
+    _Applications: []
   };
 
   store = createStore({
@@ -118,13 +119,52 @@ describe("Testing ST3-39", () => {
     let wrapper;
     const listingDetails = [
       {
-        listingName: "ST3-39.1.1(1)",
+        listingName: "ST3-39.1.1",
         roleName: "Software Developer",
         dept: "IT Support",
         num_openings: 1,
       },
       {
-        listingName: "ST3-39.1.1(2)",
+        listingName: "ST3-39.2.1",
+        roleName: "Accountant",
+        dept: "Finance",
+        num_openings: 1,
+      },
+    ];
+
+    const mock = await mockings(listingDetails);
+    const listingId1 = mock.listingId[0];
+    const listingId2 = mock.listingId[1];
+    listings = mock.listings;
+    wrapper = mount(LandingPage, {
+      global: {
+        plugins: [store, router, vuetify],
+      },
+      data() {
+        return {
+          listings: listings.data.body,
+        };
+      },
+    });
+    const listing1 = await wrapper.find(`#${listingId1}`);
+    expect(listing1.exists()).toBe(true);
+    expect(await listing1.find("#Python").attributes('color')).toEqual("default");
+
+    const listing2 = await wrapper.find(`#${listingId2}`);
+    expect(listing2.exists()).toBe(true);
+    expect(await listing2.find("[id=Microsoft Excel]").attributes('color')).toEqual("green-darken-3");  });
+
+  test("ST3-39.3.1", async () => {
+    let wrapper;
+    const listingDetails = [
+      {
+        listingName: "ST3-39.3.1(1)",
+        roleName: "Software Developer",
+        dept: "IT Support",
+        num_openings: 1,
+      },
+      {
+        listingName: "ST3-39.3.1(2)",
         roleName: "Accountant",
         dept: "Finance",
         num_openings: 1,

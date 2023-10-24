@@ -131,8 +131,8 @@ app.get("/listing/:listingid?", async (req, res) => {
         results[0].open,
         results[0].description,
         results[0].created_date,
+        await role_skill.readSkillbyRole(results[0].role_name),
         numberOfApplicants,
-        await role_skill.readSkillbyRole(results[0].role_name)
       );
       const response = {
         statusCode: 200,
@@ -283,8 +283,8 @@ app.get("/listing/filter/:filter", async (req, res) => {
           result.open,
           result.description,
           result.created_date,
+          await role_skill.readSkillbyRole(result.role_name),
           numberOfApplicants,
-          await role_skill.readSkillbyRole(result.role_name)
         )
       );
     }

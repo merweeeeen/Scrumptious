@@ -279,7 +279,6 @@ export default {
     await this.getListing();
     await this.getRoleSkills();
     await this.getSaved();
-    // this.getFavouriteListings()
   },
 };
 </script>

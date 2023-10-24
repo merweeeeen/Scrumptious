@@ -49,7 +49,6 @@ import axios from "axios";
 import Filter from "../components/Filter.vue";
 import NavBar from "../components/NavBar.vue";
 import Footer from "../components/Footer.vue";
-import { useStore } from "vuex";
 
 export default {
   name: "LandingPage",
@@ -58,12 +57,6 @@ export default {
     Filter,
     NavBar,
     Footer,
-  },
-  setup() {
-    const store = useStore();
-    return {
-      profile: (profile) => store.commit("profile", profile),
-    };
   },
   data() {
     return {
