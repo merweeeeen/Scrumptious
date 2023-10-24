@@ -12,38 +12,48 @@
       SBRP
     </v-app-bar-title>
 
-    <!-- <v-btn icon>
-            <v-icon>mdi-magnify</v-icon>
+        <!-- <v-btn 
+        variant="text"
+        @click="this.$router.push({path: '/create'})" 
+        :id="Link"
+        > 
+            link!
         </v-btn> -->
-
-    <v-btn
-      variant="text"
-      @click="this.$router.push({ path: '/create' })"
-      :id="Link"
-    >
-      link!
-    </v-btn>
 
     <v-btn icon @click="this.$router.push({ path: '/profile' })" id="Account">
       <v-icon>mdi-account</v-icon>
     </v-btn>
 
-    <!-- <v-btn icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn> -->
-  </v-app-bar>
+        <v-btn icon @click="logout">
+            <v-icon>mdi-logout</v-icon>
+        </v-btn>
+    </v-app-bar>
 </template>
 
 <script>
+import { useStore } from "vuex";
 export default {
-  data() {
-    return {
-      NavBar: "NavBar",
-      Menu: "Menu",
-      Title: "Title",
-      Link: "Link",
-      Account: "Account",
-    };
-  },
+    setup() {
+        const store = useStore();
+        return {
+            profile: (profile) => store.commit("profile", profile),
+        };
+    },
+    data() {
+        return {
+            NavBar: "NavBar",
+            Menu: "Menu",
+            Title: "Title",
+            Link: "Link",
+            Account: "Account",
+        };
+    },
+    methods: {
+        logout() {
+            this.profile("");
+            console.log(this.$store.state.profile);
+            this.$router.push({ path: "/login" });
+        },
+    },
 };
 </script>

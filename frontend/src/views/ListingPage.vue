@@ -74,14 +74,35 @@
                       variant="flat"
                       v-bind:color="primaryColor"
                       id="applyBtn"
+                      v-if=getRole()
                     >
                       Apply
                     </v-btn> -->
+
                     <ApplyRLPopup
                       :roleName="listing._listing_name"
                       :roleId="listing_id"
                       id="ApplyRLPopup"
+                      v-if="getRole()"
                     />
+
+                    <v-btn
+                      density="comfortable"
+                      size="small"
+                      variant="flat"
+                      v-bind:color="primaryColor"
+                      id="update"
+                      class="mr-5"
+                      v-else
+                      @click="
+                        this.$router.push({
+                          name: 'UpdatePage',
+                          params: { listing_id: listing_id },
+                        })
+                      "
+                    >
+                      Update
+                    </v-btn>
                   </v-col>
                 </v-row>
               </v-card>
@@ -145,6 +166,7 @@ export default {
       savedListings: ["12", "13", "14"],
       saved: false,
       staffid: this.$store.state.profile._Staff_id,
+      profile: this.$store.state.profile,
       applicants: 0,
     };
   },
@@ -244,6 +266,12 @@ export default {
           .catch(console.log("error"));
         // console.log(this.savedListings)
       }
+    },
+    getRole() {
+      if (this.$store.state.profile._Access_Rights === "1") {
+        return false;
+      }
+      return true;
     },
   },
 

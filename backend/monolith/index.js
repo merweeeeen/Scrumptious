@@ -154,6 +154,32 @@ app.get("/listing/:listingid?", async (req, res) => {
     });
 });
 
+// THIS IS PUT /listing => TO update A ROLE
+// {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
+app.put("/listing/:listingid?", async (req, res) => {
+  console.log("PUT /listing/:listingid started");
+  role
+    .updateListing(req.body, req.params.listingid)
+    .then((results) => {
+      res.status(200).send({
+        statusCode: 200,
+        body: results,
+        message: "Update Successful",
+      });
+      // res.status(201).send("Update Successful");
+      // res.send(results)
+    })
+    .catch((error) => {
+      const response = {
+        statusCode: 400,
+        body: error,
+        message: "Update Unsuccessful",
+      };
+      res.status(400).send(response);
+      console.error("Error: ", error);
+    });
+});
+
 // THIS IS POST /listing => TO CREATE A ROLE
 // {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 app.post("/listing", async (req, res) => {
