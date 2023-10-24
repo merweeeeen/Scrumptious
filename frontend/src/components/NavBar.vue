@@ -49,10 +49,10 @@ export default {
         };
     },
     methods: {
-        logout() {
+        async logout() {
+            await this.$router.push({ path: "/login" });
             this.profile("");
-            console.log(this.$store.state.profile);
-            this.$router.push({ path: "/login" });
+            // console.log(this.$store.state.profile);
         },
     },
 };
