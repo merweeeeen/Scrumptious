@@ -391,7 +391,8 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
           results[0].email,
           req.params.access,
           skills,
-          results[0].password
+          results[0].password,
+          results[0].role_name
         );
         await returnStaffClass.updateApplications()
         const response = {
@@ -430,7 +431,8 @@ app.get("/staff/:name", async (req, res) => {
         results[0].email,
         results[0].access_rights,
         skills,
-        results[0].password
+        results[0].password,
+        results[0].role_name
       );
       const response = {
         statusCode: 200,
