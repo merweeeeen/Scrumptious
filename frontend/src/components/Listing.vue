@@ -100,6 +100,7 @@
             <v-row class="ma-0 ">
               <v-col class="pb-0">
                 <v-card width="100%" color="black" variant="outlined">
+                  <!--original skills matched outside transition-->
                   <v-card-text>
                     <v-chip
                       v-for="skill in listingSkills"
@@ -115,6 +116,43 @@
                       {{ skill }}
                     </v-chip>
                   </v-card-text>
+
+
+                  <!--transition dropdown-->
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+
+                    <v-btn
+                      :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                      @click="show = !show"
+                    ></v-btn>
+                  </v-card-actions>
+
+                  <v-expand-transition>
+                    <div v-show="show">
+                      <v-divider></v-divider>
+                  
+                      <!--skills Matched-->
+                        <v-card-text>
+                          <v-chip
+                            v-for="skill in listingSkills"
+                            class="ma-1"
+                            variant="tonal"
+                            :color="
+                              employeeSkills.includes(skill)
+                                ? 'green-darken-3'
+                                : 'default'
+                            "
+                            :id="skill"
+                          >
+                            {{ skill }}
+                          </v-chip>
+                        </v-card-text>
+
+                    </div>
+                  </v-expand-transition>
+
+
                 </v-card>
               </v-col>
             </v-row>
@@ -193,6 +231,7 @@ export default {
       //applied: false
       // access: (access) => store.commit("access", access)
       listingSkills: [],
+      show: false,
     };
   },
   methods: {
