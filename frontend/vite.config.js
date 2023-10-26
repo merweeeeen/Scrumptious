@@ -24,9 +24,12 @@ export default defineConfig(({ mode }) => {
         server: {
           deps: {
             inline: ['element-plus','vuetify'],
+            hookTimeout: 50000
           },
+          hookTimeout: 50000
         },
-        testTimeout: 10000,
+        hookTimeout: 50000,
+        testTimeout: 50000,
       },
     };
   } else {

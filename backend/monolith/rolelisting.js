@@ -1,3 +1,6 @@
+const application = require("./application");
+const ApplicantClass = require('./ApplicationClass')
+
 exports.RoleListing = class {
   constructor(
     listing_id,
@@ -10,7 +13,6 @@ exports.RoleListing = class {
     open,
     desc,
     created_date,
-    applicants,
     skills
   ) {
     this._listing_id = listing_id;
@@ -23,7 +25,7 @@ exports.RoleListing = class {
     this._open = open;
     this._desc = desc;
     this._created_date = created_date;
-    this._applicants = applicants;
+    this._applicants = [];
     this._skills = skills;
   }
 
@@ -74,7 +76,7 @@ exports.RoleListing = class {
   get skills() {
     return this._skills;
   }
-
+  
   set listingName(newname) {
     this._listing_name = newname;
   }
@@ -101,5 +103,18 @@ exports.RoleListing = class {
 
   set desc(new_desc) {
     this._desc = new_desc;
+  }
+
+  async updateApplicants(){
+    const response = await application.getApplicants(this._listing_id)
+    for (let applyinfo of response){
+      this._applicants.push(
+        new ApplicantClass.Applicant(
+          applyinfo.staff_id,
+          applyinfo.listing_id,
+          applyinfo.write_up
+        )
+      )
+    }
   }
 };
