@@ -6,7 +6,10 @@
     color="teal-darken-4"
     :id="NavBar"
   >
-    <v-app-bar-nav-icon :id="Menu"></v-app-bar-nav-icon>
+    <!-- <v-app-bar-nav-icon :id="Menu"></v-app-bar-nav-icon> -->
+    <v-btn icon @click="this.$router.push({ path: '/' })" id="Menu">
+      <v-icon>mdi-home</v-icon>
+    </v-btn>
 
     <v-app-bar-title :id="Title" @click="this.$router.push({ path: '/' })">
       SBRP
