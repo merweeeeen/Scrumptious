@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LandingPage from "../views/LandingPage.vue";
 import CreateListing from "../views/CreateListing.vue";
+import ProfilePage from '../views/PersonalProfile.vue';
 import ListingPage from "../views/ListingPage.vue";
 import Login from "../views/Login.vue";
 import Test from '../views/Test.vue'
@@ -23,6 +24,12 @@ const routes = [
     path: "/create",
     name: "CreatePage",
     component: CreateListing,
+    beforeEnter: authGuard
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: ProfilePage,
     beforeEnter: authGuard
   },
   {
