@@ -423,7 +423,7 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
       res.status(400).send(response);
     });
 });
-app.get("/staff/:name", async (req, res) => {
+app.get("/staff/:id", async (req, res) => {
   staff.findStaffFromName(req.params.name).then((results) => {
     // console.log("Results: ", results);
     staff.findStaffSkill(results[0].staff_id).then((staffSkills) => {
