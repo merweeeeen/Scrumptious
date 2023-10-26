@@ -93,6 +93,7 @@
                     <v-btn
                       :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
                       @click.stop="show = !show"
+                      id="show"
                     ></v-btn>
                   </v-card-actions>
             </v-row>

@@ -1,4 +1,4 @@
-import { mount } from "@vue/test-utils";
+import { vi, mount } from "@vue/test-utils";
 import { createApp, nextTick } from "vue";
 import { createStore } from "vuex";
 import LandingPage from "../src/views/LandingPage.vue"; // Importing the page to test the existence of the component=
@@ -60,7 +60,7 @@ beforeEach(async () => {
     _Password: "imaStaff",
     _Skills: ["Adaptability", "Microsoft Excel"],
     _Staff_id: 1001,
-    _Applications: []
+    _Applications: [],
   };
 
   store = createStore({
@@ -149,11 +149,22 @@ describe("Testing ST3-39", () => {
 
     const listing1 = await wrapper.find(`#${listingId1}`);
     expect(listing1.exists()).toBe(true);
-    expect(await listing1.find("[id=Microsoft Excel]").attributes('color')).toEqual("green-darken-3"); 
-
+    const viewSkills1 = await listing1.find("#show");
+    expect(viewSkills1.exists()).toBe(true);
+    await viewSkills1.trigger("click");
+    expect(await wrapper.findComponent(`#${listingId1}`).vm.show).toBe(true);
+    expect(
+      await listing1.find("[id=Microsoft Excel]").attributes("color")
+    ).toEqual("green-darken-3");
     const listing2 = await wrapper.find(`#${listingId2}`);
     expect(listing2.exists()).toBe(true);
-    expect(await listing2.find("#Python").attributes('color')).toEqual("default");
+    const viewSkills2 = await listing2.find("#show");
+    expect(viewSkills2.exists()).toBe(true);
+    await viewSkills2.trigger("click");
+    expect(await wrapper.findComponent(`#${listingId2}`).vm.show).toBe(true);
+    expect(await listing2.find("#Python").attributes("color")).toEqual(
+      "default"
+    );
   });
 
   test("ST3-39.3.1", async () => {
