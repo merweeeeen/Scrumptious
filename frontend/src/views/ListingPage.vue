@@ -23,7 +23,9 @@
                       </p>
                     </v-col>
 
-                    <v-col class="d-flex align-center py-0 h-100">
+                    <v-col class="d-flex align-center py-0 h-100"
+                    v-if="this.$store.state.profile._Access_Rights == 0"
+                    >
                       <v-icon
                         class="align-center w-100 justify-end"
                         size="x-large"

@@ -21,8 +21,6 @@
 
               <!-- This should be where the bookmark/3 dot icon should go -->
               <v-col class="pa-0">
-                <!-- <v-icon icon="fa:fas fa-list"></v-icon> -->
-                <!-- <v-text class="text-caption text-grey-darken-2">More</v-text> -->
               </v-col>
             </v-row>
           </v-container>
@@ -43,11 +41,6 @@
           </v-container>
         </v-card-item>
 
-        <!-- <v-expand-transition>
-          <div v-show="show">
-            <v-divider></v-divider>
-          </div>
-        </v-expand-transition> -->
       </v-card>
       <v-card
         width="100%"
@@ -69,8 +62,6 @@
 
               <!-- This should be where the bookmark/3 dot icon should go -->
               <v-col class="pa-0">
-                <!-- <v-icon icon="fa:fas fa-list"></v-icon> -->
-                <!-- <v-text class="text-caption text-grey-darken-2">More</v-text> -->
               </v-col>
             </v-row>
           </v-container>
@@ -96,37 +87,21 @@
           >
             <v-row no-gutters align="center" style="height: 25px">
               <v-text class="text-subtitle-1">Skills Matched</v-text>
-            </v-row>
-            <v-row class="ma-0 ">
-              <v-col class="pb-0">
-                <v-card width="100%" color="black" variant="outlined">
-                  <!--original skills matched outside transition-->
-                  <v-card-text>
-                    <v-chip
-                      v-for="skill in listingSkills"
-                      class="ma-1"
-                      variant="tonal"
-                      :color="
-                        employeeSkills.includes(skill)
-                          ? 'green-darken-3'
-                          : 'default'
-                      "
-                      :id="skill"
-                    >
-                      {{ skill }}
-                    </v-chip>
-                  </v-card-text>
-
-
-                  <!--transition dropdown-->
-                  <v-card-actions>
+              <v-card-actions>
                     <v-spacer></v-spacer>
 
                     <v-btn
                       :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                      @click="show = !show"
+                      @click.stop="show = !show"
                     ></v-btn>
                   </v-card-actions>
+            </v-row>
+            <v-row>
+              <v-col></v-col>
+            </v-row>
+            <v-row class="ma-0 ">
+              <v-col class="pb-0">
+                
 
                   <v-expand-transition>
                     <div v-show="show">
@@ -153,7 +128,7 @@
                   </v-expand-transition>
 
 
-                </v-card>
+                <!-- </v-card> -->
               </v-col>
             </v-row>
             <v-row no-gutters align="center" style="height: 25px">
@@ -216,9 +191,6 @@ export default {
     access: String,
     identified: String,
     skills: Array,
-    // lastUpdated: String,
-    // primaryColor: String,
-    // secondaryColor: String
   },
   data() {
     return {
@@ -228,8 +200,6 @@ export default {
       primaryColor: "grey",
       secondaryColor: "grey-lighten-1",
       applications: this.$store.state.profile._Applications,
-      //applied: false
-      // access: (access) => store.commit("access", access)
       listingSkills: [],
       show: false,
     };
@@ -247,10 +217,6 @@ export default {
           numSkillsMatched++;
         }
       }
-      // console.log("num skills " + numSkillsMatched);
-      // console.log("role skills " + roleSkills.length);
-      // console.log("skills matched " + numSkillsMatched / roleSkills.length * 100);
-      // The line below updates the skillsPctMatch variable
       this.skillsPctMatch = Math.round(
         (numSkillsMatched / roleSkills.length) * 100
       );
@@ -269,19 +235,8 @@ export default {
         return "Posted " + days + " days ago";
       }
     },
-    // isapplied(){
-    //   for (eachapplicant in this.$store.state.profile._Applications){
-    //     if (eachapplicant._listing_id = this.roleId){
-    //       this.applied = true
-    //     }
-    //   }
-    // }
   },
 
-  mounted() {
-    // console.log(this.$store.state.profile);
-    // this.isapplied()
-  },
   components: {
     ApplyRLPopup,
   },
