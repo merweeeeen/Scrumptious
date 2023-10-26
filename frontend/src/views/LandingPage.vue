@@ -8,6 +8,8 @@
             :skills="skills"
             :roles="roles"
             :depts="depts"
+            @searchListing="searchListing"
+            @searchStaff="searchStaff"
             @filter="filterFunction"
             @reset="reset"
           ></Filter>
@@ -21,17 +23,19 @@
             >
               <ListingCard
                 :roleName="listing._listing_name"
+                :roleId="listing._listing_id"
                 :Department="listing._dept"
-                :num_openings="listing._num_opening"
+                :num_openings="listing._num_openings"
                 :created_at="listing._created_date"
                 :open="listing._open"
                 :access="this.$store.state._access_rights"
+                :expiry_date="listing._expiry_date"
                 :identified="listing._listing_name"
                 @click.native="gotoListing(listing)"
                 :id="listing._listing_id"
               ></ListingCard>
             </v-col>
-          </v-row>
+            </v-row>
         </v-col>
       </v-row>
     </v-container>
@@ -44,6 +48,7 @@ import axios from "axios";
 import Filter from "../components/Filter.vue";
 import NavBar from "../components/NavBar.vue";
 import Footer from "../components/Footer.vue";
+import { storeKey } from "vuex";
 
 export default {
   name: "LandingPage",
@@ -85,12 +90,42 @@ export default {
     },
     async getAllListings() {
       const response = await axios.get("http://localhost:3003/listing");
-      this.listings = response.data.body;
+      if (this.$store.state.profile._Access_Rights === "0") {
+        this.listings = response.data.body.filter(
+          (listing) =>
+            listing._open === 1 &&
+            Date.parse(listing._expiry_date) > Date.now()
+        );
+      } else {
+        this.listings = response.data.body;
+      }
     },
     gotoLogin() {
       if (this.$store.state.profile === "") {
         this.$router.push("/login");
       }
+    },
+    async searchStaff(staffName) {
+      if (staffName === "") {
+        await this.getAllListings();
+        return;
+      }
+      const response = await axios.get(
+        `http://localhost:3003/staff/${staffName}`
+      );
+      this.listings = response.data.body;
+    },
+    async searchListing(listing_name) {
+      if (listing_name === "") {
+        await this.getAllListings();
+        return;
+      }
+      const response = await axios.get(
+        `http://localhost:3003/search/${listing_name}`
+      );
+      this.listings = response.data.body.filter(
+        (listing) => listing._open === 1
+      );
     },
     async filterFunction(filters) {
       // this.$router.push(

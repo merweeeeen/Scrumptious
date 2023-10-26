@@ -1,3 +1,6 @@
+const application = require("./application");
+const ApplicantClass = require('./ApplicationClass')
+
 exports.Staff = class {
   constructor(
     Staff_id,
@@ -8,7 +11,8 @@ exports.Staff = class {
     Email,
     Access_Rights,
     Skills,
-    Password
+    Password,
+    Role_Name
   ) {
     this._Staff_id = Staff_id;
     this._Staff_FName = Staff_FName;
@@ -19,6 +23,8 @@ exports.Staff = class {
     this._Access_Rights = Access_Rights;
     this._Skills = Skills;
     this._Password = Password;
+    this._Applications = []
+    this._Role_Name = Role_Name
   }
 
   get Staff_id() {
@@ -48,5 +54,25 @@ exports.Staff = class {
 
   get Password() {
     return this._Password;
+  }
+
+  get Applications() {
+    return this._Applications
+  }
+
+  async updateApplications(){
+    const response = await application.getListingsApplied(this._Staff_id)
+    for (let applyinfo of response){
+      this._Applications.push(
+        new ApplicantClass.Applicant(
+          applyinfo.staff_id,
+          applyinfo.listing_id,
+          applyinfo.write_up
+        )
+      )
+    }
+  }
+  get RoleName() {
+    return this._Role_Name
   }
 };

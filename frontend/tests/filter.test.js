@@ -27,6 +27,7 @@ beforeEach(async () => {
       "UI/UX skills",
     ],
     _Staff_id: 5173,
+    _Applications: [],
   };
 
   const store = createStore({
