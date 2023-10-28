@@ -182,6 +182,7 @@ function deleteListing(listingId) {
   });
 }
 
+
 module.exports = {
   readAllListing,
   readOneListing,

@@ -224,19 +224,11 @@
       },
 
       async getAppliedListings() {
-        let staffApplied = this.staffInfo._Applications;
-        // console.log(staffApplied)
-        const response = await axios.get(
-          `http://localhost:3003/listing`
-        );
 
-        for (let app of staffApplied) {
-          for (let listing of response.data.body) {
-            if (app._listing_Id == listing._listing_id) {
-              this.appliedListings.push(listing);
-            }
-          }
-        }
+        const response = await axios.get(
+          `http://localhost:3003/application/staff/${this.staffInfo._Staff_id}`
+        );
+        this.appliedListings = response.data.body
         console.log(this.appliedListings);
       },
 

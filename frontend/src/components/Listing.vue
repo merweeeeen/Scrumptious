@@ -31,30 +31,6 @@
           <v-text class="text-caption">
             {{ Department }} | {{ num_openings }} Opening(s)
           </v-text>
-
-          <!-- Skills Matched Percentage Bar -->
-          <!-- <v-container class="pa-0 mt-1">
-            <v-row no-gutters align="center" style="height: 25px;">
-                <v-text class="text-subtitle-1">Skills Matched</v-text>
-            </v-row>
-            <v-row no-gutters align="center" style="height: 25px;">
-            <v-col class="pa-1">
-                <v-sheet class="rounded-5 bg-transparent" style="border: solid 1px black; border-radius: 10px;">
-                    <v-progress-linear 
-                        v-bind:model-value="skillsPctMatch"
-                        v-bind:bg-color="primaryColor"
-                        v-bind:color="secondaryColor"
-                        rounded
-                        :height="15"
-                    >
-                    <v-text class="text-caption">{{getSkillsPctMatch(this.employeeSkills, this.roleInfo.Skills_Required)}}%</v-text>
-                </v-progress-linear>
-                </v-sheet>
-            </v-col>
-            </v-row>
-        </v-container>
-    -->
-          <!-- Last Updated -->
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
               <v-col cols="auto">
@@ -102,30 +78,6 @@
           <v-text class="text-caption text-grey-darken-2">
             {{ Department }} | {{ num_openings }} Opening(s)
           </v-text>
-
-          <!-- Skills Matched Percentage Bar -->
-          <!-- <v-container class="pa-0 mt-1">
-            <v-row no-gutters align="center" style="height: 25px;">
-                <v-text class="text-subtitle-1">Skills Matched</v-text>
-            </v-row>
-            <v-row no-gutters align="center" style="height: 25px;">
-            <v-col class="pa-1">
-                <v-sheet class="rounded-5 bg-transparent" style="border: solid 1px black; border-radius: 10px;">
-                    <v-progress-linear 
-                        v-bind:model-value="skillsPctMatch"
-                        v-bind:bg-color="primaryColor"
-                        v-bind:color="secondaryColor"
-                        rounded
-                        :height="15"
-                    >
-                    <v-text class="text-caption">{{getSkillsPctMatch(this.employeeSkills, this.roleInfo.Skills_Required)}}%</v-text>
-                </v-progress-linear>
-                </v-sheet>
-            </v-col>
-            </v-row>
-        </v-container>
-    -->
-          <!-- Last Updated -->
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
               <v-col cols="auto">
@@ -136,17 +88,6 @@
             </v-row>
             <v-row>
               <v-col>
-                <!-- <v-btn
-                  width="100%"
-                  height="100%"
-                  density="comfortable"
-                  size="large"
-                  variant="flat"
-                  v-bind:color="primaryColor"
-                  id="apply"
-                  v-show="this.$store.state.profile._Access_Rights == 0"
-                  >Apply</v-btn
-                > -->
                 <ApplyRLPopup
                   :roleName="this.roleName"
                   :roleId="this.roleId"
