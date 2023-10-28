@@ -229,7 +229,6 @@
           `http://localhost:3003/application/staff/${this.staffInfo._Staff_id}`
         );
         this.appliedListings = response.data.body
-        console.log(this.appliedListings);
       },
 
       gotoListing(listing) {
@@ -242,8 +241,8 @@
   
     },
 
-    mounted() {
-        this.getAppliedListings();
+    async mounted() {
+        await this.getAppliedListings();
     },
 
   };

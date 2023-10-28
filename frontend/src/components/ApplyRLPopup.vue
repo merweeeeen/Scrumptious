@@ -320,7 +320,6 @@ export default {
   },
   mounted() {
     this.isapplied();
-    console.log(this.$store.state.profile);
   },
   props: {
     roleName: String,
