@@ -1,8 +1,9 @@
 import { mount } from "@vue/test-utils";
 import { createStore } from "vuex";
-import LandingPage from "../src/views/LandingPage.vue"; 
-import NavBar from "../src/components/NavBar.vue"; 
-import Footer from "../src/components/Footer.vue"; 
+import LandingPage from "../src/views/LandingPage.vue";
+import NavBar from "../src/components/NavBar.vue";
+import Footer from "../src/components/Footer.vue";
+import Redirect from "../src/views/Redirect.vue";
 import axios from "axios";
 import { createRouter, createMemoryHistory } from "vue-router";
 import MockAdapter from "axios-mock-adapter";
@@ -33,12 +34,18 @@ let store;
 let mock;
 let listings;
 
+const mockRouterPush = vi.fn();
 const routes = [
   {
     path: "/:skills?/:vacancy?/:dept?/:roleName?",
     name: "LandingPage",
     component: LandingPage,
-  }
+  },
+  {
+    path: "/redirect/:page",
+    name: "Redirect",
+    component: Redirect,
+  },
 ];
 
 beforeEach(async () => {
@@ -121,12 +128,28 @@ describe("Testing ST3-12", () => {
     wrapper = mount(NavBar, {
       global: {
         plugins: [store, router, vuetify],
+        mocks: {
+          $router: {
+            push: mockRouterPush,
+          },
+        },
       },
     });
     // const navBar = await wrapper.findComponent(NavBar)
-    expect(wrapper.find("#home").exists()).toBe(true);   
-    expect(wrapper.find("#Account").exists()).toBe(true);
-    expect(wrapper.find("#logout").exists()).toBe(true);
+    const home = await wrapper.find("#home");
+    expect(home.exists()).toBe(true);
+    await home.trigger("click");
+    expect(mockRouterPush).toHaveBeenCalledWith({ path: "/" });
+
+    const account = await wrapper.find("#Account");
+    expect(account.exists()).toBe(true);
+    await account.trigger("click");
+    expect(mockRouterPush).toHaveBeenCalledWith({ path: "/profile" });
+
+    const logout = await wrapper.find("#logout");
+    expect(logout.exists()).toBe(true);
+    await logout.trigger("click");
+    expect(mockRouterPush).toHaveBeenCalledWith({ path: "/login" });
   });
 
   test("ST3-12.2.1", async () => {
@@ -143,13 +166,42 @@ describe("Testing ST3-12", () => {
     wrapper = mount(Footer, {
       global: {
         plugins: [store, router, vuetify],
+        mocks: {
+          $router: {
+            push: mockRouterPush,
+          },
+        },
       },
     });
     // const navBar = await wrapper.findComponent(NavBar)
-    expect(wrapper.find("#Home").exists()).toBe(true);   
-    expect(wrapper.find("#HRMS").exists()).toBe(true);
-    expect(wrapper.find("#LMS").exists()).toBe(true);
-    expect(wrapper.find("#LJPS").exists()).toBe(true);
+    const home = await wrapper.find("#Home");
+    expect(home.exists()).toBe(true);
+    await home.trigger("click");
+    expect(mockRouterPush).toHaveBeenCalledWith({ path: "/" });
+
+    const hrms = await wrapper.find("#HRMS");
+    expect(hrms.exists()).toBe(true);
+    await hrms.trigger("click");
+    expect(mockRouterPush).toHaveBeenCalledWith({
+      name: "Redirect",
+      params: { page: "HRMS" },
+    });
+
+    const lms = await wrapper.find("#LMS");
+    expect(lms.exists()).toBe(true);
+    await lms.trigger("click");
+    expect(mockRouterPush).toHaveBeenCalledWith({
+      name: "Redirect",
+      params: { page: "LMS" },
+    });
+
+    const ljps = await wrapper.find("#LJPS");
+    expect(ljps.exists()).toBe(true);
+    await ljps.trigger("click");
+    expect(mockRouterPush).toHaveBeenCalledWith({
+      name: "Redirect",
+      params: { page: "LJPS" },
+    });
   });
 });
 
