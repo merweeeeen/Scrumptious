@@ -249,20 +249,21 @@ app.get("/listing/filter/:filter", async (req, res) => {
     const filteredResults = await role.readFilteredListing(filterString);
     let responseArray = [];
     for (let result of filteredResults) {
-      responseArray.push(
-        new listingClass.RoleListing(
-          result.listing_id,
-          result.listing_name,
-          result.role_name,
-          result.dept,
-          result.country,
-          result.num_openings,
-          result.expiry_date,
-          result.open,
-          result.description,
-          result.created_date
-        )
+      const listing = new listingClass.RoleListing(
+        result.listing_id,
+        result.listing_name,
+        result.role_name,
+        result.dept,
+        result.country,
+        result.num_openings,
+        result.expiry_date,
+        result.open,
+        result.description,
+        result.created_date,
+        await role_skill.readSkillbyRole(result.role_name)
       );
+      await listing.updateApplicants();
+      responseArray.push(listing);
     }
     const response = {
       statusCode: 200,
