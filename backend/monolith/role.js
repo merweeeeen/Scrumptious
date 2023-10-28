@@ -182,6 +182,20 @@ function deleteListing(listingId) {
   });
 }
 
+function getFavouriteByStaffId(staffid) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM listing WHERE listing_id IN (select listing_id from favourite WHERE staff_id = ${staffid});`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+
 module.exports = {
   readAllListing,
   readOneListing,
@@ -192,4 +206,5 @@ module.exports = {
   removeFavourite,
   deleteListing,
   readFilteredListing,
+  getFavouriteByStaffId
 };

@@ -12,6 +12,7 @@
             @searchStaff="searchStaff"
             @filter="filterFunction"
             @reset="reset"
+            @getFavourites="getFavourites"
           ></Filter>
         </v-col>
         <v-col>
@@ -35,7 +36,7 @@
                 :id="listing._listing_id"
               ></ListingCard>
             </v-col>
-            </v-row>
+          </v-row>
         </v-col>
       </v-row>
     </v-container>
@@ -93,8 +94,7 @@ export default {
       if (this.$store.state.profile._Access_Rights === "0") {
         this.listings = response.data.body.filter(
           (listing) =>
-            listing._open === 1 &&
-            Date.parse(listing._expiry_date) > Date.now()
+            listing._open === 1 && Date.parse(listing._expiry_date) > Date.now()
         );
       } else {
         this.listings = response.data.body;
@@ -157,6 +157,13 @@ export default {
         name: "ListingPage",
         params: { listing_id: listing._listing_id },
       });
+    },
+    async getFavourites() {
+      const response = await axios.get(
+        `http://localhost:3003/favourite/staff/${this.$store.state.profile._Staff_id}`
+      );
+      console.log(response.data.body.body)
+      this.listings= response.data.body;
     },
   },
   async created() {

@@ -75,21 +75,20 @@ app.get("/listing", async (req, res) => {
         //   )
         // );
 
-        
-        let thisListing =  new listingClass.RoleListing(
-            result.listing_id,
-            result.listing_name,
-            result.role_name,
-            result.dept,
-            result.country,
-            result.num_openings,
-            result.expiry_date,
-            result.open,
-            result.description,
-            result.created_date,
-            // numberOfApplicants,
-            await role_skill.readSkillbyRole(result.role_name)
-          );
+        let thisListing = new listingClass.RoleListing(
+          result.listing_id,
+          result.listing_name,
+          result.role_name,
+          result.dept,
+          result.country,
+          result.num_openings,
+          result.expiry_date,
+          result.open,
+          result.description,
+          result.created_date,
+          // numberOfApplicants,
+          await role_skill.readSkillbyRole(result.role_name)
+        );
         body.push(thisListing);
         await thisListing.updateApplicants();
       }
@@ -209,32 +208,34 @@ app.post("/listing", async (req, res) => {
   // else{ console.log("No body found")}
 });
 app.get("/search/:name", async (req, res) => {
-    console.log('GET /search/:name started')
-    const filteredResults = await role.readFilteredListing(`listing_name LIKE '%${req.params.name}%'`);
-    let responseArray = [];
-    for (let result of filteredResults) {
-      responseArray.push(
-        new listingClass.RoleListing(
-          result.listing_id,
-          result.listing_name,
-          result.role_name,
-          result.dept,
-          result.country,
-          result.num_openings,
-          result.expiry_date,
-          result.open,
-          result.description,
-          result.created_date
-        )
-      );
-    }
-    const response = {
-      statusCode: 200,
-      body: responseArray,
-      message: "Data Filtered Successfully",
-    };
-    res.status(200).send(response);
-    console.log('GET /search/:name ended')
+  console.log("GET /search/:name started");
+  const filteredResults = await role.readFilteredListing(
+    `listing_name LIKE '%${req.params.name}%'`
+  );
+  let responseArray = [];
+  for (let result of filteredResults) {
+    responseArray.push(
+      new listingClass.RoleListing(
+        result.listing_id,
+        result.listing_name,
+        result.role_name,
+        result.dept,
+        result.country,
+        result.num_openings,
+        result.expiry_date,
+        result.open,
+        result.description,
+        result.created_date
+      )
+    );
+  }
+  const response = {
+    statusCode: 200,
+    body: responseArray,
+    message: "Data Filtered Successfully",
+  };
+  res.status(200).send(response);
+  console.log("GET /search/:name ended");
 });
 app.get("/listing/filter/:filter", async (req, res) => {
   try {
@@ -378,7 +379,7 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
         res.send(response);
         return;
       }
-      staff.findStaffSkill(req.params.staffId).then( async (staffSkills) => {
+      staff.findStaffSkill(req.params.staffId).then(async (staffSkills) => {
         const skills = staffSkills.map((staffSkill) => {
           return staffSkill.skill_name;
         });
@@ -394,7 +395,7 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
           results[0].password,
           results[0].role_name
         );
-        await returnStaffClass.updateApplications()
+        await returnStaffClass.updateApplications();
         const response = {
           statusCode: 200,
           body: returnStaffClass,
@@ -603,45 +604,83 @@ app.delete("/delete/listing/:listingId", async (req, res) => {
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 
-
-app.get("/application/:listingId", async (req, res) =>{
-  try{
-    console.log('GET /application started')
+app.get("/application/:listingId", async (req, res) => {
+  try {
+    console.log("GET /application started");
     const listingid = req.params.listingId;
     const response = await application.getApplicants(listingid);
     let applicantsArray = [];
-    for (let application of response){
+    for (let application of response) {
       applicantsArray.push(
         new ApplicantClass.Applicant(
           application.staff_id,
           application.listing_id,
           application.write_up
         )
-      )
+      );
     }
-    res.status(200).send({status: 200, body: applicantsArray, message: "Applicants Retrieved"})
-    console.log('GET /application ended')
+    res.status(200).send({
+      status: 200,
+      body: applicantsArray,
+      message: "Applicants Retrieved",
+    });
+    console.log("GET /application ended");
   } catch (error) {
     console.log(error);
     res.status(400).send({ status: 400, message: "Retrieval Failed" });
   }
-})
+});
 
-app.post("/application", async (req, res) =>{
-  try{
-    console.log('POST /application started')
+app.post("/application", async (req, res) => {
+  try {
+    console.log("POST /application started");
     const listingid = req.body.listingId;
-    const staffid = req.body.staffId
-    const writeup = req.body.writeUp
+    const staffid = req.body.staffId;
+    const writeup = req.body.writeUp;
     const response = await application.apply(staffid, listingid, writeup);
-    res.status(200).send({status: 200, body: response, message: "Applicants Retrieved"})
-    console.log('POST /application ended')
+    res
+      .status(200)
+      .send({ status: 200, body: response, message: "Applicants Retrieved" });
+    console.log("POST /application ended");
   } catch (error) {
     console.log(error);
     res.status(400).send({ status: 400, message: "POST Failed" });
   }
-})
+});
 
+app.get("/favourite/staff/:staffId", async (req, res) => {
+  try {
+    console.log("GET /favourite/staff/:staffId started");
+    const staffid = req.params.staffId;
+    const response = await role.getFavouriteByStaffId(staffid);
+    const favArray = [];
+    for (let result of response) {
+      const returnListingClass = new listingClass.RoleListing(
+        result.listing_id,
+        result.listing_name,
+        result.role_name,
+        result.dept,
+        result.country,
+        result.num_openings,
+        result.expiry_date,
+        result.open,
+        result.description,
+        result.created_date,
+        await role_skill.readSkillbyRole(result.role_name)
+      );
+      await returnListingClass.updateApplicants();
+      favArray.push(returnListingClass);
+    }
+    res.status(200).send({
+      statusCode: 200,
+      body: favArray,
+      message: "Retrieved Successfully",
+    });
+    console.log("GET /favourite/staff/:staffId ended");
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
