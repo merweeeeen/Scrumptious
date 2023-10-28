@@ -34,30 +34,9 @@
                         <h4 id="email"> {{ staffInfo._Email }}</h4>
                     </v-sheet>
                 </v-col>
-                
-                <v-col 
-                    cols="12"
-                >
-                    <v-sheet>
-                        <h3>Skills</h3>
-                        <hr>
-                        <v-chip
-                        v-for="skill in staffInfo._Skills"
-                        class="ma-1"
-                        variant="tonal"
-                        
-                        :id="skill"
-                        > <!--:color="
-                            employeeSkills.includes(skill)
-                            ? 'green-darken-3'
-                            : 'default'
-                        "-->
-                        {{ skill }}
-                        </v-chip>
-                    </v-sheet>
-                </v-col>
             </v-row>
 
+            <!-- Staff Information -->
             <v-row class="ma-0 w-100">
               <v-col class="py-0">
                 <!-- Top card with Role Information and Apply Button -->
@@ -102,9 +81,6 @@
                           My Information
                         </p>
                       </v-col>
-
-                      <!-- <v-col class="d-flex align-center py-0 h-100">
-                      </v-col> -->
                     </v-row>
                     <p class="text--primary my-1" >
                         <v-icon>mdi-earth</v-icon>
@@ -116,45 +92,75 @@
                     </p>
 
                   </v-card-text>
-
-                  <!-- <v-row class="" justify="space-between">
-                    <v-col class="pt-0">
-                      <v-card-text>
-                        <p class="text-h7 text-medium-emphasis text--primary" id="updatedDate">
-                          Last Updated: {{ pretty_date(created_at) }} 
-                        </p>
-                      </v-card-text>
-                    </v-col>
-                    <v-col cols="auto" class="me-4">
-                    </v-col>
-                  </v-row> -->
                 </v-card>
               </v-col>
             </v-row>
   
-            <!-- <v-row class="ma-0 w-100">
-              <v-col class="pb-0">
-                <v-card width="100%" color="black" variant="outlined">
-                  <v-card-text>
-                    <p class="text-h6 text--primary">Job Description</p>
-                    <p class="text-h7 text--primary" id="desc">
-                      {{ staffInfo.email }}
-                    </p>
-                    <br />
-                    <p class="text-h6 text--primary">Skills Required</p>
-                    <v-chip
-                      v-for="skill in employeeSkills"
-                      class="ma-1"
-                      variant="tonal"
-                      
-                      :id="skill"
-                    > 
-                      {{ skill }}
-                    </v-chip>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row> -->
+            <!-- Skills -->
+            <v-row>    
+                <v-col 
+                    cols="12"
+                >
+                    <v-sheet>
+                        <h3>Skills</h3>
+                        <hr>
+                        <v-chip
+                        v-for="skill in staffInfo._Skills"
+                        class="ma-1"
+                        variant="tonal"
+                        
+                        :id="skill"
+                        > <!--:color="
+                            employeeSkills.includes(skill)
+                            ? 'green-darken-3'
+                            : 'default'
+                        "-->
+                        {{ skill }}
+                        </v-chip>
+                    </v-sheet>
+                </v-col>
+            </v-row>
+
+
+            <!-- Past Applied Listings -->
+            <v-row>    
+                <v-col 
+                    cols="12"
+                >
+                    <v-sheet>
+                        <h3>Past Applications</h3>
+                        <hr>
+                        <v-col
+                        cols="12"
+                        v-for="listing in appliedListings"
+                        class="ma-1"
+                        variant="tonal"
+                        
+                        :id="listing._listing_id"
+                        > <!--:color="
+                            employeeSkills.includes(skill)
+                            ? 'green-darken-3'
+                            : 'default'
+                        "-->
+                        <ListingCard
+                          :roleName="listing._listing_name"
+                          :roleId="listing._listing_id"
+                          :Department="listing._dept"
+                          :num_openings="listing._num_openings"
+                          :created_at="listing._created_date"
+                          :open="listing._open"
+                          :access="this.$store.state._access_rights"
+                          :expiry_date="listing._expiry_date"
+                          :identified="listing._listing_name"
+                          @click.native="gotoListing(listing)"
+                          :id="listing._listing_id"
+                        ></ListingCard>
+                        </v-col>
+                    </v-sheet>
+                </v-col>
+            </v-row>
+
+
           </v-container>
         </div>
       </div>
@@ -168,8 +174,9 @@
   <script>
   import NavBar from "../components/NavBar.vue";
   import Footer from "../components/Footer.vue";
+  import ListingCard from "../components/Listing.vue";
   import { useStore } from "vuex";
-//   import axios from "axios";
+  import axios from "axios";
   
   export default {
     setup() {
@@ -179,59 +186,18 @@
     components: {
       NavBar,
       Footer,
+      ListingCard,
     },
   
     data() {
       return {
         primaryColor: "black",
-        // employeeSkills: this.$store.state.profile._Skills,
-        employeeSkills: ["Python", "C++", "Java", "HTML", "CSS", "R", "Hello World", "Skill A"],
-        savedListings: ["12", "13", "14"],
-        saved: false,
-        // staffid: this.$store.state.profile._Staff_id,
-        staffid: "1001",
-        // staffInfo: {
-        //     staffid: "1001",
-        //     staff_FName: "Staff", 
-        //     staff_LName: "Staff", 
-        //     dept: "Human Resource",
-        //     country: "SG",
-        //     email: "staff@gmail.com",
-        // },
         staffInfo: this.$store.state.profile,
-        staffImg: null, // "https://cdn.vuetifyjs.com/images/john.jpg"
-        
+        appliedListings: [],
       }; 
     },
   
     methods: {
-    //   async getListing() {
-    //     const response = await axios.get(
-    //       `http://localhost:3003/listing/${this.listing_id}`
-    //     );
-    //     this.listing = response.data.body;
-    //     console.log(this.listing);
-    //   },
-  
-    //   async getRoleSkills() {
-    //     axios
-    //       .get(`http://localhost:3003/rs/${this.listing._role_name}`)
-    //       .then((response) => {
-    //         const data = response.data.body;
-    //         console.log(data);
-    //         let requiredSkills = [];
-  
-    //         for (let i of data) {
-    //           // console.log(data[i].role_name)
-    //           requiredSkills.push(i.skill_name);
-    //         }
-    //         console.log(requiredSkills)
-    //         // this.listingSkills = requiredSkills;
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   },
   
       days_posted(created_at) {
         var today = new Date();
@@ -257,39 +223,37 @@
         });
       },
 
-      testing() {
-        // console.log(this.$store.state.profile)
-        // axios
-        // .get()
-      }
-  
-    //   async getSaved() {
-    //     // console.log("staffid", this.staffid);
-    //     const response = await axios.get(
-    //       `http://localhost:3003/favourite/read/${this.staffid}/${this.listing_id}`
-    //     );
-    //     // console.log("saved", response)
-    //     const favouriteClass = response.data?.body
-    //       ? response.data.body
-    //       : undefined;
-    //     console.log(favouriteClass);
-    //     if (favouriteClass) {
-    //       this.saved = true;
-    //       console.log("at first listing saved: " + this.saved);
-    //     } else {
-    //       this.saved = false;
-    //       console.log("at first listing saved: " + this.saved);
-    //     }
-    //   },
-  
+      async getAppliedListings() {
+        let staffApplied = this.staffInfo._Applications;
+        // console.log(staffApplied)
+        const response = await axios.get(
+          `http://localhost:3003/listing`
+        );
+
+        for (let app of staffApplied) {
+          for (let listing of response.data.body) {
+            if (app._listing_Id == listing._listing_id) {
+              this.appliedListings.push(listing);
+            }
+          }
+        }
+        console.log(this.appliedListings);
+      },
+
+      gotoListing(listing) {
+      // this.$router.push('/' + listing.id)
+      this.$router.push({
+        name: "ListingPage",
+        params: { listing_id: listing._listing_id },
+      });
     },
   
-    async mounted() {
-    //   await this.getListing();
-    //   await this.getRoleSkills();
-    //   await this.getSaved();
-    // await this.testing();
     },
+
+    mounted() {
+        this.getAppliedListings();
+    },
+
   };
   </script>
   
