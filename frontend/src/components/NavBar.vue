@@ -7,7 +7,7 @@
     :id="NavBar"
   >
     <!-- <v-app-bar-nav-icon :id="Menu"></v-app-bar-nav-icon> -->
-    <v-btn icon @click="this.$router.push({ path: '/' })" id="Menu">
+    <v-btn icon @click="this.$router.push({ path: '/' })" id="home">
       <v-icon>mdi-home</v-icon>
     </v-btn>
 
@@ -27,7 +27,7 @@
       <v-icon>mdi-account</v-icon>
     </v-btn>
 
-        <v-btn icon @click="logout">
+        <v-btn icon @click="logout" id="logout">
             <v-icon>mdi-logout</v-icon>
         </v-btn>
     </v-app-bar>
