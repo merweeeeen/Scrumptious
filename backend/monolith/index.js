@@ -423,7 +423,7 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
       res.status(400).send(response);
     });
 });
-app.get("/staff/:id", async (req, res) => {
+app.get("/staff/:name", async (req, res) => {
   staff.findStaffFromName(req.params.name).then((results) => {
     // console.log("Results: ", results);
     staff.findStaffSkill(results[0].staff_id).then((staffSkills) => {
@@ -649,6 +649,48 @@ app.post("/application", async (req, res) =>{
     res.status(400).send({ status: 400, message: "POST Failed" });
   }
 })
+
+app.get("/application/getappstaff/:listingId", async (req, res) =>{
+    console.log('GET /application/getappstaff/:listingId started')
+    const listingid = req.params.listingId;
+    staff.listingApplicants(listingid)
+    .then(async response => {
+      console.log("Results: ", response);
+      const applicant_array = [];
+      for (let i = 0; i < response.length; i++){
+        await staff.findStaffSkill(response[i].staff_id).then((staffSkills) => {
+          let skills = staffSkills.map((staffSkill) => {
+            return staffSkill.skill_name;
+          });
+          let returnStaffClass = new staffClass.Staff(
+            response[i].staff_id,
+            response[i].staff_FName,
+            response[i].staff_LName,
+            response[i].dept,
+            response[i].country,
+            response[i].email,
+            response[i].access_rights,
+            skills,
+            response[i].password,
+            response[i].role_name
+          );
+          console.log(returnStaffClass)
+          applicant_array.push(returnStaffClass)
+
+        });
+      }
+      console.log("applcant aray")
+      // console.log(applicant_array)
+      res.status(200).send({status: 200, body: applicant_array, message: "Applicants Retrieved"})
+      console.log('GET /application/getappstaff/:listingId ended')
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(400).send({ status: 400, message: "Retrieval Failed" });
+    })
+})
+
+
 
 
 app.listen(port, () => {

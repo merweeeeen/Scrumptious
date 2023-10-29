@@ -49,7 +49,7 @@
                   </p>
                   <p class="text-h7 text--primary" id="vacancyAndApplicants">
                     {{ listing._num_openings }} Openings |
-                    {{ applicants }} Applicant(s)
+                    {{ applicants.length }} Applicant(s)
                   </p>
                   <p class="text-h7 text--primary" id="country">
                     Country: {{ listing._country }}
@@ -137,43 +137,46 @@
             </v-col>
           </v-row>
 
-          <v-row class="ma-0 w-100">
+          <v-row class="ma-0 w-100" v-if="getRole() === false">
             <v-col class="pb-0">
               <p class="text-h6 text--primary">Applicants</p>
             </v-col>
           </v-row>
 
-          <v-row class="ma-0 w-100">
+          <v-row class="ma-0 w-100" v-if="getRole() === false && applicants.length != 0">
             <v-col 
-            v-for="applicant in listing._applicants"
+            v-for="applicant in applicants"
             class="pb-0">
               <v-card width="100%" color="black" variant="outlined">
                 <v-card-text>
-                  <p class="text-h6 text--primary">Staff Name Last Name</p>
+                  <p class="text-h6 text--primary">{{ applicant._Staff_FName }} {{ applicant._Staff_LName }}</p>
                   <p class="text-h7 text--primary" id="desc">
                     <!-- {{ listing._desc }} -->
-                    Staff ID:
+                    Staff ID: {{ applicant._Staff_id }}
                     <br />
-                    Email: 
+                    Email: {{ applicant._Email }}
                   </p>
                   <!-- <br /> -->
-                  <!-- <p class="text-h6 text--primary">Skills matched</p> -->
-                  <!-- <v-chip
-                    v-for="skill in listingSkills"
+                  <p class="text-h6 text--primary">Skills matched</p>
+                  <v-chip
+                    v-for="skill in applicant._Skills"
                     class="ma-1"
                     variant="tonal"
                     :color="
-                      employeeSkills.includes(skill)
+                      listingSkills.includes(skill)
                         ? 'green-darken-3'
                         : 'default'
                     "
                     :id="skill"
                   >
                     {{ skill }}
-                  </v-chip> -->
+                  </v-chip>
                 </v-card-text>
               </v-card>
             </v-col>
+          </v-row>
+          <v-row v-else-if="getRole() === false && applicants.length == 0">
+            <v-col style="background-color:rgb(241, 249, 241); border-radius:10px; margin: 0px 20px;"><p style="margin-left: 10px;"><em style="colour: rgb(174, 174, 174);">No Applicants Yet.</em></p></v-col>
           </v-row>
         </v-container>
       </div>
@@ -202,21 +205,20 @@ export default {
       listingSkills: [],
       primaryColor: "black",
       employeeSkills: this.$store.state.profile._Skills,
-      savedListings: ["12", "13", "14"],
       saved: false,
       staffid: this.$store.state.profile._Staff_id,
       profile: this.$store.state.profile,
-      applicants: 0,
+      applicants: [], //list of users who applied
     };
   },
 
   methods: {
-    async getApplicant() {
-      const response = await axios.get(
-        `http://localhost:3003/staff/${this.$store.state.profile._Staff_id}`
-      ); 
-      this.applicant = response.data.body;
-    },
+    // async getApplicant() {
+    //   const response = await axios.get(
+    //     `http://localhost:3003/staff/${this.$store.state.profile._Staff_id}`
+    //   ); 
+    //   this.applicant = response.data.body;
+    // },
 
     async getListing() {
       console.log("listing id", this.listing_id);
@@ -224,7 +226,6 @@ export default {
         `http://localhost:3003/listing/${this.listing_id}`
       );
       this.listing = response.data.body;
-      this.applicants = response.data.body._applicants.length;
     },
 
     async getRoleSkills() {
@@ -244,6 +245,13 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+
+    async getRelevantApplicants(){
+      const response = await axios.get(`http://localhost:3003/application/getappstaff/${this.listing_id}`);
+      this.applicants = response.data.body;
+      console.log('this.applicants')
+      console.log(this.applicants)
     },
 
     days_posted(created_at) {
@@ -311,7 +319,6 @@ export default {
             this.saved = false;
           })
           .catch(console.log("error"));
-        // console.log(this.savedListings)
       }
     },
     getRole() {
@@ -326,9 +333,11 @@ export default {
     await this.getListing();
     await this.getRoleSkills();
     await this.getSaved();
-    await this.getApplicant();
+    await this.getRelevantApplicants();
+    console.log(this.applicants)
+    // await this.getApplicant();
     // this.getFavouriteListings()
-    console.log(this.applicant)
+    // console.log(this.applicant)
   },
 };
 </script>
