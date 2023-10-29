@@ -50,8 +50,6 @@ const routes = [
 beforeEach(async () => {
   console.log("Start Test");
 
-  originalAxios = axios.get;
-
   profile = {
     _Access_Rights: 0,
     _Country: "SG",
@@ -78,7 +76,6 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  axios.get = originalAxios;
   mock.restore();
   console.log(listingIds);
   for (let i = 0; i < listingIds.length; i++) {
