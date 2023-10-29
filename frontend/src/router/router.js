@@ -4,7 +4,7 @@ import CreateListing from "../views/CreateListing.vue";
 import ProfilePage from '../views/PersonalProfile.vue';
 import ListingPage from "../views/ListingPage.vue";
 import Login from "../views/Login.vue";
-import Test from '../views/Test.vue'
+import Redirect from '../views/Redirect.vue'
 import authGuard from "./authGuard";
 import Update from "../views/updateListing.vue"
 
@@ -43,6 +43,11 @@ const routes = [
     name: 'UpdatePage',
     component: Update,
     beforeEnter: authGuard
+  },
+  {
+    path: '/redirect/:page',
+    name: 'Redirect',
+    component: Redirect
   }
 ];
 

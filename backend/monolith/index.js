@@ -399,7 +399,7 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
 app.get("/staff/:name", async (req, res) => {
   staff.findStaffFromName(req.params.name).then((results) => {
     // console.log("Results: ", results);
-    staff.findStaffSkill(results[0].staff_id).then((staffSkills) => {
+    staff.findStaffSkill(results[0].staff_id).then(async (staffSkills) => {
       const skills = staffSkills.map((staffSkill) => {
         return staffSkill.skill_name;
       });
@@ -415,6 +415,7 @@ app.get("/staff/:name", async (req, res) => {
         results[0].password,
         results[0].role_name
       );
+      await returnStaffClass.updateApplications()
       const response = {
         statusCode: 200,
         body: returnStaffClass,

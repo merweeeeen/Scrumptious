@@ -9,7 +9,6 @@
       variant="flat"
       id="Apply"
       :disabled="applied"
-      v-if="this.$store.state.profile._Access_Rights === '0'"
     >
       Apply
 
@@ -282,9 +281,9 @@ export default {
       return true;
     },
     async postApply(bodyInfo) {
-      axios
+      await axios
         .post("http://localhost:3003/application", bodyInfo)
-        .then((response) => {
+        .then(async (response) => {
           // alert("Role Listing created successfully!")
           if (response.data.body.affectedRows == 0) {
             //alert("You've already applied previously??")
@@ -297,7 +296,8 @@ export default {
               _write_Up: this.writeUp,
             };
             this.staff._Applications.push(thisobj);
-            this.profile(this.staff);
+            await this.profile(this.staff);
+            // console.log(this.$store.state.profile)
           }
         })
         .catch((error) => {

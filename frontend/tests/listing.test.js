@@ -33,6 +33,7 @@ let store;
 let mock;
 let listings;
 let favourite;
+const mockRouterPush = vi.fn();
 
 const routes = [
   {
@@ -44,13 +45,11 @@ const routes = [
     path: "/listing/:listing_id",
     name: "ListingPage",
     component: ListingPage,
-  }
+  },
 ];
 
 beforeEach(async () => {
   console.log("Start Test");
-
-  originalAxios = axios.get;
 
   profile = {
     _Access_Rights: 0,
@@ -78,7 +77,6 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  axios.get = originalAxios;
   mock.restore();
   console.log(listingIds);
   for (let i = 0; i < listingIds.length; i++) {
@@ -94,7 +92,7 @@ afterEach(async () => {
   console.log("End Test");
 });
 
-async function mockings(listingDetails, fav = "") {
+async function mockings(listingDetails, fav = false) {
   const listingId = await createListings(listingDetails);
   const staffId = profile._Staff_id;
   listingIds.push(listingId);
@@ -115,8 +113,9 @@ async function mockings(listingDetails, fav = "") {
   if (fav) {
     favourite = await axios.post(`http://localhost:3003/favourite/add`, {
       staffid: staffId,
-      listingid: listingId.toString(),
+      listingid: listingId,
     });
+    console.log("favourite", favourite.data);
   }
 
   mock = new MockAdapter(axios);
@@ -145,7 +144,7 @@ async function mockings(listingDetails, fav = "") {
     mock
       .onPost(`http://localhost:3003/favourite/add`, {
         staffid: staffId,
-        listingid: listingId.toString(),
+        listingid: listingId,
       })
       .reply(200);
   }
@@ -348,6 +347,11 @@ describe("Testing ST3-16", () => {
     wrapper = mount(LandingPage, {
       global: {
         plugins: [store, router, vuetify],
+        mock: {
+          $router: {
+            push: mockRouterPush,
+          },
+        },
       },
       data() {
         return {
