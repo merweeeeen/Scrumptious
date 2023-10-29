@@ -73,7 +73,7 @@
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
               <v-col cols="auto">
-                <v-text class="text-caption">{{
+                <v-text class="text-caption" id="daysPosted">{{
                   days_posted(created_at)
                 }}</v-text>
               </v-col>
