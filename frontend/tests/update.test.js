@@ -221,7 +221,6 @@ describe("Testing ST3-13", () => {
         plugins: [store, router, vuetify],
       },
     });
-    console.log(wrapper.html())
     const updateButton = await wrapper.find(`#update`);
     expect(updateButton.exists()).toBe(true);
     await updateButton.trigger("click");
