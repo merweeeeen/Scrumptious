@@ -130,8 +130,8 @@ app.get("/listing/:listingid?", async (req, res) => {
         results[0].open,
         results[0].description,
         results[0].created_date,
+        await role_skill.readSkillbyRole(results[0].role_name),
         numberOfApplicants,
-        await role_skill.readSkillbyRole(results[0].role_name)
       );
       const response = {
         statusCode: 200,
@@ -270,6 +270,8 @@ app.get("/listing/filter/:filter", async (req, res) => {
     const filteredResults = await role.readFilteredListing(filterString);
     let responseArray = [];
     for (let result of filteredResults) {
+      const applicants = await application.getApplicants(result.listing_id);
+      const numberOfApplicants = applicants.length;
       responseArray.push(
         new listingClass.RoleListing(
           result.listing_id,
@@ -281,7 +283,9 @@ app.get("/listing/filter/:filter", async (req, res) => {
           result.expiry_date,
           result.open,
           result.description,
-          result.created_date
+          result.created_date,
+          await role_skill.readSkillbyRole(result.role_name),
+          numberOfApplicants,
         )
       );
     }
@@ -419,7 +423,7 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
 app.get("/staff/:name", async (req, res) => {
   staff.findStaffFromName(req.params.name).then((results) => {
     // console.log("Results: ", results);
-    staff.findStaffSkill(results[0].staff_id).then((staffSkills) => {
+    staff.findStaffSkill(results[0].staff_id).then(async (staffSkills) => {
       const skills = staffSkills.map((staffSkill) => {
         return staffSkill.skill_name;
       });
@@ -435,6 +439,7 @@ app.get("/staff/:name", async (req, res) => {
         results[0].password,
         results[0].role_name
       );
+      await returnStaffClass.updateApplications()
       const response = {
         statusCode: 200,
         body: returnStaffClass,
