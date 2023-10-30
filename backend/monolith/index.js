@@ -55,26 +55,6 @@ app.get("/listing", async (req, res) => {
     .then(async (results) => {
       let body = [];
       for (let result of results) {
-        // const applicants = await application.getApplicants(result.listing_id);
-        // const numberOfApplicants = applicants.length;
-
-        // body.push(
-        //   new listingClass.RoleListing(
-        //     result.listing_id,
-        //     result.listing_name,
-        //     result.role_name,
-        //     result.dept,
-        //     result.country,
-        //     result.num_openings,
-        //     result.expiry_date,
-        //     result.open,
-        //     result.description,
-        //     result.created_date,
-        //     numberOfApplicants,
-        //     await role_skill.readSkillbyRole(result.role_name)
-        //   )
-        // );
-
         let thisListing = new listingClass.RoleListing(
           result.listing_id,
           result.listing_name,
@@ -86,7 +66,6 @@ app.get("/listing", async (req, res) => {
           result.open,
           result.description,
           result.created_date,
-          // numberOfApplicants,
           await role_skill.readSkillbyRole(result.role_name)
         );
         body.push(thisListing);
@@ -115,7 +94,6 @@ app.get("/listing", async (req, res) => {
 app.get("/listing/:listingid?", async (req, res) => {
   console.log("GET /listing/:listingId started");
   const applicants = await application.getApplicants(req.params.listingid);
-  const numberOfApplicants = applicants.length;
   role
     .readOneListing(req.params.listingid)
     .then(async (results) => {
@@ -130,9 +108,9 @@ app.get("/listing/:listingid?", async (req, res) => {
         results[0].open,
         results[0].description,
         results[0].created_date,
-        await role_skill.readSkillbyRole(results[0].role_name),
-        numberOfApplicants,
+        await role_skill.readSkillbyRole(results[0].role_name)
       );
+      await returnListingClass.updateApplicants();
       const response = {
         statusCode: 200,
         body: returnListingClass,
@@ -214,20 +192,21 @@ app.get("/search/:name", async (req, res) => {
   );
   let responseArray = [];
   for (let result of filteredResults) {
-    responseArray.push(
-      new listingClass.RoleListing(
-        result.listing_id,
-        result.listing_name,
-        result.role_name,
-        result.dept,
-        result.country,
-        result.num_openings,
-        result.expiry_date,
-        result.open,
-        result.description,
-        result.created_date
-      )
+    const listing = new listingClass.RoleListing(
+      result.listing_id,
+      result.listing_name,
+      result.role_name,
+      result.dept,
+      result.country,
+      result.num_openings,
+      result.expiry_date,
+      result.open,
+      result.description,
+      result.created_date,
+      await role_skill.readSkillbyRole(result.role_name)
     );
+    await listing.updateApplicants();
+    responseArray.push(listing);
   }
   const response = {
     statusCode: 200,
@@ -270,24 +249,21 @@ app.get("/listing/filter/:filter", async (req, res) => {
     const filteredResults = await role.readFilteredListing(filterString);
     let responseArray = [];
     for (let result of filteredResults) {
-      const applicants = await application.getApplicants(result.listing_id);
-      const numberOfApplicants = applicants.length;
-      responseArray.push(
-        new listingClass.RoleListing(
-          result.listing_id,
-          result.listing_name,
-          result.role_name,
-          result.dept,
-          result.country,
-          result.num_openings,
-          result.expiry_date,
-          result.open,
-          result.description,
-          result.created_date,
-          await role_skill.readSkillbyRole(result.role_name),
-          numberOfApplicants,
-        )
+      const listing = new listingClass.RoleListing(
+        result.listing_id,
+        result.listing_name,
+        result.role_name,
+        result.dept,
+        result.country,
+        result.num_openings,
+        result.expiry_date,
+        result.open,
+        result.description,
+        result.created_date,
+        await role_skill.readSkillbyRole(result.role_name)
       );
+      await listing.updateApplicants();
+      responseArray.push(listing);
     }
     const response = {
       statusCode: 200,
@@ -609,7 +585,7 @@ app.delete("/delete/listing/:listingId", async (req, res) => {
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 
-app.get("/application/:listingId", async (req, res) => {
+app.get("/application/listing/:listingId", async (req, res) => {
   try {
     console.log("GET /application started");
     const listingid = req.params.listingId;
@@ -650,6 +626,41 @@ app.post("/application", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(400).send({ status: 400, message: "POST Failed" });
+  }
+});
+
+app.get("/application/staff/:staffId", async (req, res) => {
+  try {
+    console.log("GET /application started");
+    const staffId = req.params.staffId;
+    const response = await application.getListingsApplied(staffId);
+    let applicationListings = [];
+    for (let listingObj of response) {
+      const listing = new listingClass.RoleListing(
+        listingObj.listing_id,
+        listingObj.listing_name,
+        listingObj.role_name,
+        listingObj.dept,
+        listingObj.country,
+        listingObj.num_openings,
+        listingObj.expiry_date,
+        listingObj.open,
+        listingObj.description,
+        listingObj.created_date,
+        await role_skill.readSkillbyRole(listingObj.role_name)
+      );
+      await listing.updateApplicants();
+      applicationListings.push(listing);
+    }
+    res.status(200).send({
+      status: 200,
+      body: applicationListings,
+      message: "Applicants Retrieved",
+    });
+    console.log("GET /application ended");
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ status: 400, message: "Retrieval Failed" });
   }
 });
 
