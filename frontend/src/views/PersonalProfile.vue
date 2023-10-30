@@ -154,6 +154,7 @@
                           :identified="listing._listing_name"
                           @click.native="gotoListing(listing)"
                           :id="listing._listing_id"
+                          :skills="listing._skills"
                         ></ListingCard>
                         </v-col>
                     </v-sheet>
@@ -243,6 +244,7 @@
 
     async mounted() {
         await this.getAppliedListings();
+        console.log(this.appliedListings)
     },
 
   };
