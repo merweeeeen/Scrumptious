@@ -61,6 +61,7 @@ export default {
         this.profile(response.data.body);
 
         console.log(this.$store.state.profile);
+        this.updateExpiredListing();
         this.$router.push("/")
       } catch (err) {
         if (err) {
@@ -69,6 +70,19 @@ export default {
         }
       }
     },
+    async updateExpiredListing(){
+      try {
+        const response = await axios.put(
+          `http://localhost:3003/updateExpired`
+        );
+      }
+      catch (err){
+        if (err) {
+          console.log(err);
+          console.log("Error updating expired listings")
+        }
+      }
+    }
   },
   computed: {
     selectedRole() {

@@ -208,6 +208,7 @@ app.post("/listing", async (req, res) => {
   // }
   // else{ console.log("No body found")}
 });
+
 app.get("/search/:name", async (req, res) => {
   console.log('GET /search/:name started')
   const filteredResults = await role.readFilteredListing(`listing_name LIKE '%${req.params.name}%'`);
@@ -236,6 +237,7 @@ app.get("/search/:name", async (req, res) => {
   res.status(200).send(response);
   console.log('GET /search/:name ended')
 });
+
 app.get("/listing/filter/:filter", async (req, res) => {
   try {
     const filter = JSON.parse(req.params.filter);
@@ -302,6 +304,30 @@ app.get("/listing/filter/:filter", async (req, res) => {
     res.status(400).send(response);
   }
 });
+
+app.put("/updateExpired", async (req,res) => {
+  console.log("PUT /updateExpired started");
+  role
+    .updateExpiredListings()
+    .then((results) => {
+      const response = {
+        statusCode: 200,
+        body: results,
+        message: "Update Expired Listings Successful",
+      }
+      res.status(200).send(response);
+    })
+    .catch ((error) => {
+      const response = {
+        statusCode: 400,
+        body: error,
+        message: "Update Unsuccessful"
+      };
+      res.status(400).send(response);
+      console.error("Error: " + error);
+    });
+});
+
 /////////////////////////////////////////////////////
 ////////////// ROLE_SKILL MICROSERVICE //////////////
 /////////////////////////////////////////////////////

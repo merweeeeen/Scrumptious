@@ -71,6 +71,25 @@ function updateListing(theBody,listingid) {
   })
 }
 
+// PUT, updates all listings that are expired to have open=0 from open=1
+function updateExpiredListings(){
+  return new Promise((resolve,reject) => {
+    const closedstatus = 0;
+    const openstatus = 1;
+    const query = `UPDATE listing SET open=${closedstatus} WHERE expiry_date < current_date() AND open=${openstatus}`;
+    
+    con.query(query, function(error,results,fields) {
+      if (error) {
+        console.log("Error updating listings to closed");
+        reject(error);
+      } else {
+        console.log(`Updated ${results.affectedRows} rows.`);
+        resolve();
+      }
+    })
+  })
+}
+
 // POST, should take in an object like this: {"listing_name":"ListName1","role_name":"RoleName1","dept":"asdas","country":"sg","num_openings":2,"expiry_date":"2023-07-04","open":1, "desc":"desc1"}
 function createListing(theBody) {
   return new Promise((resolve, reject) => {
@@ -192,4 +211,5 @@ module.exports = {
   removeFavourite,
   deleteListing,
   readFilteredListing,
+  updateExpiredListings
 };
