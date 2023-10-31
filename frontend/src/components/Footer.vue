@@ -9,6 +9,7 @@
             variant="plain"
             style="margin: 10px"
             :id="link"
+            @click="gotoWhere(link)"
           >
             {{ link }}
           </v-btn>
@@ -21,8 +22,21 @@
 export default {
   data() {
     return {
-      links: ["Home", "Departments", "HRMS", "LMS", "LJPS", "Feedback"],
+      links: ["Home", "HRMS", "LMS", "LJPS"],
     };
+  },
+  methods: {
+    gotoWhere(link) {
+      if (link == "Home"){
+        this.$router.push({ path: "/" });
+      }
+      else{
+        this.$router.push({ name:"Redirect", params: { page: link }});
+      }
+      setTimeout(() => {
+        location.reload();
+      }, 100);
+    }
   },
 };
 </script>
