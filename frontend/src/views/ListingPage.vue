@@ -121,6 +121,7 @@
                   </p>
                   <br />
                   <p class="text-h6 text--primary">Skills Required</p>
+                  <div v-if="getRole()">
                   <v-chip
                     v-for="skill in listingSkills"
                     class="ma-1"
@@ -134,6 +135,17 @@
                   >
                     {{ skill }}
                   </v-chip>
+                </div>
+                <div v-else>
+                  <v-chip
+                    v-for="skill in listingSkills"
+                    class="ma-1"
+                    variant="tonal"
+                    :id="skill"
+                  >
+                    {{ skill }}
+                  </v-chip>
+                </div>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -145,13 +157,12 @@
             </v-col>
           </v-row>
 
-          <v-row class="ma-0 w-100" v-if="getRole() === false && applicants.length != 0">
-            <v-col 
-            v-for="applicant in applicants"
-            class="pb-0">
+          <div v-if="getRole() === false && applicants.length != 0">
+          <v-row class="ma-0 w-100" v-for="applicant in applicants" >
+            <v-col class="pb-0">
               <v-card width="100%" color="black" variant="outlined">
                 <v-card-text>
-                  <p class="text-h6 text--primary">{{ applicant._Staff_FName }} {{ applicant._Staff_LName }}</p>
+                  <p class="text-h5 text--primary"><em>{{ applicant._Staff_FName }} {{ applicant._Staff_LName }}</em></p>
                   <p class="text-h7 text--primary" id="desc">
                     <!-- {{ listing._desc }} -->
                     Staff ID: {{ applicant._Staff_id }}
@@ -159,7 +170,7 @@
                     Email: {{ applicant._Email }}
                   </p>
                   <!-- <br /> -->
-                  <p class="text-h6 text--primary">Skills matched</p>
+                  <p class="text-h7 text--primary"><b>Applicant's Skills:</b></p>
                   <v-chip
                     v-for="skill in applicant._Skills"
                     class="ma-1"
@@ -177,6 +188,7 @@
               </v-card>
             </v-col>
           </v-row>
+        </div>
           <v-row v-else-if="getRole() === false && applicants.length == 0">
             <v-col style="background-color:rgb(241, 249, 241); border-radius:10px; margin: 0px 20px;"><p style="margin-left: 10px;"><em style="colour: rgb(174, 174, 174);">No Applicants Yet.</em></p></v-col>
           </v-row>
@@ -325,6 +337,8 @@ export default {
     },
     getRole() {
       if (this.$store.state.profile._Access_Rights === "1") {
+        //this is HR
+
         return false;
       }
       return true;
@@ -336,7 +350,7 @@ export default {
     await this.getRoleSkills();
     await this.getSaved();
     await this.getRelevantApplicants();
-    console.log(this.applicants)
+    console.log(this.getRole())
     // await this.getApplicant();
     // this.getFavouriteListings()
     // console.log(this.applicant)
