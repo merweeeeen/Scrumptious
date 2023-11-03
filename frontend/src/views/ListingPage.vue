@@ -23,8 +23,9 @@
                       </p>
                     </v-col>
 
-                    <v-col class="d-flex align-center py-0 h-100"
-                    v-if="this.$store.state.profile._Access_Rights == 0"
+                    <v-col
+                      class="d-flex align-center py-0 h-100"
+                      v-if="this.$store.state.profile._Access_Rights == 0"
                     >
                       <v-icon
                         class="align-center w-100 justify-end"
@@ -122,30 +123,30 @@
                   <br />
                   <p class="text-h6 text--primary">Skills Required</p>
                   <div v-if="getRole()">
-                  <v-chip
-                    v-for="skill in listingSkills"
-                    class="ma-1"
-                    variant="tonal"
-                    :color="
-                      employeeSkills.includes(skill)
-                        ? 'green-darken-3'
-                        : 'default'
-                    "
-                    :id="skill"
-                  >
-                    {{ skill }}
-                  </v-chip>
-                </div>
-                <div v-else>
-                  <v-chip
-                    v-for="skill in listingSkills"
-                    class="ma-1"
-                    variant="tonal"
-                    :id="skill"
-                  >
-                    {{ skill }}
-                  </v-chip>
-                </div>
+                    <v-chip
+                      v-for="skill in listingSkills"
+                      class="ma-1"
+                      variant="tonal"
+                      :color="
+                        employeeSkills.includes(skill)
+                          ? 'green-darken-3'
+                          : 'default'
+                      "
+                      :id="skill"
+                    >
+                      {{ skill }}
+                    </v-chip>
+                  </div>
+                  <div v-else>
+                    <v-chip
+                      v-for="skill in listingSkills"
+                      class="ma-1"
+                      variant="tonal"
+                      :id="skill"
+                    >
+                      {{ skill }}
+                    </v-chip>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -158,39 +159,59 @@
           </v-row>
 
           <div v-if="getRole() === false && applicants.length != 0">
-          <v-row class="ma-0 w-100" v-for="applicant in applicants" >
-            <v-col class="pb-0">
-              <v-card width="100%" color="black" variant="outlined">
-                <v-card-text>
-                  <p class="text-h5 text--primary"><em>{{ applicant._Staff_FName }} {{ applicant._Staff_LName }}</em></p>
-                  <p class="text-h7 text--primary" id="desc">
-                    <!-- {{ listing._desc }} -->
-                    Staff ID: {{ applicant._Staff_id }}
-                    <br />
-                    Email: {{ applicant._Email }}
-                  </p>
-                  <!-- <br /> -->
-                  <p class="text-h7 text--primary"><b>Applicant's Skills:</b></p>
-                  <v-chip
-                    v-for="skill in applicant._Skills"
-                    class="ma-1"
-                    variant="tonal"
-                    :color="
-                      listingSkills.includes(skill)
-                        ? 'green-darken-3'
-                        : 'default'
-                    "
-                    :id="skill"
-                  >
-                    {{ skill }}
-                  </v-chip>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </div>
+            <v-row
+              class="ma-0 w-100"
+              v-for="applicant in applicants"
+              :id="applicant._Staff_id"
+            >
+              <v-col class="pb-0">
+                <v-card width="100%" color="black" variant="outlined">
+                  <v-card-text>
+                    <p class="text-h5 text--primary" id="staffName">
+                      <em
+                        >{{ applicant._Staff_FName }}
+                        {{ applicant._Staff_LName }}</em
+                      >
+                    </p>
+                    <p class="text-h7 text--primary" id="staffIdAndEmail">
+                      <!-- {{ listing._desc }} -->
+                      Staff ID: {{ applicant._Staff_id }}
+                      <br />
+                      Email: {{ applicant._Email }}
+                    </p>
+                    <!-- <br /> -->
+                    <p class="text-h7 text--primary">
+                      <b>Applicant's Skills:</b>
+                    </p>
+                    <v-chip
+                      v-for="skill in applicant._Skills"
+                      class="ma-1"
+                      variant="tonal"
+                      :color="
+                        listingSkills.includes(skill)
+                          ? 'green-darken-3'
+                          : 'default'
+                      "
+                      :id="skill"
+                    >
+                      {{ skill }}
+                    </v-chip>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </div>
           <v-row v-else-if="getRole() === false && applicants.length == 0">
-            <v-col style="background-color:rgb(241, 249, 241); border-radius:10px; margin: 0px 20px;"><p style="margin-left: 10px;"><em style="colour: rgb(174, 174, 174);">No Applicants Yet.</em></p></v-col>
+            <v-col
+              style="
+                background-color: rgb(241, 249, 241);
+                border-radius: 10px;
+                margin: 0px 20px;
+              "
+              ><p style="margin-left: 10px">
+                <em style="colour: rgb(174, 174, 174)">No Applicants Yet.</em>
+              </p></v-col
+            >
           </v-row>
         </v-container>
       </div>
@@ -230,12 +251,11 @@ export default {
     // async getApplicant() {
     //   const response = await axios.get(
     //     `http://localhost:3003/staff/${this.$store.state.profile._Staff_id}`
-    //   ); 
+    //   );
     //   this.applicant = response.data.body;
     // },
 
     async getListing() {
-      console.log("listing id", this.listing_id);
       const response = await axios.get(
         `http://localhost:3003/listing/${this.listing_id}`
       );
@@ -261,11 +281,11 @@ export default {
         });
     },
 
-    async getRelevantApplicants(){
-      const response = await axios.get(`http://localhost:3003/application/getappstaff/${this.listing_id}`);
+    async getRelevantApplicants() {
+      const response = await axios.get(
+        `http://localhost:3003/application/getappstaff/${this.listing_id}`
+      );
       this.applicants = response.data.body;
-      console.log('this.applicants')
-      console.log(this.applicants)
     },
 
     days_posted(created_at) {
@@ -350,7 +370,7 @@ export default {
     await this.getRoleSkills();
     await this.getSaved();
     await this.getRelevantApplicants();
-    console.log(this.getRole())
+    console.log(this.getRole());
     // await this.getApplicant();
     // this.getFavouriteListings()
     // console.log(this.applicant)
