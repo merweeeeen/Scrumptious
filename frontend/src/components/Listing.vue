@@ -16,7 +16,7 @@
           <v-container class="pa-0 mt-1">
             <v-row no-gutters align="center" style="height: 25px">
               <v-col class="pa-0">
-                <v-card-title>{{ roleName }}</v-card-title>
+                <v-card-title id="roleName">{{ roleName }}</v-card-title>
               </v-col>
 
               <!-- This should be where the bookmark/3 dot icon should go -->
@@ -26,14 +26,13 @@
           </v-container>
 
           <!-- Info about role: Department, Openings, Applicants, Full Time -->
-          <v-text class="text-caption">
+          <v-text class="text-caption" id="deptAndOpenings">
             {{ Department }} | {{ num_openings }} Opening(s)
           </v-text>
-          <!-- Last Updated -->
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
               <v-col cols="auto">
-                <v-text class="text-caption">{{
+                <v-text class="text-caption" id="daysPosted">{{
                   days_posted(created_at)
                 }}</v-text>
               </v-col>
@@ -57,7 +56,7 @@
           <v-container class="pa-0 mt-1">
             <v-row no-gutters align="center" style="height: 25px">
               <v-col class="pa-0">
-                <v-card-title>{{ roleName }}</v-card-title>
+                <v-card-title id="roleName">{{ roleName }}</v-card-title>
               </v-col>
 
               <!-- This should be where the bookmark/3 dot icon should go -->
@@ -67,9 +66,10 @@
           </v-container>
 
           <!-- Info about role: Department, Openings, Applicants, Full Time -->
-          <v-text class="text-caption text-grey-darken-2">
+          <v-text class="text-caption text-grey-darken-2" id="deptAndOpenings">
             {{ Department }} | {{ num_openings }} Opening(s)
           </v-text>
+          
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
               <v-col cols="auto">
@@ -80,7 +80,21 @@
             </v-row>
             <v-row no-gutters justify="space-between" style="height: 25px">
               <v-col cols="auto">
-                <v-text class="text-caption">{{
+                <v-text class="text-caption" id="daysPosted">
+                  Expires: {{ expiry_date }}
+                </v-text>
+              </v-col>
+            </v-row>
+            <v-row no-gutters justify="space-between" style="height: 25px">
+              <v-col cols="auto">
+                <v-text class="text-caption">
+                  Expires: {{ expiry_date }}
+                </v-text>
+              </v-col>
+            </v-row>
+            <v-row no-gutters justify="space-between" style="height: 25px">
+              <v-col cols="auto">
+                <v-text class="text-caption" id="daysPosted">{{
                   days_posted(created_at)
                 }}</v-text>
               </v-col>
