@@ -73,20 +73,9 @@
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
               <v-col cols="auto">
-                <v-text class="text-caption">
-                  Expires: {{ expiry_date }}
-                </v-text>
-              </v-col>
-            </v-row>
-            <v-row no-gutters justify="space-between" style="height: 25px">
-              <v-col cols="auto">
-                <v-text class="text-caption" id="daysPosted">
-                  Expires: {{ expiry_date }}
-                </v-text>
-              </v-col>
-            </v-row>
-            <v-row no-gutters justify="space-between" style="height: 25px">
-              <v-col cols="auto">
+<<<<<<<<< Temporary merge branch 1
+                <v-text class="text-caption" id="daysPosted">{{
+=========
                 <v-text class="text-caption">
                   Expires: {{ expiry_date }}
                 </v-text>
