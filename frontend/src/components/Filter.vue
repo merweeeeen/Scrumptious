@@ -19,10 +19,6 @@
           <v-icon>mdi-bookmark-outline</v-icon>
           &nbsp; Favourites
         </v-btn>
-        <v-btn elevation="0" class="w-100 justify-start">
-          <v-icon>mdi-file-document-edit-outline</v-icon>
-          &nbsp; My applications
-        </v-btn>
         <v-btn
           elevation="0"
           class="w-100 justify-start"
