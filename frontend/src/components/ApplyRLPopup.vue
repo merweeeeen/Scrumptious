@@ -9,7 +9,6 @@
       variant="flat"
       id="Apply"
       :disabled="applied"
-      v-if="this.$store.state.profile._Access_Rights === '0'"
     >
       Apply
 
@@ -143,6 +142,7 @@
                           @click="
                             SuccessDialog = false;
                             dialog = false;
+                            close();
                           "
                         >
                           Close
@@ -176,7 +176,10 @@
                           class="text-none text-subtitle-1"
                           size="small"
                           variant="flat"
-                          @click="ApplyFailDialog = false"
+                          @click="
+                            ApplyFailDialog = false;
+                            close();
+                          "
                         >
                           Close
                         </v-btn>
@@ -208,7 +211,10 @@
                           class="text-none text-subtitle-1"
                           size="small"
                           variant="flat"
-                          @click="AlreadyAppDialog = false"
+                          @click="
+                            AlreadyAppDialog = false;
+                            close();
+                          "
                         >
                           Close
                         </v-btn>
@@ -259,11 +265,10 @@ export default {
           listingId: parseInt(this.roleId),
           writeUp: this.writeUp,
         };
-        this.postApply(bodyInfo);
+        await this.postApply(bodyInfo);
 
         //.dialog4 = true; // should also clear the this.writeUp
         //call function here to run the back end..
-        location.reload();
       } else {
         console.log("Validation failed!");
         this.ApplyFailDialog = true;
@@ -276,9 +281,9 @@ export default {
       return true;
     },
     async postApply(bodyInfo) {
-      axios
+      await axios
         .post("http://localhost:3003/application", bodyInfo)
-        .then((response) => {
+        .then(async (response) => {
           // alert("Role Listing created successfully!")
           if (response.data.body.affectedRows == 0) {
             //alert("You've already applied previously??")
@@ -291,7 +296,8 @@ export default {
               _write_Up: this.writeUp,
             };
             this.staff._Applications.push(thisobj);
-            this.profile(this.staff);
+            await this.profile(this.staff);
+            // console.log(this.$store.state.profile)
           }
         })
         .catch((error) => {
@@ -307,6 +313,9 @@ export default {
         }
       }
       // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
+    },
+    close() {
+      location.reload();
     },
   },
   mounted() {
