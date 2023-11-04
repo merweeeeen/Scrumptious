@@ -664,6 +664,40 @@ app.get("/application/staff/:staffId", async (req, res) => {
   }
 });
 
+app.get("/favourite/staff/:staffId", async (req, res) => {
+  try {
+    console.log("GET /favourite/staff/:staffId started");
+    const staffid = req.params.staffId;
+    const response = await role.getFavouriteByStaffId(staffid);
+    const favArray = [];
+    for (let result of response) {
+      const returnListingClass = new listingClass.RoleListing(
+        result.listing_id,
+        result.listing_name,
+        result.role_name,
+        result.dept,
+        result.country,
+        result.num_openings,
+        result.expiry_date,
+        result.open,
+        result.description,
+        result.created_date,
+        await role_skill.readSkillbyRole(result.role_name)
+      );
+      await returnListingClass.updateApplicants();
+      favArray.push(returnListingClass);
+    }
+    res.status(200).send({
+      statusCode: 200,
+      body: favArray,
+      message: "Retrieved Successfully",
+    });
+    console.log("GET /favourite/staff/:staffId ended");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
