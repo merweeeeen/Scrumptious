@@ -60,14 +60,14 @@ beforeEach(async () => {
   originalAxios = axios.get;
 
   profile = {
-    _Access_Rights: '1',
+    _Access_Rights: "1",
     _Country: "SG",
     _Dept: "Human Resource",
     _Email: "Ding@gmail.com",
     _Password: "imaHR",
     _Skills: ["Computational Problem Solving", "Python"],
     _Staff_id: 5173,
-    _Applications: []
+    _Applications: [],
   };
 
   store = createStore({
@@ -132,6 +132,9 @@ async function mockings(listingDetails, bodyInfo = "", fav = "") {
   }
 
   mock = new MockAdapter(axios);
+  mock
+    .onGet(`http://localhost:3003/application/getappstaff/${listingId}`)
+    .reply(200, { body: [] });
   mock
     .onGet(`http://localhost:3003/listing`)
     .reply(200, { body: [indivListing.data.body] });
@@ -324,7 +327,6 @@ describe("Testing ST3-13", () => {
     await wrapper.vm.$router.isReady();
     await nextTick();
     expect(wrapper.vm.$route.path).toBe("/listing/" + listingId); // Testing whether the Route has been called and parsed
-
     wrapper = mount(ListingPage, {
       // Mounting the new ListingPage
       global: {
@@ -379,6 +381,11 @@ describe("Testing ST3-13", () => {
       global: {
         plugins: [store, router, vuetify],
       },
+      data() {
+        return {
+          listings: listings.data.body,
+        };
+      },
     });
     await nextTick();
     await wrapper.vm.listings;
@@ -391,12 +398,12 @@ describe("Testing ST3-13", () => {
     await wrapper.vm.$router.isReady();
     await nextTick();
     expect(wrapper.vm.$route.path).toBe("/listing/" + listingId); // Testing whether the Route has been called and parsed
-    wrapper = mount(ListingPage, {
+    wrapper = await mount(ListingPage, {
       // Mounting the new ListingPage
       global: {
         plugins: [store, router, vuetify],
       },
-    });
+    });    
     await nextTick();
     await nextTick();
     await wrapper.vm;
@@ -1184,6 +1191,9 @@ async function remock(mocked, listingDetails) {
   const getAllRoleSkills = mocked.getAllRoleSkills;
 
   mock = new MockAdapter(axios);
+  mock
+    .onGet(`http://localhost:3003/application/getappstaff/${mocked.listingId}`)
+    .reply(200, { body: [] });
   mock
     .onGet(`http://localhost:3003/listing`)
     .reply(200, { body: [indivListing.data.body] });

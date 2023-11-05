@@ -93,7 +93,15 @@ app.get("/listing", async (req, res) => {
 // THIS IS GET /listing/:listingid? => TO GET ONE ROLE FOR FRONTEND
 app.get("/listing/:listingid?", async (req, res) => {
   console.log("GET /listing/:listingId started");
-  const applicants = await application.getApplicants(req.params.listingid);
+  // const applicants = await application.getApplicants(req.params.listingid).then((a) => {return a.staff_id});
+  // console.log(applicants);
+  // const applicants = await application.getApplicants(req.params.listingid);
+  // const numberOfApplicants = applicants.length;
+  // const profiles = [];
+  // for (let applicant of applicants) {
+  //   const profile = await staff.findStaff(applicant.staff_id);
+  //   profiles.push(profile[0]);
+  // }
   role
     .readOneListing(req.params.listingid)
     .then(async (results) => {
@@ -108,6 +116,8 @@ app.get("/listing/:listingid?", async (req, res) => {
         results[0].open,
         results[0].description,
         results[0].created_date,
+        // profiles,
+        // await staff.findStaff(req.params.listingid),
         await role_skill.readSkillbyRole(results[0].role_name)
       );
       await returnListingClass.updateApplicants();
@@ -415,7 +425,7 @@ app.get("/staff/:name", async (req, res) => {
         results[0].password,
         results[0].role_name
       );
-      await returnStaffClass.updateApplications()
+      await returnStaffClass.updateApplications();
       const response = {
         statusCode: 200,
         body: returnStaffClass,
@@ -662,6 +672,71 @@ app.get("/application/staff/:staffId", async (req, res) => {
     console.log(error);
     res.status(400).send({ status: 400, message: "Retrieval Failed" });
   }
+});
+
+app.get("/application/getappstaff/:listingId", async (req, res) => {
+  console.log("GET /application/getappstaff/:listingId started");
+  const listingid = req.params.listingId;
+  staff
+    .listingApplicants(listingid)
+    .then(async (response) => {
+      const applicant_array = [];
+      for (let i = 0; i < response.length; i++) {
+        await staff.findStaffSkill(response[i].staff_id).then((staffSkills) => {
+          let skills = staffSkills.map((staffSkill) => {
+            return staffSkill.skill_name;
+          });
+          let returnStaffClass = new staffClass.Staff(
+            response[i].staff_id,
+            response[i].staff_FName,
+            response[i].staff_LName,
+            response[i].dept,
+            response[i].country,
+            response[i].email,
+            response[i].access_rights,
+            skills,
+            response[i].password,
+            response[i].role_name
+          );
+          applicant_array.push(returnStaffClass);
+        });
+      }
+      res.status(200).send({
+        status: 200,
+        body: applicant_array,
+        message: "Applicants Retrieved",
+      });
+      console.log("GET /application/getappstaff/:listingId ended");
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).send({ status: 400, message: "Retrieval Failed" });
+    });
+});
+
+app.delete("/application/:listingId/:staffId", async (req, res) => {
+  console.log("DELETE /application started");
+  const listingId = req.params.listingId;
+  const staffId = req.params.staffId;
+  application
+    .deleteApplication(staffId, listingId)
+    .then((results) => {
+      const response = {
+        statusCode: 200,
+        body: results,
+        message: "Deleted Successfully",
+      };
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      const response = {
+        statusCode: 400,
+        body: error,
+        message: "Deletion Unsuccessful",
+      };
+      res.status(400).send(response);
+    });
+  console.log("DELETE /application ended");
 });
 
 app.get("/favourite/staff/:staffId", async (req, res) => {
