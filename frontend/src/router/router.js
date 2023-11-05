@@ -7,6 +7,7 @@ import Login from "../views/Login.vue";
 import Redirect from '../views/Redirect.vue'
 import authGuard from "./authGuard";
 import Update from "../views/updateListing.vue"
+import StaffProfilePage from "../views/StaffProfilePage.vue"
 
 const routes = [
   {
@@ -48,6 +49,12 @@ const routes = [
     path: '/redirect/:page',
     name: 'Redirect',
     component: Redirect
+  },
+  {
+    path: '/staff/:staff_id',
+    name: 'StaffProfilePage',
+    component: StaffProfilePage,
+    beforeEnter: authGuard
   }
 ];
 

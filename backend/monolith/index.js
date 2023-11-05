@@ -15,6 +15,7 @@ const staff = require("./Staff");
 const favourite = require("./Favourite");
 const application = require("./application");
 const ApplicantClass = require("./ApplicationClass");
+const { Console } = require("console");
 // const e = require("express");
 
 var allowedOrigins = ["http://127.0.0.1:5173", "http://localhost:5173"];
@@ -398,6 +399,37 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
 });
 app.get("/staff/:name", async (req, res) => {
   staff.findStaffFromName(req.params.name).then((results) => {
+    // console.log("Results: ", results);
+    staff.findStaffSkill(results[0].staff_id).then(async (staffSkills) => {
+      const skills = staffSkills.map((staffSkill) => {
+        return staffSkill.skill_name;
+      });
+      const returnStaffClass = new staffClass.Staff(
+        results[0].staff_id,
+        results[0].staff_FName,
+        results[0].staff_LName,
+        results[0].dept,
+        results[0].country,
+        results[0].email,
+        results[0].access_rights,
+        skills,
+        results[0].password,
+        results[0].role_name
+      );
+      await returnStaffClass.updateApplications()
+      const response = {
+        statusCode: 200,
+        body: returnStaffClass,
+        message: "Retrieved Successfully",
+      };
+      res.status(200).send(response);
+      return;
+    });
+  });
+});
+app.get("/staffid/:staff_id", async (req, res) => {
+  console.log('/staffid called ' + req.params.staff_id)
+  staff.findStaff(req.params.staff_id).then((results) => {
     // console.log("Results: ", results);
     staff.findStaffSkill(results[0].staff_id).then(async (staffSkills) => {
       const skills = staffSkills.map((staffSkill) => {
