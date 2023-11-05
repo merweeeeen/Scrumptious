@@ -88,20 +88,25 @@ function deleteStaff(id) {
     });
   });
 }
-
-module.exports = { findStaff, findStaffFromName, findStaffSkill, createStaff, deleteStaff };
-  function listingApplicants(listingId){
-    return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM staff.staff WHERE staff_id IN (SELECT staff_id FROM role.roles_application WHERE listing_id = ${listingId});`;
-      con.query(query, function (error, results, fields) {
-        if (error) {
-          reject(error);
-        } else {
-          //   console.log("results: " + results)
-          resolve(results);
-        }
-      });
+function listingApplicants(listingId) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM staff.staff WHERE staff_id IN (SELECT staff_id FROM role.roles_application WHERE listing_id = ${listingId});`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
     });
-  }
+  });
+}
 
-module.exports = { findStaff, findStaffFromName, findStaffSkill, listingApplicants,createStaff, deleteStaff };
+module.exports = {
+  findStaff,
+  findStaffFromName,
+  findStaffSkill,
+  listingApplicants,
+  createStaff,
+  deleteStaff,
+};
