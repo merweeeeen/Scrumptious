@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex align-center flex-column">
-    <div style="width:40vw">
+    <div style="width: 40vw">
       <v-card
         width="100%"
         min-width="400px"
@@ -14,33 +14,36 @@
         <!-- Role Name and when done, bookmark/3 dot icon -->
         <v-card-item class="mt-0 w-100">
           <v-container class="pa-0 mt-1">
-            <v-row no-gutters align="center" style="height: 25px">
+            <v-row no-gutters align="center" style="height: 5px">
               <v-col class="pa-0">
-                <v-card-title>{{ roleName }}</v-card-title>
+                <v-card-title id="listingName">{{ listingName }}</v-card-title>
               </v-col>
 
               <!-- This should be where the bookmark/3 dot icon should go -->
-              <v-col class="pa-0">
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text class="text-caption" id="roleName">
+                  <b>{{ roleName }}</b>
+                </v-text>
               </v-col>
             </v-row>
           </v-container>
 
           <!-- Info about role: Department, Openings, Applicants, Full Time -->
-          <v-text class="text-caption">
+          <v-text class="text-caption" id="deptAndOpenings">
             {{ Department }} | {{ num_openings }} Opening(s)
           </v-text>
-          <!-- Last Updated -->
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
               <v-col cols="auto">
-                <v-text class="text-caption">{{
+                <v-text class="text-caption" id="daysPosted">{{
                   days_posted(created_at)
                 }}</v-text>
               </v-col>
             </v-row>
           </v-container>
         </v-card-item>
-
       </v-card>
       <v-card
         width="100%"
@@ -55,21 +58,27 @@
         <!-- Role Name and when done, bookmark/3 dot icon -->
         <v-card-item class="mt-0 w-100">
           <v-container class="pa-0 mt-1">
-            <v-row no-gutters align="center" style="height: 25px">
+            <v-row no-gutters align="center" style="height: 5px">
               <v-col class="pa-0">
-                <v-card-title>{{ roleName }}</v-card-title>
+                <v-card-title id="listingName">{{ listingName }}</v-card-title>
               </v-col>
 
               <!-- This should be where the bookmark/3 dot icon should go -->
-              <v-col class="pa-0">
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text class="text-caption" id="roleName">
+                  <b>{{ roleName }}</b>
+                </v-text>
               </v-col>
             </v-row>
           </v-container>
 
           <!-- Info about role: Department, Openings, Applicants, Full Time -->
-          <v-text class="text-caption text-grey-darken-2">
+          <v-text class="text-caption text-grey-darken-2" id="deptAndOpenings">
             {{ Department }} | {{ num_openings }} Opening(s)
           </v-text>
+
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
               <v-col cols="auto">
@@ -95,46 +104,42 @@
             <v-row no-gutters align="center" style="height: 25px">
               <v-text class="text-subtitle-1">Skills Matched</v-text>
               <v-card-actions>
-                    <v-spacer></v-spacer>
+                <v-spacer></v-spacer>
 
-                    <v-btn
-                      :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                      @click.stop="show = !show"
-                      id="show"
-                    ></v-btn>
-                  </v-card-actions>
+                <v-btn
+                  :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                  @click.stop="show = !show"
+                  id="show"
+                ></v-btn>
+              </v-card-actions>
             </v-row>
             <v-row>
               <v-col></v-col>
             </v-row>
-            <v-row class="ma-0 ">
+            <v-row class="ma-0">
               <v-col class="pb-0">
-                
+                <v-expand-transition>
+                  <div v-show="show">
+                    <v-divider></v-divider>
 
-                  <v-expand-transition>
-                    <div v-show="show">
-                      <v-divider></v-divider>
-                  
-                      <!--skills Matched-->
-                        <v-card-text>
-                          <v-chip
-                            v-for="skill in listingSkills"
-                            class="ma-1"
-                            variant="tonal"
-                            :color="
-                              employeeSkills.includes(skill)
-                                ? 'green-darken-3'
-                                : 'default'
-                            "
-                            :id="skill"
-                          >
-                            {{ skill }}
-                          </v-chip>
-                        </v-card-text>
-
-                    </div>
-                  </v-expand-transition>
-
+                    <!--skills Matched-->
+                    <v-card-text>
+                      <v-chip
+                        v-for="skill in listingSkills"
+                        class="ma-1"
+                        variant="tonal"
+                        :color="
+                          employeeSkills.includes(skill)
+                            ? 'green-darken-3'
+                            : 'default'
+                        "
+                        :id="skill"
+                      >
+                        {{ skill }}
+                      </v-chip>
+                    </v-card-text>
+                  </div>
+                </v-expand-transition>
 
                 <!-- </v-card> -->
               </v-col>
@@ -191,6 +196,7 @@ export default {
   name: "ListingCard",
   props: {
     roleName: String,
+    listingName: String,
     roleId: Number,
     Department: String,
     num_openings: Number,

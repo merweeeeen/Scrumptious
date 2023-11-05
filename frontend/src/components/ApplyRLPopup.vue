@@ -142,7 +142,7 @@
                           @click="
                             SuccessDialog = false;
                             dialog = false;
-                            reloadPage()
+                            close();
                           "
                         >
                           Close
@@ -176,7 +176,10 @@
                           class="text-none text-subtitle-1"
                           size="small"
                           variant="flat"
-                          @click="ApplyFailDialog = false"
+                          @click="
+                            ApplyFailDialog = false;
+                            close();
+                          "
                         >
                           Close
                         </v-btn>
@@ -208,7 +211,10 @@
                           class="text-none text-subtitle-1"
                           size="small"
                           variant="flat"
-                          @click="AlreadyAppDialog = false"
+                          @click="
+                            AlreadyAppDialog = false;
+                            close();
+                          "
                         >
                           Close
                         </v-btn>
@@ -263,7 +269,6 @@ export default {
 
         //.dialog4 = true; // should also clear the this.writeUp
         //call function here to run the back end..
-        // location.reload();
       } else {
         console.log("Validation failed!");
         this.ApplyFailDialog = true;
@@ -309,9 +314,9 @@ export default {
       }
       // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
     },
-    reloadPage(){
-      location.reload()
-    }
+    close() {
+      location.reload();
+    },
   },
   mounted() {
     this.isapplied();

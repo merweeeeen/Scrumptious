@@ -71,11 +71,11 @@ beforeEach(async () => {
         profile,
       };
     },
-    mutations:{
+    mutations: {
       profile(state, profile) {
         state.profile = profile;
       },
-    }
+    },
   });
 
   router = createRouter({
@@ -168,6 +168,10 @@ async function mockings(listingDetails, fav = "") {
   mock
     .onPost(`http://localhost:3003/application`, bodyInfo)
     .reply(200, { body: submitApplication.data.body });
+
+  mock
+    .onGet(`http://localhost:3003/application/getappstaff/${listingId}`)
+    .reply(200, { body: [] });
 
   return { listings, listingId: listingId };
 }
