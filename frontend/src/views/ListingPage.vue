@@ -165,7 +165,7 @@
               :id="applicant._Staff_id"
             >
               <v-col class="pb-0">
-                <v-card width="100%" color="black" variant="outlined">
+                <v-card width="100%" color="black" variant="outlined" @click.native="gotoProfile(applicant._Staff_id)">
                   <v-card-text>
                     <p class="text-h5 text--primary" id="staffName">
                       <em
@@ -362,6 +362,13 @@ export default {
         return false;
       }
       return true;
+    },
+    gotoProfile(staffId) {
+      // this.$router.push('/' + listing.id)
+      this.$router.push({
+        name: "StaffProfilePage",
+        params: { staff_id: staffId },
+      });
     },
   },
 

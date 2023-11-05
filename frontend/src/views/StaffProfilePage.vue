@@ -143,7 +143,8 @@
                             : 'default'
                         "-->
                         <ListingCard
-                          :roleName="listing._listing_name"
+                          :roleName="listing._role_name"
+                          :listingName="listing._listing_name"
                           :roleId="listing._listing_id"
                           :Department="listing._dept"
                           :num_openings="listing._num_openings"
