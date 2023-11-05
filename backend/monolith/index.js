@@ -292,7 +292,7 @@ app.get("/listing/filter/:filter", async (req, res) => {
   }
 });
 
-app.put("/updateExpired", async (req,res) => {
+app.put("/updateExpired", async (req, res) => {
   console.log("PUT /updateExpired started");
   role
     .updateExpiredListings()
@@ -301,18 +301,19 @@ app.put("/updateExpired", async (req,res) => {
         statusCode: 200,
         body: results,
         message: "Update Expired Listings Successful",
-      }
+      };
       res.status(200).send(response);
     })
-    .catch ((error) => {
+    .catch((error) => {
       const response = {
         statusCode: 400,
         body: error,
-        message: "Update Unsuccessful"
+        message: "Update Unsuccessful",
       };
       res.status(400).send(response);
       console.error("Error: " + error);
     });
+    console.log("PUT /updateExpired ended");
 });
 
 /////////////////////////////////////////////////////
@@ -662,6 +663,32 @@ app.post("/application", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(400).send({ status: 400, message: "POST Failed" });
+  }
+});
+
+app.post("/register", async (req, res) => {
+  try {
+    console.log("POST /register started");
+    console.log(req.body)
+    const details = req.body.staffDetails;
+    const response = await staff.createStaff(details);
+    res
+      .status(200)
+      .send({ status: 200, body: response, message: "Staff Created" });
+  } catch (err) {
+    console.log(err);
+    res.status(400).send({ status: 400, message: "Staff Creation Failed" });
+  }
+  console.log("POST /register ended");
+});
+
+app.delete("/delete/staff/:staffId", async (req, res) => {
+  try {
+    await staff.deleteStaff(req.params.staffId);
+    res.status(200).send({ status: 200, message: "Staff Deleted" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ status: 400, message: "Staff Deletion Failed" });
   }
 });
 

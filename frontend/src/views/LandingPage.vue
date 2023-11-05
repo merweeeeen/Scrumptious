@@ -97,8 +97,10 @@ export default {
           (listing) =>
             listing._open === 1 && Date.parse(listing._expiry_date) >= Date.now()
         );
+        console.log(this.listings)
       } else {
         this.listings = response.data.body;
+        console.log(this.listings)
       }
     },
     gotoLogin() {
