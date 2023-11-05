@@ -111,6 +111,14 @@ async function mockings(listingDetails, fav = "") {
     .onGet(`http://localhost:3003/listing`)
     .reply(200, { body: [indivListing1.data.body, indivListing2.data.body] });
 
+  mock
+    .onGet(`http://localhost:3003/application/getappstaff/${listingId1}`)
+    .reply(200, { body: [] });
+
+  mock
+    .onGet(`http://localhost:3003/application/getappstaff/${listingId2}`)
+    .reply(200, { body: [] });
+    
   return { listings, listingId: [listingId1, listingId2] };
 }
 

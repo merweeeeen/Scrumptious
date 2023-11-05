@@ -60,8 +60,23 @@ async function apply(staffid, listingid, writeup) {
   });
 }
 
+async function deleteApplication(staffid, listingid) {
+  return new Promise((resolve, reject) => {
+    const query = `DELETE FROM role.roles_application WHERE staff_id = ${staffid} AND listing_id = ${listingid};`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+
 module.exports = {
   getApplicants,
   getListingsApplied,
   apply,
+  deleteApplication,
 };
