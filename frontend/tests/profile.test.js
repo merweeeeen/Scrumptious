@@ -145,7 +145,7 @@ describe("Integration tests", async () => {
     await nextTick();
     const listingCard = await wrapper.find(`#${listingId}`);
     expect(listingCard.exists()).toBe(true);
-    expect(listingCard.find("#roleName").text()).toBe("ST3-41.1.1");
+    expect(listingCard.find("#roleName").text()).toBe("Software Developer");
 
     const deptAndOpenings = await listingCard.find(`#deptAndOpenings`);
     expect(deptAndOpenings.text()).toBe("IT Support | 1 Opening(s)");
