@@ -82,6 +82,13 @@
           <v-container class="pa-0">
             <v-row no-gutters justify="space-between" style="height: 25px">
               <v-col cols="auto">
+                <v-text class="text-caption">
+                  Expires: {{ expiry_date }}
+                </v-text>
+              </v-col>
+            </v-row>
+            <v-row no-gutters justify="space-between" style="height: 25px">
+              <v-col cols="auto">
                 <v-text class="text-caption" id="daysPosted">{{
                   days_posted(created_at)
                 }}</v-text>
@@ -196,6 +203,7 @@ export default {
     created_at: String,
     open: Number,
     access: String,
+    expiry_date: String,
     identified: String,
     skills: Array,
   },

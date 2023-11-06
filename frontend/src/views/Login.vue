@@ -1,5 +1,5 @@
 <template>
-  <v-card class="card" style="padding:20px">
+  <v-card class="card" style="padding: 20px">
     Staff ID<v-text-field
       label="Staff ID"
       style="width: 100%"
@@ -18,7 +18,7 @@
       density="compact"
       style="width: 100%"
     ></v-select>
-    <v-btn @click="login">Login</v-btn>
+    <v-btn @click="login" id="login">Login</v-btn>
   </v-card>
 </template>
 
@@ -58,14 +58,25 @@ export default {
           alert("Wrong Password");
           return;
         }
-        this.profile(response.data.body);
+        await this.profile(response.data.body);
 
         console.log(this.$store.state.profile);
-        this.$router.push("/")
+        this.updateExpiredListing();
+        this.$router.push("/");
       } catch (err) {
         if (err) {
           console.log(err);
           alert("Invalid Account.");
+        }
+      }
+    },
+    async updateExpiredListing() {
+      try {
+        const response = await axios.put(`http://localhost:3003/updateExpired`);
+      } catch (err) {
+        if (err) {
+          console.log(err);
+          console.log("Error updating expired listings");
         }
       }
     },
