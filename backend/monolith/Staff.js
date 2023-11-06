@@ -39,31 +39,74 @@ function findStaffFromName(name) {
 }
 
 function findStaffSkill(id) {
-    return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM staff_skill WHERE staff_id = ${id};`;
-      con.query(query, function (error, results, fields) {
-        if (error) {
-          reject(error);
-        } else {
-          //   console.log("results: " + results)
-          resolve(results);
-        }
-      });
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM staff_skill WHERE staff_id = ${id};`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
     });
-  }
+  });
+}
 
-  function listingApplicants(listingId){
-    return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM staff.staff WHERE staff_id IN (SELECT staff_id FROM role.roles_application WHERE listing_id = ${listingId});`;
-      con.query(query, function (error, results, fields) {
-        if (error) {
-          reject(error);
-        } else {
-          //   console.log("results: " + results)
-          resolve(results);
-        }
-      });
+function createStaff(details) {
+  return new Promise((resolve, reject) => {
+    const id = details.id;
+    const fName = details.fName;
+    const lName = details.lName;
+    const dept = details.dept;
+    const country = details.country;
+    const email = details.email;
+    const accessRights = details.accessRights;
+    const password = details.password;
+    const roleName = details.roleName;
+    const query = `INSERT INTO staff (staff_id,staff_FName, staff_LName, dept, country, email, access_rights, password, role_name) VALUES ('${id}','${fName}','${lName}','${dept}','${country}','${email}','${accessRights}',"${password}",'${roleName}');`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
     });
-  }
+  });
+}
 
-module.exports = { findStaff, findStaffFromName, findStaffSkill, listingApplicants };
+function deleteStaff(id) {
+  return new Promise((resolve, reject) => {
+    const query = `DELETE FROM staff WHERE staff_id = ${id};`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+function listingApplicants(listingId) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM staff.staff WHERE staff_id IN (SELECT staff_id FROM role.roles_application WHERE listing_id = ${listingId});`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+
+module.exports = {
+  findStaff,
+  findStaffFromName,
+  findStaffSkill,
+  listingApplicants,
+  createStaff,
+  deleteStaff,
+};
