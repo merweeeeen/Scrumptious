@@ -15,28 +15,29 @@ let con = createConnection();
 con.connect((err) => {
   if (err) {
     console.error("Error connecting to the database:", err);
-    // Handle the error as needed, and then reset the connection
+  }
+});
+
+// Register an error event handler on the connection
+con.on("error", (err) => {
+  if (err.code === "PROTOCOL_CONNECTION_LOST") {
+    console.log("Connection was lost. Reconnecting...");
     resetConnection();
   } else {
-    console.log("Connected to the database");
+    console.error("Database connection error:", err);
   }
 });
 
 function resetConnection() {
-  con.end((err) => {
+  con = createConnection();
+  con.connect((err) => {
     if (err) {
-      console.error("Error closing the connection:", err);
+      console.error("Error reconnecting to the database:", err);
+      // Handle the error, and you may choose to attempt the reset again
+    } else {
+      console.log("Connection reset and re-established successfully");
+      // You can now use the new connection for queries
     }
-    con = createConnection();
-    con.connect((err) => {
-      if (err) {
-        console.error("Error connecting to the database after reset:", err);
-        // Handle the error, and you may choose to attempt the reset again
-      } else {
-        console.log("Connection reset and re-established successfully");
-        // You can now use the new connection for queries
-      }
-    });
   });
 }
 
