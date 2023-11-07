@@ -231,7 +231,6 @@
         let staffinformation = await axios.get(
           `http://localhost:3003/staffid/${staffid}`
         )
-        console.log(staffinformation)
         this.staffInfo = staffinformation.data.body
       },
 
@@ -263,11 +262,9 @@
     },
 
     async mounted() {
-        console.log(this.$route.params.staff_id)
         this.checkAccess()
         await this.getStaff();
         await this.getAppliedListings();
-        console.log(this.appliedListings)
     },
 
   };

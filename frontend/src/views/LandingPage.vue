@@ -97,10 +97,8 @@ export default {
           (listing) =>
             listing._open === 1 && Date.parse(listing._expiry_date) >= Date.now()
         );
-        console.log(this.listings)
       } else {
         this.listings = response.data.body;
-        console.log(this.listings)
       }
     },
     gotoLogin() {
@@ -165,7 +163,6 @@ export default {
       const response = await axios.get(
         `http://localhost:3003/favourite/staff/${this.$store.state.profile._Staff_id}`
       );
-      console.log(response.data.body.body)
       this.listings= response.data.body;
     },
   },

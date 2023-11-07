@@ -49,7 +49,6 @@ export default {
             this.accessRights[this.selected]
           }`
         );
-        console.log(response.data);
         if (response.data.message === "Invalid Access") {
           alert("You are not authorised to use HR profile");
           return;
@@ -60,7 +59,6 @@ export default {
         }
         await this.profile(response.data.body);
 
-        console.log(this.$store.state.profile);
         this.updateExpiredListing();
         this.$router.push("/");
       } catch (err) {

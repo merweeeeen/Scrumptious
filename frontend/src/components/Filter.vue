@@ -178,7 +178,6 @@ export default {
   },
   methods: {
     searchListing() {
-      console.log(this.listing_name);
       this.$emit("searchListing", this.listing_name);
       this.listing_name = "";
     },

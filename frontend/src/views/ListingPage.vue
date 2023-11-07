@@ -377,7 +377,6 @@ export default {
     await this.getRoleSkills();
     await this.getSaved();
     await this.getRelevantApplicants();
-    console.log(this.getRole());
     // await this.getApplicant();
     // this.getFavouriteListings()
     // console.log(this.applicant)

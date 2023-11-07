@@ -245,7 +245,6 @@
 
     async mounted() {
         await this.getAppliedListings();
-        console.log(this.appliedListings)
     },
 
   };
