@@ -20,32 +20,7 @@ const mockAlertPush = vi.fn();
 const mockCommit = vi.fn();
 vi.spyOn(window, "alert").mockImplementation(mockAlertPush);
 
-beforeEach(async () => {
-  console.log("Start Test");
 
-  store = new Vuex.Store({
-    mutations: {
-      profile: mockCommit,
-    },
-  });
-});
-
-afterEach(async () => {
-  mock.restore();
-  console.log(listingIds);
-  for (let i = 0; i < listingIds.length; i++) {
-    console.log(listingIds[i]);
-    await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
-    await axios.delete(`http://127.0.0.1:3003/delete/staff/9999`); //
-  }
-  if (favourite) {
-    await axios.post("http://localhost:3003/favourite/remove", {
-      staffid: profile._Staff_id,
-      listingid: listingIds[listingIds.length - 1].toString(),
-    });
-  }
-  console.log("End Test");
-});
 
 async function mockings(listingDetails, access = 0) {
   const listingId = await createListings(listingDetails);
@@ -99,6 +74,34 @@ async function mockings(listingDetails, access = 0) {
 }
 
 describe("Testing ST3-93", () => {
+  beforeEach(async () => {
+    console.log("Start Test");
+
+    store = new Vuex.Store({
+      mutations: {
+        profile: mockCommit,
+      },
+    });
+  });
+
+  afterEach(async () => {
+    mock.restore();
+    console.log(listingIds);
+    for (let i = 0; i < listingIds.length; i++) {
+      console.log(listingIds[i]);
+      await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
+      await axios.delete(`http://127.0.0.1:3003/delete/staff/9999`); //
+    }
+    if (favourite) {
+      await axios.post("http://localhost:3003/favourite/remove", {
+        staffid: profile._Staff_id,
+        listingid: listingIds[listingIds.length - 1].toString(),
+      });
+    }
+    listingIds = []
+
+    console.log("End Test");
+  });
   test("ST3-93.1.1", async () => {
     let wrapper;
     const listingDetails = {
@@ -183,84 +186,84 @@ describe("Testing ST3-93", () => {
     ).toBe("red");
   });
 
-    test("ST3-93.2.1", async () => {
-      let wrapper;
-      const listingDetails = {
-        listingName: "ST3-93.2.1",
-        roleName: "Software Developer",
-        dept: "IT Support",
-        num_openings: 1,
-      };
-      const mocked = await mockings(listingDetails, 0);
-      const listingId = mocked.listingId;
-      listings = mocked.indivListing;
+  test("ST3-93.2.1", async () => {
+    let wrapper;
+    const listingDetails = {
+      listingName: "ST3-93.2.1",
+      roleName: "Software Developer",
+      dept: "IT Support",
+      num_openings: 1,
+    };
+    const mocked = await mockings(listingDetails, 0);
+    const listingId = mocked.listingId;
+    listings = mocked.indivListing;
 
-      wrapper = mount(Login, {
-        global: {
-          plugins: [store],
-          mocks: {
-            $router: { push: mockRouterPush },
-          },
+    wrapper = mount(Login, {
+      global: {
+        plugins: [store],
+        mocks: {
+          $router: { push: mockRouterPush },
         },
-      });
-
-      await wrapper.setData({
-        staffId: 9999,
-        password: "testpassword",
-        selected: "Staff",
-      });
-      await wrapper.find("#login").trigger("click");
-      await nextTick();
-      await nextTick();
-
-      expect(mockRouterPush).toHaveBeenCalledWith("/");
-      expect(mockCommit).toHaveBeenCalled();
-      expect(mockCommit).toHaveBeenCalledWith(
-        {},
-        {
-          _Access_Rights: "0",
-          _Applications: [],
-          _Country: "SG",
-          _Dept: "IT Support",
-          _Email: "test@gamil.com",
-          _Password: "testpassword",
-          _Role_Name: "Human Resource",
-          _Skills: [],
-          _Staff_FName: "Test",
-          _Staff_LName: "Case",
-          _Staff_id: 9999,
-        }
-      );
-      store = new Vuex.Store({
-        state() {
-          return {
-            profile: {
-              _Access_Rights: "0",
-              _Applications: [],
-              _Country: "SG",
-              _Dept: "IT Support",
-              _Email: "test@gamil.com",
-              _Password: "testpassword",
-              _Role_Name: "Human Resource",
-              _Skills: [],
-              _Staff_FName: "Test",
-              _Staff_LName: "Case",
-              _Staff_id: 9999,
-            },
-          };
-        },
-      });
-      wrapper = mount(LandingPage, {
-        global: {
-          plugins: [store],
-          mocks: {
-            $router: { push: mockRouterPush },
-          },
-        },
-      });
-      const listing = await wrapper.find(`#${listingId}`);
-      expect(listing.exists()).toBe(false);
+      },
     });
+
+    await wrapper.setData({
+      staffId: 9999,
+      password: "testpassword",
+      selected: "Staff",
+    });
+    await wrapper.find("#login").trigger("click");
+    await nextTick();
+    await nextTick();
+
+    expect(mockRouterPush).toHaveBeenCalledWith("/");
+    expect(mockCommit).toHaveBeenCalled();
+    expect(mockCommit).toHaveBeenCalledWith(
+      {},
+      {
+        _Access_Rights: "0",
+        _Applications: [],
+        _Country: "SG",
+        _Dept: "IT Support",
+        _Email: "test@gamil.com",
+        _Password: "testpassword",
+        _Role_Name: "Human Resource",
+        _Skills: [],
+        _Staff_FName: "Test",
+        _Staff_LName: "Case",
+        _Staff_id: 9999,
+      }
+    );
+    store = new Vuex.Store({
+      state() {
+        return {
+          profile: {
+            _Access_Rights: "0",
+            _Applications: [],
+            _Country: "SG",
+            _Dept: "IT Support",
+            _Email: "test@gamil.com",
+            _Password: "testpassword",
+            _Role_Name: "Human Resource",
+            _Skills: [],
+            _Staff_FName: "Test",
+            _Staff_LName: "Case",
+            _Staff_id: 9999,
+          },
+        };
+      },
+    });
+    wrapper = mount(LandingPage, {
+      global: {
+        plugins: [store],
+        mocks: {
+          $router: { push: mockRouterPush },
+        },
+      },
+    });
+    const listing = await wrapper.find(`#${listingId}`);
+    expect(listing.exists()).toBe(false);
+  });
 });
 
 async function createListings(listingDetails) {

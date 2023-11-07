@@ -48,47 +48,6 @@ const routes = [
   },
 ];
 
-beforeEach(async () => {
-  console.log("Start Test");
-
-  originalAxios = axios.get;
-
-  profile = {
-    _Access_Rights: 0,
-    _Country: "SG",
-    _Dept: "Human Resource",
-    _Email: "Ding@gmail.com",
-    _Password: "imaHR",
-    _Skills: ["Computational Problem Solving", "Python"],
-    _Staff_id: 5173,
-    _Applications: [],
-  };
-
-  store = createStore({
-    state() {
-      return {
-        profile,
-      };
-    },
-  });
-
-  router = createRouter({
-    history: createMemoryHistory(),
-    routes,
-  });
-});
-
-afterEach(async () => {
-  axios.get = originalAxios;
-  mock.restore();
-  console.log(listingIds);
-  for (let i = 0; i < listingIds.length; i++) {
-    console.log(listingIds[i]);
-    await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
-  }
-  console.log("End Test");
-});
-
 async function mockings(listingDetails, fav = "") {
   const listingId = await createListings(listingDetails);
   const staffId = profile._Staff_id;
@@ -114,6 +73,48 @@ async function mockings(listingDetails, fav = "") {
 }
 
 describe("Testing ST3-12", () => {
+  beforeEach(async () => {
+    console.log("Start Test");
+
+    originalAxios = axios.get;
+
+    profile = {
+      _Access_Rights: 0,
+      _Country: "SG",
+      _Dept: "Human Resource",
+      _Email: "Ding@gmail.com",
+      _Password: "imaHR",
+      _Skills: ["Computational Problem Solving", "Python"],
+      _Staff_id: 5173,
+      _Applications: [],
+    };
+
+    store = createStore({
+      state() {
+        return {
+          profile,
+        };
+      },
+    });
+
+    router = createRouter({
+      history: createMemoryHistory(),
+      routes,
+    });
+  });
+
+  afterEach(async () => {
+    axios.get = originalAxios;
+    mock.restore();
+    console.log(listingIds);
+    for (let i = 0; i < listingIds.length; i++) {
+      console.log(listingIds[i]);
+      await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
+    }
+    listingIds = []
+
+    console.log("End Test");
+  });
   test("ST3-12.1.1", async () => {
     let wrapper;
     const listingDetails = {

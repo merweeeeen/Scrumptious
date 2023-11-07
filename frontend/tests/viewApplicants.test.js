@@ -49,51 +49,7 @@ const routes = [
   },
 ];
 
-beforeEach(async () => {
-  console.log("Start Test");
 
-  profile = {
-    _Access_Rights: "1",
-    _Country: "SG",
-    _Dept: "Human Resource",
-    _Email: "Ding@gmail.com",
-    _Password: "imaHR",
-    _Skills: ["Computational Problem Solving", "Python"],
-    _Staff_id: 5173,
-    _Applications: [],
-  };
-
-  store = createStore({
-    state() {
-      return {
-        profile,
-      };
-    },
-  });
-
-  router = createRouter({
-    history: createMemoryHistory(),
-    routes,
-  });
-});
-
-afterEach(async () => {
-  mock.restore();
-  for (let i = 0; i < listingIds.length; i++) {
-    await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
-    await axios.delete(
-      `http://127.0.0.1:3003/application/${listingIds[i]}/2222`
-    );
-  }
-  if (favourite) {
-    await axios.post("http://localhost:3003/favourite/remove", {
-      staffid: profile._Staff_id,
-      listingid: listingIds[listingIds.length - 1].toString(),
-    });
-  }
-
-  console.log("End Test");
-});
 
 async function mockings(listingDetails, addApplication = false, fav = false) {
   const listingId = await createListings(listingDetails);
@@ -180,6 +136,52 @@ async function mockings(listingDetails, addApplication = false, fav = false) {
 }
 
 describe("Testing ST3-55", () => {
+  beforeEach(async () => {
+    console.log("Start Test");
+
+    profile = {
+      _Access_Rights: "1",
+      _Country: "SG",
+      _Dept: "Human Resource",
+      _Email: "Ding@gmail.com",
+      _Password: "imaHR",
+      _Skills: ["Computational Problem Solving", "Python"],
+      _Staff_id: 5173,
+      _Applications: [],
+    };
+
+    store = createStore({
+      state() {
+        return {
+          profile,
+        };
+      },
+    });
+
+    router = createRouter({
+      history: createMemoryHistory(),
+      routes,
+    });
+  });
+
+  afterEach(async () => {
+    mock.restore();
+    for (let i = 0; i < listingIds.length; i++) {
+      await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
+      await axios.delete(
+        `http://127.0.0.1:3003/application/${listingIds[i]}/2222`
+      );
+    }
+    if (favourite) {
+      await axios.post("http://localhost:3003/favourite/remove", {
+        staffid: profile._Staff_id,
+        listingid: listingIds[listingIds.length - 1].toString(),
+      });
+    }
+    listingIds = []
+
+    console.log("End Test");
+  });
   test("ST3-55.1.1", async () => {
     let wrapper;
     const listingDetails = {
