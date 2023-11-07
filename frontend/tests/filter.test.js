@@ -14,54 +14,55 @@ let profile;
 let mock;
 let store;
 
-beforeEach(async () => {
-  console.log("Start Test");
 
-  originalAxios = axios.get;
-  response = await axios.get("http://127.0.0.1:3003/listing");
-  profile = {
-    _Access_Rights: 1,
-    _Country: "SG",
-    _Dept: "Human Resource",
-    _Email: "Ding@gmail.com",
-    _Password: "imaHR",
-    _Skills: [
-      "Computational Problem Solving",
-      "JavaScript",
-      "Python",
-      "UI/UX skills",
-    ],
-    _Staff_id: 5173,
-    _Applications: [],
-  };
-
-  store = createStore({
-    state() {
-      return {
-        profile,
-      };
-    },
-  });
-});
-
-afterEach(async () => {
-  axios.get = originalAxios;
-  mock.restore();
-  for (let i = 0; i < listingIds.length; i++) {
-    await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
-  }
-  if (favourite) {
-    await axios.post("http://localhost:3003/favourite/remove", {
-      staffid: profile._Staff_id,
-      listingid: listingIds[listingIds.length - 1].toString(),
-    });
-  }
-  listingIds = [];
-
-  console.log("End Test");
-});
 
 describe("Integration tests", async () => {
+  beforeEach(async () => {
+    console.log("Start Test");
+
+    originalAxios = axios.get;
+    response = await axios.get("http://127.0.0.1:3003/listing");
+    profile = {
+      _Access_Rights: 1,
+      _Country: "SG",
+      _Dept: "Human Resource",
+      _Email: "Ding@gmail.com",
+      _Password: "imaHR",
+      _Skills: [
+        "Computational Problem Solving",
+        "JavaScript",
+        "Python",
+        "UI/UX skills",
+      ],
+      _Staff_id: 5173,
+      _Applications: [],
+    };
+
+    store = createStore({
+      state() {
+        return {
+          profile,
+        };
+      },
+    });
+  });
+
+  afterEach(async () => {
+    axios.get = originalAxios;
+    mock.restore();
+    for (let i = 0; i < listingIds.length; i++) {
+      await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
+    }
+    if (favourite) {
+      await axios.post("http://localhost:3003/favourite/remove", {
+        staffid: profile._Staff_id,
+        listingid: listingIds[listingIds.length - 1].toString(),
+      });
+    }
+    listingIds = [];
+
+    console.log("End Test");
+  });
   test("ST3-8.1.1", async () => {
     // Call the filtered Axios call first since the data is already expected
     const listingDetails = {

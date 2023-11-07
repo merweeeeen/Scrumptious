@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
+server.timeout = 0; // Set to 0 for no timeout
 const cors = require("cors");
-// app.use(cors());
 const port = 3003;
 const bodyParser = require("body-parser");
 // app.use(bodyParser.json());
@@ -15,7 +17,7 @@ const staff = require("./Staff");
 const favourite = require("./Favourite");
 const application = require("./application");
 const ApplicantClass = require("./ApplicationClass");
-// const e = require("express");
+const { Console } = require("console");
 
 var allowedOrigins = ["http://127.0.0.1:5173", "http://localhost:5173"];
 app.use(
@@ -313,7 +315,7 @@ app.put("/updateExpired", async (req, res) => {
       res.status(400).send(response);
       console.error("Error: " + error);
     });
-    console.log("PUT /updateExpired ended");
+  console.log("PUT /updateExpired ended");
 });
 
 /////////////////////////////////////////////////////
@@ -435,6 +437,37 @@ app.get("/login/:staffId/:password/:access", async (req, res) => {
 });
 app.get("/staff/:name", async (req, res) => {
   staff.findStaffFromName(req.params.name).then((results) => {
+    // console.log("Results: ", results);
+    staff.findStaffSkill(results[0].staff_id).then(async (staffSkills) => {
+      const skills = staffSkills.map((staffSkill) => {
+        return staffSkill.skill_name;
+      });
+      const returnStaffClass = new staffClass.Staff(
+        results[0].staff_id,
+        results[0].staff_FName,
+        results[0].staff_LName,
+        results[0].dept,
+        results[0].country,
+        results[0].email,
+        results[0].access_rights,
+        skills,
+        results[0].password,
+        results[0].role_name
+      );
+      await returnStaffClass.updateApplications();
+      const response = {
+        statusCode: 200,
+        body: returnStaffClass,
+        message: "Retrieved Successfully",
+      };
+      res.status(200).send(response);
+      return;
+    });
+  });
+});
+app.get("/staffid/:staff_id", async (req, res) => {
+  console.log("/staffid called " + req.params.staff_id);
+  staff.findStaff(req.params.staff_id).then((results) => {
     // console.log("Results: ", results);
     staff.findStaffSkill(results[0].staff_id).then(async (staffSkills) => {
       const skills = staffSkills.map((staffSkill) => {
@@ -669,7 +702,7 @@ app.post("/application", async (req, res) => {
 app.post("/register", async (req, res) => {
   try {
     console.log("POST /register started");
-    console.log(req.body)
+    console.log(req.body);
     const details = req.body.staffDetails;
     const response = await staff.createStaff(details);
     res
@@ -684,12 +717,14 @@ app.post("/register", async (req, res) => {
 
 app.delete("/delete/staff/:staffId", async (req, res) => {
   try {
+    console.log("DELETE /delete/staff/:staffId started");
     await staff.deleteStaff(req.params.staffId);
     res.status(200).send({ status: 200, message: "Staff Deleted" });
   } catch (error) {
     console.log(error);
     res.status(400).send({ status: 400, message: "Staff Deletion Failed" });
   }
+  console.log("DELETE /delete/staff/:staffId ended");
 });
 
 app.get("/application/staff/:staffId", async (req, res) => {
@@ -823,6 +858,41 @@ app.get("/favourite/staff/:staffId", async (req, res) => {
     console.log("GET /favourite/staff/:staffId ended");
   } catch (error) {
     console.log(error);
+  }
+});
+
+app.post("/staff/skill", async (req, res) => {
+  try {
+    console.log("POST /staff/skill started");
+    const staffId = req.body.staffId;
+    const skills = req.body.skillArray;
+    for (let skill of skills) {
+      const response = await staff_skill.createSkillForStaff({
+        staffId,
+        skillName: skill,
+      });
+    }
+    res.status(200).send({ status: 200, message: "Skill Added" });
+    console.log("POST /staff/skill ended");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.delete("/staff/skill/:staffId/:skill", async (req, res) => {
+  try {
+    console.log("DELETE /staff/skill started");
+    const staffId = req.params.staffId;
+    const skill = req.params.skill;
+    const response = await staff_skill.deleteSkillForStaff({
+      staffId,
+      skillName: skill,
+    });
+
+    res.status(200).send({ status: 200, message: "Skill Deleted" });
+    console.log("DELETE /staff/skill ended");
+  } catch (err) {
+    console.log(err);
   }
 });
 

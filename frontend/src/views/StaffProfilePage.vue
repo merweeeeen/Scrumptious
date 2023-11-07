@@ -194,8 +194,9 @@
     data() {
       return {
         primaryColor: "black",
-        staffInfo: this.$store.state.profile,
+        staffInfo: {},
         appliedListings: [],
+        loginstaff: this.$store.state.profile
       }; 
     },
   
@@ -225,10 +226,18 @@
         });
       },
 
-      async getAppliedListings() {
+      async getStaff(){
+        let staffid = this.$route.params.staff_id
+        let staffinformation = await axios.get(
+          `http://localhost:3003/staffid/${staffid}`
+        )
+        this.staffInfo = staffinformation.data.body
+      },
 
+      async getAppliedListings() {
+        let staffid = this.$route.params.staff_id
         const response = await axios.get(
-          `http://localhost:3003/application/staff/${this.staffInfo._Staff_id}`
+          `http://localhost:3003/application/staff/${staffid}`
         );
         this.appliedListings = response.data.body
       },
@@ -240,10 +249,21 @@
         params: { listing_id: listing._listing_id },
       });
     },
+    checkAccess() {
+      if (this.loginstaff._Access_Rights == 1) {
+        return true;
+      } else {
+        alert("You do not have access to this page");
+        this.$router.push("/");
+        return false;
+      }
+    },
   
     },
 
     async mounted() {
+        this.checkAccess()
+        await this.getStaff();
         await this.getAppliedListings();
     },
 

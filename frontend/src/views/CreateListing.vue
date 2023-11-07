@@ -175,8 +175,6 @@
       axios.get('http://localhost:3003/rs')
       .then(response => {
         this.responseHolder = response.data
-        // console.log(response.data)
-        console.log(this.responseHolder)
         // this.content = this.responseHolder.body[0].role_name
         for (var i = 0; i < this.responseHolder.body.length; i++) {
           // this.content += [this.responseHolder.body[i].rolename]
@@ -189,8 +187,6 @@
             this.listtoskills[this.responseHolder.body[i].role_name] = [this.responseHolder.body[i].skill_name]
           }
         }
-        console.log(this.listtoskills)
-        console.log(this.roleslist)
       })
       .catch(error => {
         console.log(error)
@@ -243,10 +239,8 @@
           open: 1
         }
         // const jsonInfo = JSON.stringify(bodyInfo)
-        console.log(bodyInfo)
         axios.post('http://localhost:3003/listing', bodyInfo)
         .then(response => {
-          console.log(response)
           // alert("Role Listing created successfully!")
           this.dialog = true
           // alert("Role Listing created successfully!" + this.jobtitle + "\n" + this.rolename + "\n" + this.jobdescription + "\n" + this.dept + "\n" + this.vacancies + "\n" + this.country + "\n" + this.expirydate)
