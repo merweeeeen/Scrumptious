@@ -1,6 +1,11 @@
 # Scrumptious
 Scrumptious SPM Project
 
+# Secrets
+1. Create an .env file in backend/monolith
+2. Copy over the variables from the .env.example file into the .env file
+3. Insert respective secrets into the env file
+
 # Backend
 1. Go to the correct directory
 ```
