@@ -1,14 +1,44 @@
 const mysql = require("mysql");
 require("dotenv").config();
-const con = mysql.createConnection({
-  host: process.env["hostname"],
-  user: process.env["user"],
-  password: process.env["password"],
-  database: "staff",
-  connectTimeout: 600000, // Set the connection timeout to 60 seconds (adjust as needed)
+function createConnection() {
+  return mysql.createConnection({
+    host: process.env["hostname"],
+    user: process.env["user"],
+    password: process.env["password"],
+    database: "staff",
+    connectTimeout: 600000
+  });
+}
+
+let con = createConnection();
+
+con.connect((err) => {
+  if (err) {
+    console.error("Error connecting to the database:", err);
+    // Handle the error as needed, and then reset the connection
+    resetConnection();
+  } else {
+    console.log("Connected to the database");
+  }
 });
 
-con.connect();
+function resetConnection() {
+  con.end((err) => {
+    if (err) {
+      console.error("Error closing the connection:", err);
+    }
+    con = createConnection();
+    con.connect((err) => {
+      if (err) {
+        console.error("Error connecting to the database after reset:", err);
+        // Handle the error, and you may choose to attempt the reset again
+      } else {
+        console.log("Connection reset and re-established successfully");
+        // You can now use the new connection for queries
+      }
+    });
+  });
+}
 
 function findStaff(id) {
   return new Promise((resolve, reject) => {
