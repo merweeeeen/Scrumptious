@@ -22,11 +22,13 @@
         </v-col>
         <v-col cols="8">
           <v-autocomplete
+            id = 'rolelistings'
             v-model="rolename"
             variant="outlined"
-            clearable
             :items=this.roleslist
-            placeholder="Select a role"
+            :placeholder="this.roleslist.length == 0 
+              ? 'An error has occurred, please check connection or refresh and try again'
+              : 'Select a role'"
           ></v-autocomplete>
         </v-col>
       </v-row>
@@ -57,6 +59,20 @@
       </v-row>
       <v-row>
         <v-col cols="2" class="contentCenter">
+          <p class="text">Country</p>
+        </v-col>
+        <v-col cols="8">
+          <v-autocomplete
+            v-model="country"
+            variant="outlined"
+            clearable
+            :items='["Singapore","Malaysia","Thailand","Korea","Japan"]'
+            placeholder="Select a country"
+          ></v-autocomplete>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="2" class="contentCenter">
           <p class="text">Department</p>
         </v-col>
         <v-col cols="8">
@@ -79,20 +95,6 @@
             :rules="[v => v.indexOf('.') == -1 && v.indexOf('-')|| 'Please key in a positive whole number only.']"
             v-model="vacancies" type="number" placeholder="Please key in the number of vacancies">
           </v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="2" class="contentCenter">
-          <p class="text">Country</p>
-        </v-col>
-        <v-col cols="8">
-          <v-autocomplete
-            v-model="country"
-            variant="outlined"
-            clearable
-            :items='["Singapore","Malaysia","Thailand","Korea","Japan"]'
-            placeholder="Select a country"
-          ></v-autocomplete>
         </v-col>
       </v-row>
       <v-row>
@@ -190,6 +192,9 @@
       })
       .catch(error => {
         console.log(error)
+        //document.getElementById('rolelistings').placeholder = 'An error has occured, please refresh page'
+        this.errormsg = ['An error has occurred, please refresh the page or try again later.']
+        this.invalid = true;
       })
     },
     isValid(value){
@@ -247,6 +252,8 @@
         })
         .catch(error => {
           console.log(error)
+          this.errormsg = ['Creation of listing was unsuccessful, please refresh the page or try again later.']
+          this.invalid = true;
         })
         
       }
