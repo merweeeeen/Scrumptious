@@ -5,7 +5,7 @@ const con = mysql.createConnection({
   user: process.env["user"],
   password: process.env["password"],
   database: "staff",
-  connectTimeout: 180000, // Set the connection timeout to 60 seconds (adjust as needed)
+  connectTimeout: 600000, // Set the connection timeout to 60 seconds (adjust as needed)
 });
 
 con.connect();
