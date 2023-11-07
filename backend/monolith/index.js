@@ -1,8 +1,9 @@
 const express = require("express");
 const app = express();
-const timeout = require('connect-timeout');
+const http = require('http');
+const server = http.createServer(app);
+server.timeout = 0; // Set to 0 for no timeout
 const cors = require("cors");
-// app.use(cors());
 const port = 3003;
 const bodyParser = require("body-parser");
 // app.use(bodyParser.json());
@@ -17,7 +18,6 @@ const favourite = require("./Favourite");
 const application = require("./application");
 const ApplicantClass = require("./ApplicationClass");
 const { Console } = require("console");
-// const e = require("express");
 
 var allowedOrigins = ["http://127.0.0.1:5173", "http://localhost:5173"];
 app.use(
@@ -37,7 +37,6 @@ app.use(
   }),
   bodyParser.json()
 );
-app.use(timeout(0))
 
 /////////////////////////////////////////////////////
 ///////////////////// TEST //////////////////////////
