@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const timeout = require('connect-timeout');
 const cors = require("cors");
 // app.use(cors());
 const port = 3003;
@@ -36,6 +37,7 @@ app.use(
   }),
   bodyParser.json()
 );
+app.use(timeout(0))
 
 /////////////////////////////////////////////////////
 ///////////////////// TEST //////////////////////////
