@@ -88,7 +88,9 @@ afterEach(async () => {
   axios.get = originalAxios;
   mock.restore();
   for (let i = 0; i < listingIds.length; i++) {
+    console.log(listingIds[i])
     await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
+    await axios.delete(`http://127.0.0.1:3003/application/${listingIds[i]}/1001`); //
   }
   if (favourite) {
     await axios.post("http://localhost:3003/favourite/remove", {
