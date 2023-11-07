@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
+server.timeout = 0; // Set to 0 for no timeout
 const cors = require("cors");
-// app.use(cors());
 const port = 3003;
 const bodyParser = require("body-parser");
 // app.use(bodyParser.json());
@@ -15,7 +17,7 @@ const staff = require("./Staff");
 const favourite = require("./Favourite");
 const application = require("./application");
 const ApplicantClass = require("./ApplicationClass");
-// const e = require("express");
+const { Console } = require("console");
 
 var allowedOrigins = ["http://127.0.0.1:5173", "http://localhost:5173"];
 app.use(
@@ -93,7 +95,15 @@ app.get("/listing", async (req, res) => {
 // THIS IS GET /listing/:listingid? => TO GET ONE ROLE FOR FRONTEND
 app.get("/listing/:listingid?", async (req, res) => {
   console.log("GET /listing/:listingId started");
-  const applicants = await application.getApplicants(req.params.listingid);
+  // const applicants = await application.getApplicants(req.params.listingid).then((a) => {return a.staff_id});
+  // console.log(applicants);
+  // const applicants = await application.getApplicants(req.params.listingid);
+  // const numberOfApplicants = applicants.length;
+  // const profiles = [];
+  // for (let applicant of applicants) {
+  //   const profile = await staff.findStaff(applicant.staff_id);
+  //   profiles.push(profile[0]);
+  // }
   role
     .readOneListing(req.params.listingid)
     .then(async (results) => {
@@ -108,6 +118,8 @@ app.get("/listing/:listingid?", async (req, res) => {
         results[0].open,
         results[0].description,
         results[0].created_date,
+        // profiles,
+        // await staff.findStaff(req.params.listingid),
         await role_skill.readSkillbyRole(results[0].role_name)
       );
       await returnListingClass.updateApplicants();
@@ -185,6 +197,7 @@ app.post("/listing", async (req, res) => {
   // }
   // else{ console.log("No body found")}
 });
+
 app.get("/search/:name", async (req, res) => {
   console.log("GET /search/:name started");
   const filteredResults = await role.readFilteredListing(
@@ -216,6 +229,7 @@ app.get("/search/:name", async (req, res) => {
   res.status(200).send(response);
   console.log("GET /search/:name ended");
 });
+
 app.get("/listing/filter/:filter", async (req, res) => {
   try {
     const filter = JSON.parse(req.params.filter);
@@ -279,6 +293,31 @@ app.get("/listing/filter/:filter", async (req, res) => {
     res.status(400).send(response);
   }
 });
+
+app.put("/updateExpired", async (req, res) => {
+  console.log("PUT /updateExpired started");
+  role
+    .updateExpiredListings()
+    .then((results) => {
+      const response = {
+        statusCode: 200,
+        body: results,
+        message: "Update Expired Listings Successful",
+      };
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      const response = {
+        statusCode: 400,
+        body: error,
+        message: "Update Unsuccessful",
+      };
+      res.status(400).send(response);
+      console.error("Error: " + error);
+    });
+  console.log("PUT /updateExpired ended");
+});
+
 /////////////////////////////////////////////////////
 ////////////// ROLE_SKILL MICROSERVICE //////////////
 /////////////////////////////////////////////////////
@@ -415,7 +454,38 @@ app.get("/staff/:name", async (req, res) => {
         results[0].password,
         results[0].role_name
       );
-      await returnStaffClass.updateApplications()
+      await returnStaffClass.updateApplications();
+      const response = {
+        statusCode: 200,
+        body: returnStaffClass,
+        message: "Retrieved Successfully",
+      };
+      res.status(200).send(response);
+      return;
+    });
+  });
+});
+app.get("/staffid/:staff_id", async (req, res) => {
+  console.log("/staffid called " + req.params.staff_id);
+  staff.findStaff(req.params.staff_id).then((results) => {
+    // console.log("Results: ", results);
+    staff.findStaffSkill(results[0].staff_id).then(async (staffSkills) => {
+      const skills = staffSkills.map((staffSkill) => {
+        return staffSkill.skill_name;
+      });
+      const returnStaffClass = new staffClass.Staff(
+        results[0].staff_id,
+        results[0].staff_FName,
+        results[0].staff_LName,
+        results[0].dept,
+        results[0].country,
+        results[0].email,
+        results[0].access_rights,
+        skills,
+        results[0].password,
+        results[0].role_name
+      );
+      await returnStaffClass.updateApplications();
       const response = {
         statusCode: 200,
         body: returnStaffClass,
@@ -629,6 +699,34 @@ app.post("/application", async (req, res) => {
   }
 });
 
+app.post("/register", async (req, res) => {
+  try {
+    console.log("POST /register started");
+    console.log(req.body);
+    const details = req.body.staffDetails;
+    const response = await staff.createStaff(details);
+    res
+      .status(200)
+      .send({ status: 200, body: response, message: "Staff Created" });
+  } catch (err) {
+    console.log(err);
+    res.status(400).send({ status: 400, message: "Staff Creation Failed" });
+  }
+  console.log("POST /register ended");
+});
+
+app.delete("/delete/staff/:staffId", async (req, res) => {
+  try {
+    console.log("DELETE /delete/staff/:staffId started");
+    await staff.deleteStaff(req.params.staffId);
+    res.status(200).send({ status: 200, message: "Staff Deleted" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ status: 400, message: "Staff Deletion Failed" });
+  }
+  console.log("DELETE /delete/staff/:staffId ended");
+});
+
 app.get("/application/staff/:staffId", async (req, res) => {
   try {
     console.log("GET /application started");
@@ -661,6 +759,140 @@ app.get("/application/staff/:staffId", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(400).send({ status: 400, message: "Retrieval Failed" });
+  }
+});
+
+app.get("/application/getappstaff/:listingId", async (req, res) => {
+  console.log("GET /application/getappstaff/:listingId started");
+  const listingid = req.params.listingId;
+  staff
+    .listingApplicants(listingid)
+    .then(async (response) => {
+      const applicant_array = [];
+      for (let i = 0; i < response.length; i++) {
+        await staff.findStaffSkill(response[i].staff_id).then((staffSkills) => {
+          let skills = staffSkills.map((staffSkill) => {
+            return staffSkill.skill_name;
+          });
+          let returnStaffClass = new staffClass.Staff(
+            response[i].staff_id,
+            response[i].staff_FName,
+            response[i].staff_LName,
+            response[i].dept,
+            response[i].country,
+            response[i].email,
+            response[i].access_rights,
+            skills,
+            response[i].password,
+            response[i].role_name
+          );
+          applicant_array.push(returnStaffClass);
+        });
+      }
+      res.status(200).send({
+        status: 200,
+        body: applicant_array,
+        message: "Applicants Retrieved",
+      });
+      console.log("GET /application/getappstaff/:listingId ended");
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).send({ status: 400, message: "Retrieval Failed" });
+    });
+});
+
+app.delete("/application/:listingId/:staffId", async (req, res) => {
+  console.log("DELETE /application started");
+  const listingId = req.params.listingId;
+  const staffId = req.params.staffId;
+  application
+    .deleteApplication(staffId, listingId)
+    .then((results) => {
+      const response = {
+        statusCode: 200,
+        body: results,
+        message: "Deleted Successfully",
+      };
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      const response = {
+        statusCode: 400,
+        body: error,
+        message: "Deletion Unsuccessful",
+      };
+      res.status(400).send(response);
+    });
+  console.log("DELETE /application ended");
+});
+
+app.get("/favourite/staff/:staffId", async (req, res) => {
+  try {
+    console.log("GET /favourite/staff/:staffId started");
+    const staffid = req.params.staffId;
+    const response = await role.getFavouriteByStaffId(staffid);
+    const favArray = [];
+    for (let result of response) {
+      const returnListingClass = new listingClass.RoleListing(
+        result.listing_id,
+        result.listing_name,
+        result.role_name,
+        result.dept,
+        result.country,
+        result.num_openings,
+        result.expiry_date,
+        result.open,
+        result.description,
+        result.created_date,
+        await role_skill.readSkillbyRole(result.role_name)
+      );
+      await returnListingClass.updateApplicants();
+      favArray.push(returnListingClass);
+    }
+    res.status(200).send({
+      statusCode: 200,
+      body: favArray,
+      message: "Retrieved Successfully",
+    });
+    console.log("GET /favourite/staff/:staffId ended");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post("/staff/skill", async (req, res) => {
+  try {
+    console.log("POST /staff/skill started");
+    const staffId = req.body.staffId;
+    const skills = req.body.skillArray;
+    for (let skill of skills) {
+      const response = await staff_skill.createSkillForStaff({
+        staffId,
+        skillName: skill,
+      });
+    }
+    res.status(200).send({ status: 200, message: "Skill Added" });
+    console.log("POST /staff/skill ended");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.delete("/staff/skill/:staffId/:skill", async (req, res) => {
+  try {
+    console.log("DELETE /staff/skill started");
+    const staffId = req.params.staffId;
+    const skill = req.params.skill;
+    const response = await staff_skill.deleteSkillForStaff({
+      staffId,
+      skillName: skill,
+    });
+
+    res.status(200).send({ status: 200, message: "Skill Deleted" });
+    console.log("DELETE /staff/skill ended");
+  } catch (err) {
+    console.log(err);
   }
 });
 

@@ -12,6 +12,7 @@
             @searchStaff="searchStaff"
             @filter="filterFunction"
             @reset="reset"
+            @getFavourites="getFavourites"
           ></Filter>
         </v-col>
         <v-col>
@@ -22,7 +23,8 @@
               :id="listing._listing_name"
             >
               <ListingCard
-                :roleName="listing._listing_name"
+                :roleName="listing._role_name"
+                :listingName="listing._listing_name"
                 :roleId="listing._listing_id"
                 :Department="listing._dept"
                 :num_openings="listing._num_openings"
@@ -93,7 +95,7 @@ export default {
       if (this.$store.state.profile._Access_Rights === "0") {
         this.listings = response.data.body.filter(
           (listing) =>
-            listing._open === 1 && Date.parse(listing._expiry_date) > Date.now()
+            listing._open === 1 && Date.parse(listing._expiry_date) >= Date.now()
         );
       } else {
         this.listings = response.data.body;
@@ -156,6 +158,12 @@ export default {
         name: "ListingPage",
         params: { listing_id: listing._listing_id },
       });
+    },
+    async getFavourites() {
+      const response = await axios.get(
+        `http://localhost:3003/favourite/staff/${this.$store.state.profile._Staff_id}`
+      );
+      this.listings= response.data.body;
     },
   },
   async created() {

@@ -54,50 +54,7 @@ const routes = [
   },
 ];
 
-beforeEach(async () => {
-  console.log("Start Test");
 
-  originalAxios = axios.get;
-
-  profile = {
-    _Access_Rights: '1',
-    _Country: "SG",
-    _Dept: "Human Resource",
-    _Email: "Ding@gmail.com",
-    _Password: "imaHR",
-    _Skills: ["Computational Problem Solving", "Python"],
-    _Staff_id: 5173,
-    _Applications: []
-  };
-
-  store = createStore({
-    state() {
-      return {
-        profile,
-      };
-    },
-  });
-
-  router = createRouter({
-    history: createMemoryHistory(),
-    routes,
-  });
-});
-
-afterEach(async () => {
-  axios.get = originalAxios;
-  mock.restore();
-  for (let i = 0; i < listingIds.length; i++) {
-    await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
-  }
-  if (favourite) {
-    await axios.post("http://localhost:3003/favourite/remove", {
-      staffid: profile._Staff_id,
-      listingid: listingIds[listingIds.length - 1].toString(),
-    });
-  }
-  console.log("End Test");
-});
 
 async function mockings(listingDetails, bodyInfo = "", fav = "") {
   const listingId = await createListings(listingDetails);
@@ -132,6 +89,9 @@ async function mockings(listingDetails, bodyInfo = "", fav = "") {
   }
 
   mock = new MockAdapter(axios);
+  mock
+    .onGet(`http://localhost:3003/application/getappstaff/${listingId}`)
+    .reply(200, { body: [] });
   mock
     .onGet(`http://localhost:3003/listing`)
     .reply(200, { body: [indivListing.data.body] });
@@ -182,6 +142,52 @@ async function mockings(listingDetails, bodyInfo = "", fav = "") {
 }
 
 describe("Testing ST3-13", () => {
+  beforeEach(async () => {
+    console.log("Start Test");
+
+    originalAxios = axios.get;
+
+    profile = {
+      _Access_Rights: "1",
+      _Country: "SG",
+      _Dept: "Human Resource",
+      _Email: "Ding@gmail.com",
+      _Password: "imaHR",
+      _Skills: ["Computational Problem Solving", "Python"],
+      _Staff_id: 5173,
+      _Applications: [],
+    };
+
+    store = createStore({
+      state() {
+        return {
+          profile,
+        };
+      },
+    });
+
+    router = createRouter({
+      history: createMemoryHistory(),
+      routes,
+    });
+  });
+
+  afterEach(async () => {
+    axios.get = originalAxios;
+    mock.restore();
+    for (let i = 0; i < listingIds.length; i++) {
+      await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
+    }
+    if (favourite) {
+      await axios.post("http://localhost:3003/favourite/remove", {
+        staffid: profile._Staff_id,
+        listingid: listingIds[listingIds.length - 1].toString(),
+      });
+    }
+    listingIds = []
+
+    console.log("End Test");
+  });
   test("ST3-13.1.1", async () => {
     let wrapper;
     const listingDetails = {
@@ -324,7 +330,6 @@ describe("Testing ST3-13", () => {
     await wrapper.vm.$router.isReady();
     await nextTick();
     expect(wrapper.vm.$route.path).toBe("/listing/" + listingId); // Testing whether the Route has been called and parsed
-
     wrapper = mount(ListingPage, {
       // Mounting the new ListingPage
       global: {
@@ -379,6 +384,11 @@ describe("Testing ST3-13", () => {
       global: {
         plugins: [store, router, vuetify],
       },
+      data() {
+        return {
+          listings: listings.data.body,
+        };
+      },
     });
     await nextTick();
     await wrapper.vm.listings;
@@ -391,7 +401,7 @@ describe("Testing ST3-13", () => {
     await wrapper.vm.$router.isReady();
     await nextTick();
     expect(wrapper.vm.$route.path).toBe("/listing/" + listingId); // Testing whether the Route has been called and parsed
-    wrapper = mount(ListingPage, {
+    wrapper = await mount(ListingPage, {
       // Mounting the new ListingPage
       global: {
         plugins: [store, router, vuetify],
@@ -1184,6 +1194,9 @@ async function remock(mocked, listingDetails) {
   const getAllRoleSkills = mocked.getAllRoleSkills;
 
   mock = new MockAdapter(axios);
+  mock
+    .onGet(`http://localhost:3003/application/getappstaff/${mocked.listingId}`)
+    .reply(200, { body: [] });
   mock
     .onGet(`http://localhost:3003/listing`)
     .reply(200, { body: [indivListing.data.body] });

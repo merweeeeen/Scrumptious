@@ -23,8 +23,9 @@
                       </p>
                     </v-col>
 
-                    <v-col class="d-flex align-center py-0 h-100"
-                    v-if="this.$store.state.profile._Access_Rights == 0"
+                    <v-col
+                      class="d-flex align-center py-0 h-100"
+                      v-if="this.$store.state.profile._Access_Rights == 0"
                     >
                       <v-icon
                         class="align-center w-100 justify-end"
@@ -51,7 +52,7 @@
                   </p>
                   <p class="text-h7 text--primary" id="vacancyAndApplicants">
                     {{ listing._num_openings }} Openings |
-                    {{ applicants }} Applicant(s)
+                    {{ applicants.length }} Applicant(s)
                   </p>
                   <p class="text-h7 text--primary" id="country">
                     Country: {{ listing._country }}
@@ -121,22 +122,96 @@
                   </p>
                   <br />
                   <p class="text-h6 text--primary">Skills Required</p>
-                  <v-chip
-                    v-for="skill in listingSkills"
-                    class="ma-1"
-                    variant="tonal"
-                    :color="
-                      employeeSkills.includes(skill)
-                        ? 'green-darken-3'
-                        : 'default'
-                    "
-                    :id="skill"
-                  >
-                    {{ skill }}
-                  </v-chip>
+                  <div v-if="getRole()">
+                    <v-chip
+                      v-for="skill in listingSkills"
+                      class="ma-1"
+                      variant="tonal"
+                      :color="
+                        employeeSkills.includes(skill)
+                          ? 'green-darken-3'
+                          : 'default'
+                      "
+                      :id="skill"
+                    >
+                      {{ skill }}
+                    </v-chip>
+                  </div>
+                  <div v-else>
+                    <v-chip
+                      v-for="skill in listingSkills"
+                      class="ma-1"
+                      variant="tonal"
+                      :id="skill"
+                    >
+                      {{ skill }}
+                    </v-chip>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-col>
+          </v-row>
+
+          <v-row class="ma-0 w-100" v-if="getRole() === false">
+            <v-col class="pb-0">
+              <p class="text-h6 text--primary">Applicants</p>
+            </v-col>
+          </v-row>
+
+          <div v-if="getRole() === false && applicants.length != 0">
+            <v-row
+              class="ma-0 w-100"
+              v-for="applicant in applicants"
+              :id="applicant._Staff_id"
+            >
+              <v-col class="pb-0">
+                <v-card width="100%" color="black" variant="outlined" @click.native="gotoProfile(applicant._Staff_id)" id="click">
+                  <v-card-text>
+                    <p class="text-h5 text--primary" id="staffName">
+                      <em
+                        >{{ applicant._Staff_FName }}
+                        {{ applicant._Staff_LName }}</em
+                      >
+                    </p>
+                    <p class="text-h7 text--primary" id="staffIdAndEmail">
+                      <!-- {{ listing._desc }} -->
+                      Staff ID: {{ applicant._Staff_id }}
+                      <br />
+                      Email: {{ applicant._Email }}
+                    </p>
+                    <!-- <br /> -->
+                    <p class="text-h7 text--primary">
+                      <b>Applicant's Skills:</b>
+                    </p>
+                    <v-chip
+                      v-for="skill in applicant._Skills"
+                      class="ma-1"
+                      variant="tonal"
+                      :color="
+                        listingSkills.includes(skill)
+                          ? 'green-darken-3'
+                          : 'default'
+                      "
+                      :id="skill"
+                    >
+                      {{ skill }}
+                    </v-chip>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </div>
+          <v-row v-else-if="getRole() === false && applicants.length == 0">
+            <v-col
+              style="
+                background-color: rgb(241, 249, 241);
+                border-radius: 10px;
+                margin: 0px 20px;
+              "
+              ><p style="margin-left: 10px">
+                <em style="colour: rgb(174, 174, 174)">No Applicants Yet.</em>
+              </p></v-col
+            >
           </v-row>
         </v-container>
       </div>
@@ -165,21 +240,26 @@ export default {
       listingSkills: [],
       primaryColor: "black",
       employeeSkills: this.$store.state.profile._Skills,
-      savedListings: ["12", "13", "14"],
       saved: false,
       staffid: this.$store.state.profile._Staff_id,
       profile: this.$store.state.profile,
-      applicants: 0,
+      applicants: [], //list of users who applied
     };
   },
 
   methods: {
+    // async getApplicant() {
+    //   const response = await axios.get(
+    //     `http://localhost:3003/staff/${this.$store.state.profile._Staff_id}`
+    //   );
+    //   this.applicant = response.data.body;
+    // },
+
     async getListing() {
       const response = await axios.get(
         `http://localhost:3003/listing/${this.listing_id}`
       );
       this.listing = response.data.body;
-      this.applicants = response.data.body._applicants.length;
     },
 
     async getRoleSkills() {
@@ -199,6 +279,13 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+
+    async getRelevantApplicants() {
+      const response = await axios.get(
+        `http://localhost:3003/application/getappstaff/${this.listing_id}`
+      );
+      this.applicants = response.data.body;
     },
 
     days_posted(created_at) {
@@ -266,14 +353,22 @@ export default {
             this.saved = false;
           })
           .catch(console.log("error"));
-        // console.log(this.savedListings)
       }
     },
     getRole() {
       if (this.$store.state.profile._Access_Rights === "1") {
+        //this is HR
+
         return false;
       }
       return true;
+    },
+    gotoProfile(staffId) {
+      // this.$router.push('/' + listing.id)
+      this.$router.push({
+        name: "StaffProfilePage",
+        params: { staff_id: staffId },
+      });
     },
   },
 
@@ -281,6 +376,10 @@ export default {
     await this.getListing();
     await this.getRoleSkills();
     await this.getSaved();
+    await this.getRelevantApplicants();
+    // await this.getApplicant();
+    // this.getFavouriteListings()
+    // console.log(this.applicant)
   },
 };
 </script>

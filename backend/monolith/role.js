@@ -1,14 +1,45 @@
 const mysql = require("mysql");
 require("dotenv").config();
-const con = mysql.createConnection({
-  host: process.env["hostname"],
-  user: process.env["user"],
-  password: process.env["password"],
-  database: "role",
-  connectTimeout: 60000, // Set the connection timeout to 60 seconds (adjust as needed)
+function createConnection() {
+  return mysql.createConnection({
+    host: process.env["hostname"],
+    user: process.env["user"],
+    password: process.env["password"],
+    database: "role",
+    connectTimeout: 600000
+  });
+}
+
+let con = createConnection();
+
+con.connect((err) => {
+  if (err) {
+    console.error("Error connecting to the database:", err);
+  }
 });
 
-con.connect();
+// Register an error event handler on the connection
+con.on("error", (err) => {
+  if (err.code === "PROTOCOL_CONNECTION_LOST") {
+    console.log("Connection was lost. Reconnecting...");
+    resetConnection();
+  } else {
+    console.error("Database connection error:", err);
+  }
+});
+
+function resetConnection() {
+  con = createConnection();
+  con.connect((err) => {
+    if (err) {
+      console.error("Error reconnecting to the database:", err);
+      // Handle the error, and you may choose to attempt the reset again
+    } else {
+      console.log("Connection reset and re-established successfully");
+      // You can now use the new connection for queries
+    }
+  });
+}
 
 async function readAllListing() {
   return new Promise((resolve, reject) => {
@@ -69,6 +100,25 @@ function updateListing(theBody,listingid) {
             resolve(results);
         }
       });
+  })
+}
+
+// PUT, updates all listings that are expired to have open=0 from open=1
+function updateExpiredListings(){
+  return new Promise((resolve,reject) => {
+    const closedstatus = 0;
+    const openstatus = 1;
+    const query = `UPDATE listing SET open=${closedstatus} WHERE expiry_date < current_date() AND open=${openstatus}`;
+    
+    con.query(query, function(error,results,fields) {
+      if (error) {
+        console.log("Error updating listings to closed");
+        reject(error);
+      } else {
+        console.log(`Updated ${results.affectedRows} rows.`);
+        resolve();
+      }
+    })
   })
 }
 
@@ -183,6 +233,19 @@ function deleteListing(listingId) {
   });
 }
 
+function getFavouriteByStaffId(staffid) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM listing WHERE listing_id IN (select listing_id from favourite WHERE staff_id = ${staffid});`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
 
 module.exports = {
   readAllListing,
@@ -194,4 +257,6 @@ module.exports = {
   removeFavourite,
   deleteListing,
   readFilteredListing,
+  getFavouriteByStaffId,
+  updateExpiredListings
 };

@@ -1,14 +1,45 @@
 const mysql = require("mysql");
 require("dotenv").config();
-const con = mysql.createConnection({
-  host: process.env["hostname"],
-  user: process.env["user"],
-  password: process.env["password"],
-  database: "staff",
-  connectTimeout: 60000, // Set the connection timeout to 60 seconds (adjust as needed)
+function createConnection() {
+  return mysql.createConnection({
+    host: process.env["hostname"],
+    user: process.env["user"],
+    password: process.env["password"],
+    database: "staff",
+    connectTimeout: 600000
+  });
+}
+
+let con = createConnection();
+
+con.connect((err) => {
+  if (err) {
+    console.error("Error connecting to the database:", err);
+  }
 });
 
-con.connect();
+// Register an error event handler on the connection
+con.on("error", (err) => {
+  if (err.code === "PROTOCOL_CONNECTION_LOST") {
+    console.log("Connection was lost. Reconnecting...");
+    resetConnection();
+  } else {
+    console.error("Database connection error:", err);
+  }
+});
+
+function resetConnection() {
+  con = createConnection();
+  con.connect((err) => {
+    if (err) {
+      console.error("Error reconnecting to the database:", err);
+      // Handle the error, and you may choose to attempt the reset again
+    } else {
+      console.log("Connection reset and re-established successfully");
+      // You can now use the new connection for queries
+    }
+  });
+}
 
 function findStaff(id) {
   return new Promise((resolve, reject) => {
@@ -39,17 +70,74 @@ function findStaffFromName(name) {
 }
 
 function findStaffSkill(id) {
-    return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM staff_skill WHERE staff_id = ${id};`;
-      con.query(query, function (error, results, fields) {
-        if (error) {
-          reject(error);
-        } else {
-          //   console.log("results: " + results)
-          resolve(results);
-        }
-      });
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM staff_skill WHERE staff_id = ${id};`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
     });
-  }
+  });
+}
 
-module.exports = { findStaff, findStaffFromName, findStaffSkill };
+function createStaff(details) {
+  return new Promise((resolve, reject) => {
+    const id = details.id;
+    const fName = details.fName;
+    const lName = details.lName;
+    const dept = details.dept;
+    const country = details.country;
+    const email = details.email;
+    const accessRights = details.accessRights;
+    const password = details.password;
+    const roleName = details.roleName;
+    const query = `INSERT INTO staff (staff_id,staff_FName, staff_LName, dept, country, email, access_rights, password, role_name) VALUES ('${id}','${fName}','${lName}','${dept}','${country}','${email}','${accessRights}',"${password}",'${roleName}');`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+
+function deleteStaff(id) {
+  return new Promise((resolve, reject) => {
+    const query = `DELETE FROM staff WHERE staff_id = ${id};`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+function listingApplicants(listingId) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM staff.staff WHERE staff_id IN (SELECT staff_id FROM role.roles_application WHERE listing_id = ${listingId});`;
+    con.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        //   console.log("results: " + results)
+        resolve(results);
+      }
+    });
+  });
+}
+
+module.exports = {
+  findStaff,
+  findStaffFromName,
+  findStaffSkill,
+  listingApplicants,
+  createStaff,
+  deleteStaff,
+};

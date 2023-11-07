@@ -14,43 +14,44 @@ let profile;
 let mock;
 const mockRouterPush = vi.fn();
 
-beforeEach(async () => {
-  console.log("Start Test");
-
-  originalAxios = axios.get;
-  profile = {
-    _Access_Rights: 0,
-    _Country: "SG",
-    _Dept: "Finance",
-    _Email: "johndoe@gmail.com",
-    _Password: "imaStaff",
-    _Skills: ["Adaptability", "Microsoft Excel"],
-    _Staff_id: 1001,
-    _Staff_FName: "John",
-    _Staff_LName: "Doe",
-    _Role_Name: "Accountant",
-    _Applications: [],
-  };
-
-  store = createStore({
-    state() {
-      return {
-        profile,
-      };
-    },
-  });
-});
-
-afterEach(async () => {
-  axios.get = originalAxios;
-  mock.restore();
-  for (let i = 0; i < listingIds.length; i++) {
-    await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
-  }
-  console.log("End Test");
-});
-
 describe("Integration tests", async () => {
+  beforeEach(async () => {
+    console.log("Start Test");
+
+    originalAxios = axios.get;
+    profile = {
+      _Access_Rights: 0,
+      _Country: "SG",
+      _Dept: "Finance",
+      _Email: "johndoe@gmail.com",
+      _Password: "imaStaff",
+      _Skills: ["Adaptability", "Microsoft Excel"],
+      _Staff_id: 1001,
+      _Staff_FName: "John",
+      _Staff_LName: "Doe",
+      _Role_Name: "Accountant",
+      _Applications: [],
+    };
+
+    store = createStore({
+      state() {
+        return {
+          profile,
+        };
+      },
+    });
+  });
+
+  afterEach(async () => {
+    axios.get = originalAxios;
+    mock.restore();
+    for (let i = 0; i < listingIds.length; i++) {
+      await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
+    }
+    listingIds = []
+
+    console.log("End Test");
+  });
   test("ST3-37.1.1", async () => {
     // Call the filtered Axios call first since the data is already expected
     const listingDetails = {
@@ -145,7 +146,7 @@ describe("Integration tests", async () => {
     await nextTick();
     const listingCard = await wrapper.find(`#${listingId}`);
     expect(listingCard.exists()).toBe(true);
-    expect(listingCard.find("#roleName").text()).toBe("ST3-41.1.1");
+    expect(listingCard.find("#roleName").text()).toBe("Software Developer");
 
     const deptAndOpenings = await listingCard.find(`#deptAndOpenings`);
     expect(deptAndOpenings.text()).toBe("IT Support | 1 Opening(s)");

@@ -33,6 +33,7 @@ let store;
 let mock;
 let listings;
 let favourite;
+let applicationIds = [];
 const mockRouterPush = vi.fn();
 
 const routes = [
@@ -50,16 +51,33 @@ const routes = [
 
 
 
-async function mockings(listingDetails, fav = false) {
+async function mockings(listingDetails, addApplication = false, fav = false) {
   const listingId = await createListings(listingDetails);
   const staffId = profile._Staff_id;
   listingIds.push(listingId);
-  listings = await axios.get("http://127.0.0.1:3003/listing");
-
   const indivListing = await axios.get(
     `http://127.0.0.1:3003/listing/${listingId}`
   );
-  // console.log(indivListing);
+
+  const applicationId = await axios.post("http://127.0.0.1:3003/application", {
+    listingId: listingId,
+    staffId: "2222",
+    writeUp: "TestCase",
+  });
+  applicationIds.push(applicationId.data.body.insertId);
+
+  if (addApplication) {
+    applicationIds.push(
+      (
+        await axios.post("http://127.0.0.1:3003/application", {
+          listingId: listingId,
+          staffId: "3333",
+          writeUp: "TestCase",
+        })
+      ).data.body.insertId
+    );
+  }
+
   const getSaved = await axios.get(
     `http://127.0.0.1:3003/favourite/read/${profile._Staff_id}/${listingId}`
   );
@@ -68,12 +86,15 @@ async function mockings(listingDetails, fav = false) {
     `http://127.0.0.1:3003/rs/${listingDetails.roleName}`
   );
 
+  const getRelevantApplicants = await axios.get(
+    `http://127.0.0.1:3003/application/getappstaff/${listingId}`
+  );
+
   if (fav) {
     favourite = await axios.post(`http://localhost:3003/favourite/add`, {
       staffid: staffId,
       listingid: listingId,
     });
-    console.log("favourite", favourite.data);
   }
 
   mock = new MockAdapter(axios);
@@ -109,18 +130,17 @@ async function mockings(listingDetails, fav = false) {
 
   mock
     .onGet(`http://localhost:3003/application/getappstaff/${listingId}`)
-    .reply(200, { body: [] });
+    .reply(200, { body: getRelevantApplicants.data.body });
 
-  return { listings, listingId: listingId };
+  return { indivListing, listingId: listingId };
 }
 
-describe("Testing ST3-16", () => {
-
+describe("Testing ST3-55", () => {
   beforeEach(async () => {
     console.log("Start Test");
 
     profile = {
-      _Access_Rights: 0,
+      _Access_Rights: "1",
       _Country: "SG",
       _Dept: "Human Resource",
       _Email: "Ding@gmail.com",
@@ -146,10 +166,11 @@ describe("Testing ST3-16", () => {
 
   afterEach(async () => {
     mock.restore();
-    console.log(listingIds);
     for (let i = 0; i < listingIds.length; i++) {
-      console.log(listingIds[i]);
       await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
+      await axios.delete(
+        `http://127.0.0.1:3003/application/${listingIds[i]}/2222`
+      );
     }
     if (favourite) {
       await axios.post("http://localhost:3003/favourite/remove", {
@@ -161,10 +182,10 @@ describe("Testing ST3-16", () => {
 
     console.log("End Test");
   });
-  test("ST3-16.1.1", async () => {
+  test("ST3-55.1.1", async () => {
     let wrapper;
     const listingDetails = {
-      listingName: "ST3-16.1.1",
+      listingName: "ST3-55.1.1",
       roleName: "Software Developer",
       dept: "IT Support",
       num_openings: 1,
@@ -172,38 +193,48 @@ describe("Testing ST3-16", () => {
 
     const mock = await mockings(listingDetails);
     const listingId = mock.listingId;
-    listings = mock.listings;
+    listings = mock.indivListing;
     wrapper = mount(LandingPage, {
       global: {
         plugins: [store, router, vuetify],
+        mocks: {
+          $router: {
+            push: mockRouterPush,
+          },
+        },
       },
       data() {
         return {
-          listings: listings.data.body,
+          listings: [listings.data.body],
         };
       },
     });
     const listing = await wrapper.find(`#${listingId}`);
     expect(listing.exists()).toBe(true);
     await wrapper.find(`#${listingId}`).trigger("click");
-    await wrapper.vm.$router.push({
+    expect(mockRouterPush).toHaveBeenCalledWith({
       name: "ListingPage",
       params: { listing_id: listingId },
     });
-    await wrapper.vm.$router.isReady();
-    await nextTick();
-    expect(wrapper.vm.$route.path).toBe("/listing/" + listingId); // Testing whether the Route has been called and parsed
-
     wrapper = mount(ListingPage, {
       // Mounting the new ListingPage
       global: {
-        plugins: [store, router, vuetify],
+        plugins: [store, vuetify],
+        mocks: {
+          $router: {
+            push: mockRouterPush,
+          },
+          $route: {
+            params: { listing_id: listingId },
+          },
+        },
       },
     });
+    await nextTick();
     const listingName = await wrapper.find(`#listingName`);
     await nextTick();
     await wrapper.vm.listing;
-    expect(listingName.text()).toBe("ST3-16.1.1");
+    expect(listingName.text()).toBe("ST3-55.1.1");
 
     const description = await wrapper.find(`#desc`);
     expect(description.text()).toBe("TestCase");
@@ -224,126 +255,10 @@ describe("Testing ST3-16", () => {
     expect(createdDate.text()).toContain("Posted today");
   });
 
-  test("ST3-16.2.1", async () => {
+  test("ST3-55.2.1", async () => {
     let wrapper;
     const listingDetails = {
-      listingName: "ST3-16.2.1",
-      roleName: "Software Developer",
-      dept: "IT Support",
-      num_openings: 1,
-    };
-
-    const mock = await mockings(listingDetails);
-    const listingId = mock.listingId;
-    listings = mock.listings;
-    wrapper = mount(LandingPage, {
-      global: {
-        plugins: [store, router, vuetify],
-      },
-      data() {
-        return {
-          listings: listings.data.body,
-        };
-      },
-    });
-
-    const listing = await wrapper.find(`#${listingId}`);
-    expect(listing.exists()).toBe(true);
-    await wrapper.find(`#${listingId}`).trigger("click");
-
-    await wrapper.vm.$router.push({
-      name: "ListingPage",
-      params: { listing_id: listingId },
-    });
-    await wrapper.vm.$router.isReady();
-    await nextTick();
-    expect(wrapper.vm.$route.path).toBe("/listing/" + listingId); // Testing whether the Route has been called and parsed
-
-    wrapper = mount(ListingPage, {
-      // Mounting the new ListingPage
-      global: {
-        plugins: [store, router, vuetify],
-      },
-    });
-    await nextTick();
-    await wrapper.vm.listing;
-    await wrapper.vm.listingSkills;
-    await nextTick();
-    await nextTick();
-    await nextTick();
-    const js = await wrapper.find(`#JavaScript`);
-    expect(js.attributes("color")).toBe("default");
-
-    const python = await wrapper.find(`#Python`);
-    expect(python.attributes("color")).toBe("green-darken-3");
-  });
-
-  test("ST3-16.3.1", async () => {
-    let wrapper;
-    const listingDetails = {
-      listingName: "ST3-16.3.1",
-      roleName: "Software Developer",
-      dept: "IT Support",
-      num_openings: 1,
-    };
-
-    const mock = await mockings(listingDetails);
-    const listingId = mock.listingId;
-    listings = mock.listings;
-    wrapper = mount(LandingPage, {
-      global: {
-        plugins: [store, router, vuetify],
-      },
-      data() {
-        return {
-          listings: listings.data.body,
-        };
-      },
-    });
-
-    const listing = await wrapper.find(`#${listingId}`);
-    expect(listing.exists()).toBe(true);
-    await wrapper.find(`#${listingId}`).trigger("click");
-
-    await wrapper.vm.$router.push({
-      name: "ListingPage",
-      params: { listing_id: listingId },
-    });
-    await wrapper.vm.$router.isReady();
-    await nextTick();
-    expect(wrapper.vm.$route.path).toBe("/listing/" + listingId); // Testing whether the Route has been called and parsed
-
-    wrapper = mount(ListingPage, {
-      // Mounting the new ListingPage
-      global: {
-        plugins: [store, router, vuetify],
-      },
-    });
-    await nextTick();
-    await wrapper.vm.listing;
-    await wrapper.vm.listingSkills;
-    await nextTick();
-    await nextTick();
-    await nextTick();
-    const js = await wrapper.find(`#JavaScript`);
-    expect(js.exists()).toBe(true);
-
-    const compThinking = await wrapper.find(
-      `[id="Computational Problem Solving"]`
-    );
-    expect(compThinking.exists()).toBe(true);
-
-    const uiux = await wrapper.find(`[id="UI/UX skills"]`);
-    expect(uiux.exists()).toBe(true);
-
-    const python = await wrapper.find(`#Python`);
-    expect(python.exists()).toBe(true);
-  });
-
-  test("ST3-16.4.1", async () => {
-    let wrapper;
-    const listingDetails = {
-      listingName: "ST3-16.4.1",
+      listingName: "ST3-55.2.1",
       roleName: "Software Developer",
       dept: "IT Support",
       num_openings: 1,
@@ -351,11 +266,11 @@ describe("Testing ST3-16", () => {
 
     const mock = await mockings(listingDetails, true);
     const listingId = mock.listingId;
-    listings = mock.listings;
+    listings = mock.indivListing;
     wrapper = mount(LandingPage, {
       global: {
         plugins: [store, router, vuetify],
-        mock: {
+        mocks: {
           $router: {
             push: mockRouterPush,
           },
@@ -363,40 +278,181 @@ describe("Testing ST3-16", () => {
       },
       data() {
         return {
-          listings: listings.data.body,
+          listings: [listings.data.body],
         };
       },
     });
-
     const listing = await wrapper.find(`#${listingId}`);
     expect(listing.exists()).toBe(true);
     await wrapper.find(`#${listingId}`).trigger("click");
-
-    await wrapper.vm.$router.push({
+    expect(mockRouterPush).toHaveBeenCalledWith({
       name: "ListingPage",
       params: { listing_id: listingId },
     });
-    await wrapper.vm.$router.isReady();
-    await nextTick();
-    expect(wrapper.vm.$route.path).toBe("/listing/" + listingId); // Testing whether the Route has been called and parsed
-
     wrapper = mount(ListingPage, {
       // Mounting the new ListingPage
       global: {
-        plugins: [store, router, vuetify],
+        plugins: [store, vuetify],
+        mocks: {
+          $router: {
+            push: mockRouterPush,
+          },
+          $route: {
+            params: { listing_id: listingId },
+          },
+        },
       },
     });
     await nextTick();
-    await wrapper.vm.listing;
-    await wrapper.vm.listingSkills;
     await nextTick();
     await nextTick();
     await nextTick();
-    await wrapper.find(`#notSaved`).trigger("click");
-    await wrapper.setData({ saved: true });
     await nextTick();
-    const saved = await wrapper.find(`#saved`);
-    expect(saved.exists()).toBe(true);
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    const application1 = await wrapper.find(`#2222`);
+    expect(application1.find("#staffName").text()).toBe("Low LiXuen");
+    const application2 = await wrapper.find(`#3333`);
+    expect(application2.find("#staffName").text()).toBe("Beatrice Gan");
+  });
+
+  test("ST3-55.3.1", async () => {
+    let wrapper;
+    const listingDetails = {
+      listingName: "ST3-55.3.1",
+      roleName: "Software Developer",
+      dept: "IT Support",
+      num_openings: 1,
+    };
+
+    const mock = await mockings(listingDetails);
+    const listingId = mock.listingId;
+    listings = mock.indivListing;
+    wrapper = mount(LandingPage, {
+      global: {
+        plugins: [store, router, vuetify],
+        mocks: {
+          $router: {
+            push: mockRouterPush,
+          },
+        },
+      },
+      data() {
+        return {
+          listings: [listings.data.body],
+        };
+      },
+    });
+    const listing = await wrapper.find(`#${listingId}`);
+    expect(listing.exists()).toBe(true);
+    await wrapper.find(`#${listingId}`).trigger("click");
+    expect(mockRouterPush).toHaveBeenCalledWith({
+      name: "ListingPage",
+      params: { listing_id: listingId },
+    });
+    wrapper = mount(ListingPage, {
+      // Mounting the new ListingPage
+      global: {
+        plugins: [store, vuetify],
+        mocks: {
+          $router: {
+            push: mockRouterPush,
+          },
+          $route: {
+            params: { listing_id: listingId },
+          },
+        },
+      },
+    });
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    const application = await wrapper.find(`#2222`);
+    expect(application.find("#staffName").text()).toBe("Low LiXuen");
+    expect(application.find("#staffIdAndEmail").text()).toBe(
+      "Staff ID: 2222  Email: lixuen@gmail.com"
+    );
+    expect(application.find("#JavaScript").attributes("color")).toEqual(
+      "green-darken-3"
+    );
+    expect(
+      application.find("[id=Microsoft Excel]").attributes("color")
+    ).toEqual("default");
+    expect(application.find("#Python").attributes("color")).toEqual(
+      "green-darken-3"
+    );
+  });
+
+  test("ST3-55.4.1", async () => {
+    let wrapper;
+    const listingDetails = {
+      listingName: "ST3-55.4.1",
+      roleName: "Software Developer",
+      dept: "IT Support",
+      num_openings: 1,
+    };
+
+    profile._Access_Rights = "0";
+
+    const mock = await mockings(listingDetails);
+    const listingId = mock.listingId;
+    listings = mock.indivListing;
+    wrapper = mount(LandingPage, {
+      global: {
+        plugins: [store, router, vuetify],
+        mocks: {
+          $router: {
+            push: mockRouterPush,
+          },
+        },
+      },
+      data() {
+        return {
+          listings: [listings.data.body],
+        };
+      },
+    });
+    const listing = await wrapper.find(`#${listingId}`);
+    expect(listing.exists()).toBe(true);
+    await wrapper.find(`#${listingId}`).trigger("click");
+    expect(mockRouterPush).toHaveBeenCalledWith({
+      name: "ListingPage",
+      params: { listing_id: listingId },
+    });
+    wrapper = mount(ListingPage, {
+      // Mounting the new ListingPage
+      global: {
+        plugins: [store, vuetify],
+        mocks: {
+          $router: {
+            push: mockRouterPush,
+          },
+          $route: {
+            params: { listing_id: listingId },
+          },
+        },
+      },
+    });
+    const application = await wrapper.find(`#2222`);
+    expect(application.exists()).toBe(false);
   });
 });
 

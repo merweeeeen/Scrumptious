@@ -1,8 +1,8 @@
 <template>
   <v-container class="justify-center">
-    <v-row class=" flex-column border rounded-xl">
+    <v-row class="flex-column border rounded-xl">
       <v-col>
-        <p>Search for a job listing: </p>
+        <p>Search for a job listing:</p>
         <v-text-field
           label="Search listing"
           append-icon="mdi-magnify"
@@ -15,22 +15,18 @@
         ></v-text-field>
       </v-col>
       <v-col>
-        <v-btn elevation="0" class="w-100 justify-start">
+        <v-btn elevation="0" class="w-100 justify-start" @click="getFavourites" id="favourites">
           <v-icon>mdi-bookmark-outline</v-icon>
           &nbsp; Favourites
         </v-btn>
-        <v-btn elevation="0" class=" w-100 justify-start">
-          <v-icon>mdi-file-document-edit-outline</v-icon>
-          &nbsp; My applications
-        </v-btn>
-        <v-btn 
-        elevation="0"
-        class="w-100 justify-start"
-        @click="this.$router.push({path: '/create'})" 
-        v-if="this.$store.state.profile._Access_Rights == 1"
-        > 
-        <v-icon>mdi-plus-thick</v-icon>
-        &nbsp; Create a new listing
+        <v-btn
+          elevation="0"
+          class="w-100 justify-start"
+          @click="this.$router.push({ path: '/create' })"
+          v-if="this.$store.state.profile._Access_Rights == 1"
+        >
+          <v-icon>mdi-plus-thick</v-icon>
+          &nbsp; Create a new listing
         </v-btn>
       </v-col>
     </v-row>
@@ -75,7 +71,7 @@
                 :items="depts"
                 label="Department"
                 color="indigo"
-                style="font-size: 10px; width: 90%;"
+                style="font-size: 10px; width: 90%"
                 v-model="selectedDept"
                 id="dept"
               >
@@ -98,7 +94,7 @@
                 :items="skills"
                 label="Skill"
                 color="indigo"
-                style="font-size: 10px; width: 90%;"
+                style="font-size: 10px; width: 90%"
                 v-model="selectedSkill"
                 id="skill"
               >
@@ -121,7 +117,7 @@
                 :items="roles"
                 label="Role"
                 color="indigo"
-                style="font-size: 10px; width: 90%;"
+                style="font-size: 10px; width: 90%"
                 v-model="selectedRole"
                 id="role"
               >
@@ -146,7 +142,7 @@
                 :items="vacancies"
                 label="Vacancy"
                 color="indigo"
-                style="font-size: 10px; width: 90%;"
+                style="font-size: 10px; width: 90%"
                 v-model="selectedVacancy"
                 id="vacancy"
               >
@@ -163,7 +159,7 @@
 
 <script>
 export default {
-  emits: ["filter", "reset", "searchListing", "searchStaff"],
+  emits: ["filter", "reset", "searchListing", "searchStaff", "getFavourites"],
   props: ["skills", "roles", "depts"],
   data() {
     return {
@@ -182,9 +178,8 @@ export default {
   },
   methods: {
     searchListing() {
-        console.log(this.listing_name)
-        this.$emit("searchListing", this.listing_name);
-        this.listing_name = "";
+      this.$emit("searchListing", this.listing_name);
+      this.listing_name = "";
     },
     searchStaff() {
       this.$emit("searchStaff", this.staff_name);
@@ -210,6 +205,9 @@ export default {
       this.dept = [];
       this.vacancy = [];
       this.$emit("reset");
+    },
+    getFavourites() {
+      this.$emit("getFavourites");
     },
   },
 };

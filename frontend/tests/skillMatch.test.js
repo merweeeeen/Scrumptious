@@ -47,50 +47,7 @@ const routes = [
   },
 ];
 
-beforeEach(async () => {
-  console.log("Start Test");
 
-  originalAxios = axios.get;
-
-  profile = {
-    _Access_Rights: "0",
-    _Country: "SG",
-    _Dept: "Finance",
-    _Email: "johndoe@gmail.com",
-    _Password: "imaStaff",
-    _Skills: ["Adaptability", "Microsoft Excel"],
-    _Staff_id: 1001,
-    _Applications: [],
-  };
-
-  store = createStore({
-    state() {
-      return {
-        profile,
-      };
-    },
-  });
-
-  router = createRouter({
-    history: createMemoryHistory(),
-    routes,
-  });
-});
-
-afterEach(async () => {
-  axios.get = originalAxios;
-  mock.restore();
-  for (let i = 0; i < listingIds.length; i++) {
-    await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
-  }
-  if (favourite) {
-    await axios.post("http://localhost:3003/favourite/remove", {
-      staffid: profile._Staff_id,
-      listingid: listingIds[listingIds.length - 1].toString(),
-    });
-  }
-  console.log("End Test");
-});
 
 async function mockings(listingDetails, fav = "") {
   const listingId1 = await createListings(listingDetails[0]);
@@ -111,10 +68,64 @@ async function mockings(listingDetails, fav = "") {
     .onGet(`http://localhost:3003/listing`)
     .reply(200, { body: [indivListing1.data.body, indivListing2.data.body] });
 
+  mock
+    .onGet(`http://localhost:3003/application/getappstaff/${listingId1}`)
+    .reply(200, { body: [] });
+
+  mock
+    .onGet(`http://localhost:3003/application/getappstaff/${listingId2}`)
+    .reply(200, { body: [] });
+
   return { listings, listingId: [listingId1, listingId2] };
 }
 
 describe("Testing ST3-39", () => {
+  beforeEach(async () => {
+    console.log("Start Test");
+
+    originalAxios = axios.get;
+
+    profile = {
+      _Access_Rights: "0",
+      _Country: "SG",
+      _Dept: "Finance",
+      _Email: "johndoe@gmail.com",
+      _Password: "imaStaff",
+      _Skills: ["Adaptability", "Microsoft Excel"],
+      _Staff_id: 1001,
+      _Applications: [],
+    };
+
+    store = createStore({
+      state() {
+        return {
+          profile,
+        };
+      },
+    });
+
+    router = createRouter({
+      history: createMemoryHistory(),
+      routes,
+    });
+  });
+
+  afterEach(async () => {
+    axios.get = originalAxios;
+    mock.restore();
+    for (let i = 0; i < listingIds.length; i++) {
+      await axios.delete(`http://127.0.0.1:3003/delete/listing/${listingIds[i]}`); //
+    }
+    if (favourite) {
+      await axios.post("http://localhost:3003/favourite/remove", {
+        staffid: profile._Staff_id,
+        listingid: listingIds[listingIds.length - 1].toString(),
+      });
+    }
+    listingIds = []
+
+    console.log("End Test");
+  });
   test("ST3-39.1.1 and ST3-39.2.1", async () => {
     let wrapper;
     const listingDetails = [
